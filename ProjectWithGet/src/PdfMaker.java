@@ -1,5 +1,3 @@
-package com.java.pdfmaker;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.FileOutputStream;
@@ -22,7 +20,7 @@ public class PdfMaker {
 	String fontName = "";
 	float fontSize = 8f;
 	float spacing;
-	
+
 	String s = 
 			"|-------------------------|-------------------------|\n" +
 			"|-----1-----1-----1-----1-|-----1-----1-----1-----1-|\n" +
@@ -75,11 +73,14 @@ public class PdfMaker {
 		//pdf.createPDF();
 //	}
 	
+	//public PdfMaker(String filePath, ArrayList<String> contents, String fontName, float fontSize, float spacing) throws DocumentException, IOException {
 	public PdfMaker(String filePath, String fontName, float fontSize, float spacing) throws DocumentException, IOException {
+
 		this.filePath = filePath;
 		this.fontName = fontName;
 		this.spacing = spacing;
 		this.fontSize = fontSize;
+		this.contents = contents;
 		//Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		//width = screenSize.getWidth();
 		//height = screenSize.getHeight();
