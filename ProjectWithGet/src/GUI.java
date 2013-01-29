@@ -11,7 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,11 +36,13 @@ import javax.swing.event.ListSelectionListener;
 
 import org.jpedal.*;
 
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.BaseFont;
 
 
 
 public class GUI extends JFrame {
+	
 	private JPanel rightPane;
 	private JPanel buttonPane;
 	private JPanel sliderPane;
@@ -46,16 +53,23 @@ public class GUI extends JFrame {
 	private JSlider spacing;
 	private JSlider font;
 	private JInternalFrame pane;
+
+	String inputPath = "C:/CSE2311/input.txt"; //Hard coded input path
+	String filePath = "C:/CSE2311/output.pdf"; //Hard coded output path
+	ArrayList<String> contents = new ArrayList<String>();
 	
-	String filePath = "C:/CSE2311/output.pdf";
-	String [] fonts = {BaseFont.HELVETICA, BaseFont.HELVETICA_OBLIQUE, BaseFont.HELVETICA_BOLD, BaseFont.HELVETICA_BOLDOBLIQUE,
-			BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, BaseFont.TIMES_BOLDITALIC}; 
-	
-	public GUI(){
+	//Array of fonts
+	String [] fonts = { BaseFont.HELVETICA, BaseFont.HELVETICA_OBLIQUE, BaseFont.HELVETICA_BOLD, BaseFont.HELVETICA_BOLDOBLIQUE,
+						BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, BaseFont.TIMES_BOLDITALIC }; 
+
+	public GUI() throws DocumentException, IOException{
+		
+		//Top-right button pane
 		buttonPane = new JPanel(new GridLayout(7, 1));
 		open = new JButton("Open File");
 		convertPDF = new JButton("Convert to PDF");
 		convertASCII = new JButton("Convert to ASCII");
+		contents = inputConverter(inputPath);
 		
 		buttonPane.add(new JLabel());
 		buttonPane.add(open);
@@ -65,22 +79,26 @@ public class GUI extends JFrame {
 		buttonPane.add(convertASCII);
 		buttonPane.add(new JLabel());
 		buttonPane.setBorder(BorderFactory.createLineBorder(Color.black));
+
 		
+		//Middle-right font list
 		sliderPane = new JPanel(new GridLayout(3, 1, 0, 40));
-		
+
 		fontNames = new JList<String>(fonts);
-		//fontNames.setSelectedIndex(0);
 		fontNames.setBorder(BorderFactory.createTitledBorder("Select Font:"));
+		
+
+		//List listener
 		fontNames.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				Thread t = new Thread() {
 					public void run() {
 						try{
 							if(fontNames.getSelectedValue() != null)
-								new PdfMaker(filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
+								new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
 							else
-								new PdfMaker(filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
-					
+								new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
+
 							PdfRenderer();
 						}
 						catch(Exception ex) {
@@ -90,25 +108,26 @@ public class GUI extends JFrame {
 				};
 				t.start();
             }
-
-			
 		});
-		
+
+		//Middle-right font size slider
 		font = new JSlider(1, 10);
 		font.setBorder(BorderFactory.createTitledBorder("Font Size:"));
 		font.setMajorTickSpacing(5);
 		font.setMinorTickSpacing(1);
 		font.setPaintTicks(true);
+		
+		//Font size slider listener
 		font.addChangeListener(new ChangeListener() {
 			public void stateChanged (ChangeEvent e) {
 				Thread t = new Thread() {
 					public void run() {
-				
+
 						try{
 							if(fontNames.getSelectedValue() != null)
-								new PdfMaker(filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
+								new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
 							else
-								new PdfMaker(filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
+								new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
 							PdfRenderer();
 						}
 						catch(Exception ex) {
@@ -117,26 +136,29 @@ public class GUI extends JFrame {
 					}
 				};
 				t.start();
-				
+
 			}
 		});
-		
+
+		//Bottom-right spacing slider
 		spacing = new JSlider(1, 10);
 		spacing.setBorder(BorderFactory.createTitledBorder("Spacing:"));
 		spacing.setMajorTickSpacing(5);
 		spacing.setMinorTickSpacing(1);
 		spacing.setPaintTicks(true);
+		
+		//Spacing slider listener
 		spacing.addChangeListener(new ChangeListener() {
 			public void stateChanged (ChangeEvent e) {
 				Thread t = new Thread() {
 					public void run() {
-				
+
 						try{
 							if(fontNames.getSelectedValue() != null)
-								new PdfMaker(filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
+								new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
 							else
-								new PdfMaker(filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
-					
+								new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
+
 							PdfRenderer();
 						}
 						catch(Exception ex) {
@@ -145,26 +167,20 @@ public class GUI extends JFrame {
 					}
 				};
 				t.start();
-				
+
 			}
 		});
-		
-		
-		//sliderPane.add(new JLabel());
+
+		//Add the elements to the GUI
 		sliderPane.add(font);
-		//sliderPane.add(new JLabel());
 		sliderPane.add(spacing);
-		
-		//sliderPane.add(new JLabel());
 		sliderPane.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		
 		rightPane = new JPanel(new GridLayout(3, 1));
 		rightPane.add(buttonPane);
 		rightPane.add(new JScrollPane(fontNames), BorderLayout.CENTER);
 		rightPane.add(sliderPane);
 		rightPane.setBorder(BorderFactory.createLineBorder(Color.black));
-		
+
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
 		c.add(rightPane, BorderLayout.EAST);
@@ -174,7 +190,44 @@ public class GUI extends JFrame {
 		setVisible(true);
 	}
 	
+	public ArrayList<String> inputConverter(String inputPath) throws DocumentException, IOException {
+		
+
+		String s = "";
+		String cur = "";
+		ArrayList<String> contents = new ArrayList<String>();
+		
+		//Input file
+		BufferedReader in = new BufferedReader(new FileReader(inputPath));
+
+		contents.add((in.readLine()).substring(6));
+		contents.add((in.readLine()).substring(9));
+		contents.add((in.readLine()).substring(8));
+		
+		cur = in.readLine();
+		while(cur != null)
+		{
+			for(int i = 1; i <= 6; i++)
+			{
+				if(i != 6)
+				{
+					s += in.readLine() + "\n";
+				}
+				else 
+					s += in.readLine();
+			}
+
+			contents.add(s);
+			s = "";
+			cur = in.readLine();
+		}
+		in.close();
+		return contents;
+		
+	}
+
 	public void PdfRenderer() {
+		
 		/*try{
 			PdfMaker pdf = new PdfMaker(filePath, fontNames.getSelectedItem().toString(), font.getValue(), spacing.getValue());
 			//System.out.println(spacing.getValue());
@@ -183,10 +236,9 @@ public class GUI extends JFrame {
 		catch(Exception e){
 			e.printStackTrace();
 		}*/
-		
+
 		PdfDecoder pdfView = new PdfDecoder();
-		
-		
+
 		try {
 			pdfView.openPdfFile(filePath);
 			pdfView.decodePage(1);
@@ -198,9 +250,18 @@ public class GUI extends JFrame {
 		getContentPane().add(pdfView, BorderLayout.CENTER);
 		validate();
 	}
-	
+
 	public static void main (String args[]) {
-		GUI gui = new GUI();
+		GUI gui = null;
+		try {
+			gui = new GUI();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		gui.PdfRenderer();
 	}
 }
