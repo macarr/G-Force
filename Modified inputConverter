@@ -1,0 +1,39 @@
+public ArrayList<ArrayList<String>> inputConverter(String inputPath) throws DocumentException, IOException {
+  	ArrayList<ArrayList<String>> contents;
+
+		ArrayList<String> block = new ArrayList<String>();
+		String s = "";
+		String cur = "";
+		contents = new ArrayList<ArrayList<String>>();
+
+		//Input file
+		BufferedReader in = new BufferedReader(new FileReader(inputPath));
+
+		s += in.readLine().substring(6) + "\n";
+		s += in.readLine().substring(9) + "\n";
+		s += in.readLine().substring(8) + "\n";
+		
+		//contents.add(s);
+		
+		in.readLine();
+
+		int line = 1;
+		s = "";
+	 	
+		while((cur = in.readLine()) != null) {
+	 		
+			if(line <= 6) {
+	 			block.add(new String(cur));
+	 			line++;
+			}
+			else {
+				contents.add(block);
+				block = new ArrayList<String>();
+	 			line = 1;
+			}
+		}
+		//System.out.println(contents.size());
+		
+		in.close();
+		return contents;
+	}
