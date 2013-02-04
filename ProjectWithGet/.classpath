@@ -2,17 +2,21 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itextpdf-5.3.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itextpdf-5.3.5-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itextpdf-5.3.5-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-pdfa-5.3.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-pdfa-5.3.5-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-pdfa-5.3.5-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-xtra-5.3.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-xtra-5.3.5-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-xtra-5.3.5-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/jpedal_lgpl.jar"/>
-	<classpathentry kind="lib" path="lib/itextpdf-5.3.5.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.3.5.jar" sourcepath="lib">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/cse/home/cse13167/git/G-Force/ProjectWithGet/lib/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/jpedal_lgpl.jar"/>
+	<classpathentry kind="lib" path="lib/itext-pdfa-5.3.5.jar" sourcepath="lib">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/cse/home/cse13167/git/G-Force/ProjectWithGet/lib/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/itext-xtra-5.3.5.jar" sourcepath="lib">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/cse/home/cse13167/git/G-Force/ProjectWithGet/lib/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

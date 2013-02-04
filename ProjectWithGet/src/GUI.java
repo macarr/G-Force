@@ -66,8 +66,8 @@ public class GUI extends JFrame {
 	 * 
 	 * Please feel free to tell me I'm silly and do things your own way.
 	 */
-	String inputPath = "C:/CSE2311/input.txt"; //Hard coded input path
-	String filePath = "C:/CSE2311/output.pdf"; //Hard coded output path
+	String inputPath = "files/input.txt"; //Hard coded input path
+	String filePath = "files/output.pdf"; //Hard coded output path
 	ArrayList<String> contents = new ArrayList<String>();
 	
 	//Array of fonts
@@ -263,7 +263,7 @@ public class GUI extends JFrame {
 		validate();
 	}
 
-	public static void main (String args[]) {
+	public static void main (String[] args) {
 		GUI gui = null;
 		try {
 			gui = new GUI();
