@@ -12,5 +12,7 @@
 	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-xtra-5.3.5-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/Library/itext-xtra-5.3.5-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Joy/Desktop/CSE2311/jpedal_lgpl.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.3.5.jar"/>
+	<classpathentry kind="lib" path="lib/jpedal_lgpl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
