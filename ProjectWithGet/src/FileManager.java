@@ -16,7 +16,7 @@ public class FileManager extends JPanel {
 	 */
 	
 	public FileManager() {
-		
+		fc = new JFileChooser();
 	}
 	
 	public File loadFile() {
