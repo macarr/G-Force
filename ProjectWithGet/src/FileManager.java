@@ -15,6 +15,10 @@ public class FileManager extends JPanel {
 	 * @return file chosen by JFileChooser
 	 */
 	
+	public FileManager() {
+		
+	}
+	
 	public File loadFile() {
 		
 		int returnVal = fc.showOpenDialog(FileManager.this);

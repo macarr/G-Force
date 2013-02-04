@@ -54,6 +54,18 @@ public class GUI extends JFrame {
 	private JSlider font;
 	private JInternalFrame pane;
 
+	
+	/*
+	 * Matt comment: these hard coded paths need to be replaced at some point by FileManager.loadFile()
+	 * and FileManager.saveFile(). However, at this point I'm not sure how to untangle them in such a
+	 * way that I don't totally bone the program. It LOOKS like all we need to do is just make it so 
+	 * that the PDF Renderer/creator do not just start up when the GUI starts up, and instead wait for
+	 * a Load/Save event (at which point we run the PDF renderer/creator respectively with the returned
+	 * FileManager values as arguments). Unfortunately, I'm not sure where to start with that without
+	 * destroying what makes everything work.
+	 * 
+	 * Please feel free to tell me I'm silly and do things your own way.
+	 */
 	String inputPath = "C:/CSE2311/input.txt"; //Hard coded input path
 	String filePath = "C:/CSE2311/output.pdf"; //Hard coded output path
 	ArrayList<String> contents = new ArrayList<String>();
@@ -61,7 +73,7 @@ public class GUI extends JFrame {
 	//Array of fonts
 	String [] fonts = { BaseFont.HELVETICA, BaseFont.HELVETICA_OBLIQUE, BaseFont.HELVETICA_BOLD, BaseFont.HELVETICA_BOLDOBLIQUE,
 						BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, BaseFont.TIMES_BOLDITALIC }; 
-
+	
 	public GUI() throws DocumentException, IOException{
 		
 		//Top-right button pane
