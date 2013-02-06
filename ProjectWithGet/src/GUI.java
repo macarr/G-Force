@@ -22,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -47,6 +48,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JPanel buttonPane;
 	private JPanel sliderPane;
 	private JButton open;
+	private JButton save;
 	private JButton convertPDF;
 	private JButton convertASCII;
 	private JList<String> fontNames;
@@ -55,6 +57,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JInternalFrame pane;
 	private FileManager fm;
 	private File readFile;
+	private File toSave;
 
 	
 	/*
@@ -68,7 +71,7 @@ public class GUI extends JFrame implements ActionListener {
 	 * 
 	 * Please feel free to tell me I'm silly and do things your own way.
 	 */
-	String inputPath = "files/input.txt"; //Hard coded input path
+	String inputPath = null;
 	String filePath = "files/output.pdf"; //Hard coded output path
 	ArrayList<String> contents = new ArrayList<String>();
 	
@@ -78,21 +81,26 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public GUI() throws DocumentException, IOException{
 		
+		fm = new FileManager();
+		inputPath = fm.loadFile().getAbsolutePath();
+		
 		//Top-right button pane
 		buttonPane = new JPanel(new GridLayout(7, 1));
 		open = new JButton("Open File");
 		open.addActionListener(this);
+		save = new JButton("Save File");
+		save.addActionListener(this);
 		convertPDF = new JButton("Convert to PDF");
 		convertASCII = new JButton("Convert to ASCII");
 		contents = inputConverter(inputPath);
 		
-		buttonPane.add(new JLabel());
 		buttonPane.add(open);
+		buttonPane.add(new JLabel());
+		buttonPane.add(save);
 		buttonPane.add(new JLabel());
 		buttonPane.add(convertPDF);
 		buttonPane.add(new JLabel());
 		buttonPane.add(convertASCII);
-		buttonPane.add(new JLabel());
 		buttonPane.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		
@@ -106,22 +114,7 @@ public class GUI extends JFrame implements ActionListener {
 		//List listener
 		fontNames.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				Thread t = new Thread() {
-					public void run() {
-						try{
-							if(fontNames.getSelectedValue() != null)
-								new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
-							else
-								new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
-
-							PdfRenderer();
-						}
-						catch(Exception ex) {
-							//ex.printStackTrace();
-						}
-					}
-				};
-				t.start();
+				refresh();
             }
 		});
 
@@ -135,23 +128,7 @@ public class GUI extends JFrame implements ActionListener {
 		//Font size slider listener
 		font.addChangeListener(new ChangeListener() {
 			public void stateChanged (ChangeEvent e) {
-				Thread t = new Thread() {
-					public void run() {
-
-						try{
-							if(fontNames.getSelectedValue() != null)
-								new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
-							else
-								new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
-							PdfRenderer();
-						}
-						catch(Exception ex) {
-							//ex.printStackTrace();
-						}
-					}
-				};
-				t.start();
-
+				refresh();
 			}
 		});
 
@@ -165,24 +142,7 @@ public class GUI extends JFrame implements ActionListener {
 		//Spacing slider listener
 		spacing.addChangeListener(new ChangeListener() {
 			public void stateChanged (ChangeEvent e) {
-				Thread t = new Thread() {
-					public void run() {
-
-						try{
-							if(fontNames.getSelectedValue() != null)
-								new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
-							else
-								new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
-
-							PdfRenderer();
-						}
-						catch(Exception ex) {
-							//ex.printStackTrace();
-						}
-					}
-				};
-				t.start();
-
+				refresh();
 			}
 		});
 
@@ -213,11 +173,41 @@ public class GUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(open)) {
 			
-			fm = new FileManager();
 			readFile = fm.loadFile();
 			inputPath = readFile.getAbsolutePath();
+			refresh();
 			
 		}
+		if(e.getSource().equals(save)) {
+			
+			toSave = new File(filePath);
+			try {
+			fm.saveFile(toSave);
+			} catch(IOException z) {
+				JOptionPane.showMessageDialog(this, "IOException (fix me later)", "IOException", JOptionPane.ERROR_MESSAGE);
+			}
+			
+		}
+	}
+	
+	private void refresh() {
+		Thread t = new Thread() {
+			public void run() {
+
+				try{
+					if(fontNames.getSelectedValue() != null)
+						new PdfMaker(contents, filePath, fontNames.getSelectedValue().toString(), font.getValue(), spacing.getValue()).createPDF();
+					else
+						new PdfMaker(contents, filePath, BaseFont.TIMES_ROMAN, font.getValue(), spacing.getValue()).createPDF();
+
+					PdfRenderer();
+				}
+				catch(Exception ex) {
+					//ex.printStackTrace();
+				}
+			}
+		};
+		t.start();
 	}
 	
 	public ArrayList<String> inputConverter(String inputPath) throws DocumentException, IOException {
