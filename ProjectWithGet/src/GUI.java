@@ -41,7 +41,7 @@ import com.itextpdf.text.pdf.BaseFont;
 
 
 
-public class GUI extends JFrame {
+public class GUI extends JFrame implements ActionListener {
 	
 	private JPanel rightPane;
 	private JPanel buttonPane;
@@ -53,6 +53,8 @@ public class GUI extends JFrame {
 	private JSlider spacing;
 	private JSlider font;
 	private JInternalFrame pane;
+	private FileManager fm;
+	private File readFile;
 
 	
 	/*
@@ -79,6 +81,7 @@ public class GUI extends JFrame {
 		//Top-right button pane
 		buttonPane = new JPanel(new GridLayout(7, 1));
 		open = new JButton("Open File");
+		open.addActionListener(this);
 		convertPDF = new JButton("Convert to PDF");
 		convertASCII = new JButton("Convert to ASCII");
 		contents = inputConverter(inputPath);
@@ -200,6 +203,21 @@ public class GUI extends JFrame {
 		setSize(screenSize);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+	}
+	
+	/*
+	 * Need to find some way to re-load the input file and re-create the output when the open button is fired
+	 * 
+	 */
+	
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(open)) {
+			
+			fm = new FileManager();
+			readFile = fm.loadFile();
+			inputPath = readFile.getAbsolutePath();
+			
+		}
 	}
 	
 	public ArrayList<String> inputConverter(String inputPath) throws DocumentException, IOException {
