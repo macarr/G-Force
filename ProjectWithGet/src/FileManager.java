@@ -4,6 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.*;
+import javax.swing.JOptionPane;
 
 public class FileManager extends JPanel {
 	
@@ -67,10 +68,9 @@ public class FileManager extends JPanel {
 				
 			} catch (FileNotFoundException e) {
 				
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(this,"Target file not found!", "File Error", JOptionPane.ERROR_MESSAGE);
 				
 			} finally {
-				
 				if(out != null)
 					out.close();
 				

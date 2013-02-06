@@ -181,12 +181,13 @@ public class GUI extends JFrame implements ActionListener {
 		if(e.getSource().equals(save)) {
 			
 			toSave = new File(filePath);
+			
 			try {
 			fm.saveFile(toSave);
-			} catch(IOException z) {
-				JOptionPane.showMessageDialog(this, "IOException (fix me later)", "IOException", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException z) {
+				z.printStackTrace();
 			}
-			
+				
 		}
 	}
 	
