@@ -1,0 +1,314 @@
+package com.java.pdfmaker;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.jpedal.*;
+import org.jpedal.fonts.FontMappings;
+
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.BaseFont;
+
+class UIController extends JPanel implements ActionListener{
+  //holds the drop-down menus and the 'convert' button
+	private JPanel controlPane;
+	private JButton openButton;
+	private JButton convertButton;
+	//JComboBox holding the font-name values
+	private JComboBox<String> fontNamesCombo;
+	//JComboBox holding the font-size values
+	private JComboBox<String> fontSizesCombo;
+	//JComboBox holding the spacing values
+	private JComboBox<String> spacingCombo;
+	private UIModel data;
+	
+	//The font-names that shall be used
+	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_OBLIQUE, BaseFont.HELVETICA_BOLD, BaseFont.HELVETICA_BOLDOBLIQUE,
+			BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, BaseFont.TIMES_BOLDITALIC };
+	
+	//The font-sizes that shall be used
+	private String [] fontSizes = {"6", "7", "8", "9", "10", "11", "12", "13", "14"};
+	
+	//The spacing values that shall be used
+	private String [] spacing = {"1", "2", "3", "4", "5", "6", "7", "8"};
+	
+	public UIController(Dimension size, UIModel data){
+		this.data = data;
+		openButton = new JButton("Open Ascii File");
+		openButton.addActionListener(this);
+		openButton.setPreferredSize(new Dimension(size.width, size.height/6));
+		
+		//littleTopPane holds the help-tip at the top and the open button
+		JPanel littleTopPane = new JPanel();
+		littleTopPane.setLayout(new BorderLayout());
+		JLabel helpTip = new JLabel("Press F1 on keyboard for help.");
+		helpTip.setForeground(new Color(182, 33, 45));
+		littleTopPane.add(helpTip, BorderLayout.NORTH);
+		littleTopPane.add(openButton, BorderLayout.SOUTH);
+		
+		//fontName is a JComboBox
+		fontNamesCombo = new JComboBox<String>(fontNames);
+		fontNamesCombo.setEnabled(false);
+		fontNamesCombo.setSelectedIndex(0);
+		fontNamesCombo.setBorder(BorderFactory.createTitledBorder("Select Font:"));		
+		
+		//fontSize is a JComboBox
+		fontSizesCombo = new JComboBox<String>(fontSizes);
+		fontSizesCombo.setEnabled(false);
+		fontSizesCombo.setSelectedIndex(fontSizesCombo.getItemCount()-1);
+		fontSizesCombo.setBorder(BorderFactory.createTitledBorder("Select Font Size:"));
+
+		//spacing is a JComboBox
+		spacingCombo = new JComboBox<String>(spacing);
+		spacingCombo.setEnabled(false);
+		spacingCombo.setSelectedIndex(4);
+		spacingCombo.setBorder(BorderFactory.createTitledBorder("Select Spacing:"));
+
+		//save button
+		convertButton = new JButton("Convert to PDF");
+		convertButton.setEnabled(false);
+		convertButton.addActionListener(this);
+	
+		//convertPane would hold the drop-down menus and the 'Convert' button
+		JPanel convertPane = new JPanel();
+		convertPane.setLayout(new GridLayout(4, 1));
+		
+		//Adding the controls to the convertPane
+		convertPane.add(fontNamesCombo);
+		convertPane.add(fontSizesCombo);
+		convertPane.add(spacingCombo);
+		convertPane.add(convertButton);
+		convertPane.setBorder(BorderFactory.createTitledBorder(""));
+		
+		controlPane = new JPanel(new BorderLayout());
+		
+		//Adding the littleTopPane and convertPane to the current JPanel
+		controlPane.add(littleTopPane, BorderLayout.NORTH);
+		controlPane.add(convertPane, BorderLayout.CENTER);
+		
+		//Setting the layout of this JPanel (UIControls), and adding the controlPane
+		setLayout(new BorderLayout());
+		controlPane.setPreferredSize(new Dimension(size.width, size.height));
+		add(controlPane, BorderLayout.NORTH);
+	}
+	
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource() == openButton){
+			int status  = data.loadFile();
+			
+			if(status == 1){
+				fontNamesCombo.setEnabled(true);
+				fontSizesCombo.setEnabled(true);
+				spacingCombo.setEnabled(true);
+				convertButton.setEnabled(true);
+			}
+		}
+		else if(e.getSource() == this.convertButton){
+			data.convertFile(fontNamesCombo.getSelectedItem().toString(), Float.parseFloat(fontSizesCombo.getSelectedItem().toString()), 
+					Float.parseFloat(spacingCombo.getSelectedItem().toString()));
+		}
+	}
+}
+
+class UIModel{
+	public UIView subject;
+	String inputPath = "";
+	String outputPath = "C:/CSE2311/music.pdf";
+	private ArrayList<ArrayList<String>> contents;
+	
+	public UIModel(UIView subject){
+		this.subject = subject;
+	}
+	public int loadFile(){
+		JFileChooser fC = new JFileChooser();
+		int status = 0;
+		
+		int returnVal = fC.showOpenDialog(subject);
+
+		if(returnVal == JFileChooser.APPROVE_OPTION) {
+			inputPath = fC.getSelectedFile().toString();
+			contents = inputConverter(inputPath);
+			subject.showAsciiFile(contents);
+			status = 1;
+		}
+		return status;
+	}
+	
+	public void convertFile(String fontName, float fontSize, float spacing){
+		ArrayList<ArrayList<String>> fileContents = new ArrayList<ArrayList<String>>();
+		//System.out.println(contents.size());
+		
+		for(int blockNum = 1; blockNum < contents.size(); blockNum++){
+			fileContents.add(contents.get(blockNum));
+		}
+		new PdfMaker(contents.get(0), fileContents, outputPath, fontName, fontSize, spacing).createPDF();
+		subject.PdfRenderer(outputPath);
+	}
+	
+	
+	
+	public ArrayList<ArrayList<String>> inputConverter(String inputPath){
+		ArrayList<ArrayList<String>> cont;
+
+		ArrayList<String> block = new ArrayList<String>();
+		String s = "";
+		String cur = "";
+		cont = new ArrayList<ArrayList<String>>();
+
+		try{
+		//Input file
+		BufferedReader in = new BufferedReader(new FileReader(inputPath));
+
+		block.add(in.readLine().substring(6));
+		block.add(in.readLine().substring(9));
+		block.add(in.readLine().substring(8));
+		
+		//header = block;
+		cont.add(block);
+		
+		block = new ArrayList<String>();
+		in.readLine();
+
+		int line = 1;
+		s = "";
+	 	
+		
+		while((cur = in.readLine()) != null) {
+	 		
+			if(line <= 6) {
+	 			block.add(new String(cur));
+	 			line++;
+			}
+			else {
+				cont.add(block);
+				block = new ArrayList<String>();
+	 			line = 1;
+			}
+		}
+	
+		in.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return cont;
+	}
+}
+
+class UIView extends JPanel{
+	private JPanel centerPane;
+	private JLabel statusUpdate;
+	private JTextArea asciiDisplay;
+	private JProgressBar progressBar;
+	
+	public UIView(){
+		setLayout(new BorderLayout());
+		centerPane = new JPanel();
+		centerPane.setBackground(Color.gray);
+		add(centerPane, BorderLayout.CENTER);
+	}
+	
+	public void showAsciiFile(ArrayList<ArrayList<String>> contents){
+		asciiDisplay = new JTextArea(100, 100);
+		asciiDisplay.append(contents.get(0).get(0) + "\n");
+		asciiDisplay.append(contents.get(0).get(1) + "\n");
+		asciiDisplay.append(contents.get(0).get(2) + "\n\n");
+		
+		for(int blockNum = 1; blockNum < contents.size(); blockNum++){
+			for(int lineNum = 0; lineNum < contents.get(blockNum).size(); lineNum++){
+				asciiDisplay.append(contents.get(blockNum).get(lineNum) + "\n");
+			}
+		}
+		centerPane.add(new JScrollPane(asciiDisplay), BorderLayout.CENTER);
+		centerPane.revalidate();
+		centerPane.repaint();
+	}
+	
+	public void PdfRenderer(String outputPath) {
+		PdfDecoder tabMusic = new PdfDecoder();
+
+		try {
+			tabMusic.openPdfFile(outputPath);
+			for(int pageNum = 1; pageNum <= tabMusic.getNumberOfPages(); pageNum++){
+				tabMusic.decodePage(pageNum);
+				tabMusic.setPageParameters(1, pageNum);
+			}	
+			
+		}
+		catch (Exception e) {
+		}
+
+		//first we clear up the centerPane
+		centerPane.removeAll();
+		//then we add the pdf onto the centerPane and display it
+		centerPane.add(new JScrollPane(tabMusic, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
+
+		centerPane.revalidate();
+		centerPane.repaint();
+		//statusLabel.setText(" ");
+	}
+}
+
+public class GUI extends JFrame{
+	public GUI(){
+		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+		UIView subject = new UIView();
+		UIModel data = new UIModel(subject);
+		UIController ui = new UIController(new Dimension(size.width/7, size.height/3), data);
+		//JPanel p = new JPanel(new BorderLayout());
+		//p.add(ui, BorderLayout.NORTH);
+		Container c = getContentPane();
+		c.setLayout(new BorderLayout());
+		c.add(subject, BorderLayout.CENTER);
+		c.add(ui, BorderLayout.EAST);
+		
+		setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		setVisible(true);
+	}
+	
+	public static void main(String args[]){
+		new GUI();
+	}
+}
