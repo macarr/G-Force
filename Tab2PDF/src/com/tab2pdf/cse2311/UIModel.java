@@ -10,24 +10,21 @@ import javax.swing.JFileChooser;
 import com.itextpdf.text.DocumentException;
 
 class UIModel{
-	public UIView subject;
-	String inputPath = "";
-	String outputPath = "files/output.txt";
-	private ArrayList<ArrayList<String>> contents;
+	public InputConverter data = new InputConverter("", "files/output.txt");
 
 	public UIModel(UIView subject){
-		this.subject = subject;
+		this.data.subject = subject;
 	}
 	public int loadFile(){
 		JFileChooser fC = new JFileChooser();
 		int status = 0;
 
-		int returnVal = fC.showOpenDialog(subject);
+		int returnVal = fC.showOpenDialog(data.subject);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			inputPath = fC.getSelectedFile().toString();
-			contents = inputConverter(inputPath);
-			subject.showAsciiFile(contents);
+			data.inputPath = fC.getSelectedFile().toString();
+			data.contents = inputConverter(data.inputPath);
+			data.subject.showAsciiFile(data.contents);
 			status = 1;
 		}
 		return status;
@@ -37,66 +34,20 @@ class UIModel{
 		ArrayList<ArrayList<String>> fileContents = new ArrayList<ArrayList<String>>();
 		//System.out.println(contents.size());
 
-		for(int blockNum = 1; blockNum < contents.size(); blockNum++){
-			fileContents.add(contents.get(blockNum));
+		for(int blockNum = 1; blockNum < data.contents.size(); blockNum++){
+			fileContents.add(data.contents.get(blockNum));
 		}
 		try {
-			new PdfMaker(contents.get(0), fileContents, outputPath, fontName, fontSize, spacing).createPDF();
+			new PdfMaker(data.contents.get(0), fileContents, data.outputPath, fontName, fontSize, spacing).createPDF();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
-		subject.PdfRenderer(outputPath);
+		data.subject.PdfRenderer(data.outputPath);
 	}
 
 
 
-	public ArrayList<ArrayList<String>> inputConverter(String inputPath){
-		ArrayList<ArrayList<String>> cont;
-
-		ArrayList<String> block = new ArrayList<String>();
-		String s = "";
-		String cur = "";
-		cont = new ArrayList<ArrayList<String>>();
-
-		try{
-		//Input file
-		BufferedReader in = new BufferedReader(new FileReader(inputPath));
-
-		block.add(in.readLine().substring(6));
-		block.add(in.readLine().substring(9));
-		block.add(in.readLine().substring(8));
-
-		//header = block;
-		cont.add(block);
-
-		block = new ArrayList<String>();
-		in.readLine();
-
-		int line = 1;
-		s = "";
-
-
-		while((cur = in.readLine()) != null) {
-
-			if(line <= 6) {
-	 			block.add(new String(cur));
-	 			line++;
-			}
-			else {
-				cont.add(block);
-				block = new ArrayList<String>();
-	 			line = 1;
-			}
-		}
-
-		in.close();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-
-		return cont;
-	}
+	
 }
