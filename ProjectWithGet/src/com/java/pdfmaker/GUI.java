@@ -365,7 +365,7 @@ class UIMiddleLayer{
 	String inputPath = "";
 	
 	//The temporary output path.
-	String outputPath = "C:/CSE2311/temp.pdf";
+	String outputPath = "files/temp.pdf";
 	
 	//If the user decides to save the file, the file-path would be stored in 'destinationPath'.
 	String destinationPath = "";
@@ -630,7 +630,7 @@ public class GUI extends JFrame{
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				outputArea.closePdfFile();
-				new File("C:/CSE2311/temp.pdf").delete();
+				new File("files/temp.pdf").delete();
 			}
 		});
 	
