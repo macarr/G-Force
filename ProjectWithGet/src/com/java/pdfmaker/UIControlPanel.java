@@ -19,7 +19,7 @@ import javax.swing.KeyStroke;
 import com.itextpdf.text.pdf.BaseFont;
 
 //Class 'UIController' sets up the components on the right-hand side of the User-Interface
-public class UIController extends JPanel{
+public class UIControlPanel extends JPanel{
 	
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 228385549718664150L;
@@ -46,7 +46,7 @@ public class UIController extends JPanel{
 	private JComboBox<String> spacingCombo;
 	
 	//Reference to the 'UIMiddleLayer'.
-	private final UIMiddleLayer data;
+	private final FileManager data;
 	
 	//'chosenFontName' is an object that holds the selected value from the 'fontNamesCombo' and makes this value accessible from
 	//multiple methods.  
@@ -72,7 +72,7 @@ public class UIController extends JPanel{
 	
 	//The 'UIController' constructor. It takes two parameters- one defining the preferred size for this 'UIConstructor', and the second one
 	//carrying the reference to the 'UIMiddleLayer'.  
-	public UIController(Dimension size, final UIMiddleLayer data){
+	public UIControlPanel(Dimension size, final FileManager data){
 		
 		//Setting the amount of space on the UI that this 'UIController' would occupy.
 		setPreferredSize(new Dimension(size.width, size.height));

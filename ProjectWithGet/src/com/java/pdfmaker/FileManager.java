@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import com.itextpdf.text.Rectangle;
 
 //UIMiddleLayer takes care of the File input/output and miscellaneous tasks.
-public class UIMiddleLayer{
+public class FileManager{
 	//'outputArea' is the 'UIView' where the screen output takes place. 
 	public UIView outputArea;
 	
@@ -37,7 +37,7 @@ public class UIMiddleLayer{
 	int pageHeight=792;
 	
 	//The 'UIMiddleLayer' constructor, which takes as parameter a reference to the UIView where all screen output is rendered.
-	public UIMiddleLayer(UIView outputArea){
+	public FileManager(UIView outputArea){
 		this.outputArea = outputArea;
 	}
 	

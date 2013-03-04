@@ -18,8 +18,8 @@ public class GUI extends JFrame{
 	public GUI(){
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 		final UIView outputArea = new UIView();
-		UIMiddleLayer data = new UIMiddleLayer(outputArea);
-		UIController ui = new UIController(new Dimension(size.width/5, size.height/3), data);
+		FileManager data = new FileManager(outputArea);
+		UIControlPanel ui = new UIControlPanel(new Dimension(size.width/5, size.height/3), data);
 		
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
