@@ -7,7 +7,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 
 public class PdfMaker {
-	private Document document;
+  private Document document;
 	private PdfWriter writer;
 	private ArrayList<ArrayList<String>> contents;
 	
