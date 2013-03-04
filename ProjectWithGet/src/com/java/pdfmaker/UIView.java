@@ -69,16 +69,17 @@ public class UIView extends JPanel{
 	}
 	
 	//This method displays the Ascii file when the user opens it.
-	public void showAsciiFile(ArrayList<ArrayList<String>> contents){
+	public void showAsciiFile(inputParser in){
 		//First making the status-label blank 
 		statusUpdateLabel.setText(" ");
 		asciiDisplay = new JTextArea(100, 100);
 		asciiDisplay.setFont(new Font("MonoSpaced", Font.PLAIN, 15));
-		asciiDisplay.append(contents.get(0).get(0) + "\n");
-		asciiDisplay.append(contents.get(0).get(1) + "\n");
-		asciiDisplay.append(contents.get(0).get(2) + "\n\n");
+		asciiDisplay.append(in.getTitle() + "\n");
+		asciiDisplay.append(in.getSubtitle() + "\n\n");
 		
-		for(int blockNum = 1; blockNum < contents.size(); blockNum++){
+		ArrayList<ArrayList<String>> contents = in.getData();
+		
+		for(int blockNum = 0; blockNum < contents.size(); blockNum++){
 			for(int lineNum = 0; lineNum < contents.get(blockNum).size(); lineNum++){
 				asciiDisplay.append(contents.get(blockNum).get(lineNum) + "\n");
 			}
