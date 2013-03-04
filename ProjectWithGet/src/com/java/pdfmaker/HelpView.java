@@ -13,7 +13,7 @@ public class HelpView extends JFrame{
 
 	public HelpView(){
 		JTextPane helpPane = new JTextPane();
-		helpPane.setText("To convert a file to PDF:\n1) First open an text tablature file by clicking on 'Open Source File'.\n" +
+		helpPane.setText("To convert a file to PDF:\n1) First open an text tablature file by clicking on 'Open .txt File'.\n" +
 						 "2) Select your desired font, font-size, and spacing.\n3) Click on 'Convert to PDF'." +
 					     "\n\nTo make a change to the font settings or spacing:\n1) Choose the desired settings from the drop down menus.\n" +
 					     "2) Click on 'Convert to PDF'.");

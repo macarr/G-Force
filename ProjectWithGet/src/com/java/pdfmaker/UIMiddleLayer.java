@@ -43,13 +43,19 @@ public class UIMiddleLayer{
 	public int loadFile(){
 		JFileChooser fC = new JFileChooser();
 		
-		//'status' is a flag which is returned to the caller of the 'loafFile', based on which, the caller enables some buttons.  
+		//'status' is a flag which is returned to the caller of the 'loadFile', based on which, the caller enables some buttons.  
 		int status = 0;
 		
 		int returnVal = fC.showOpenDialog(outputArea);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			inputPath = fC.getSelectedFile().toString();
+			
+			if(!(inputPath.substring(inputPath.length()-4).equals(".txt"))) {
+				JOptionPane.showMessageDialog(outputArea, ""+inputPath+" is not a .txt file. " +
+						"Please select a file with the .txt extension", "Invalid file", JOptionPane.ERROR_MESSAGE);
+				return status;
+			}
 			
 			//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
 			//the contents of the file.

@@ -81,7 +81,7 @@ public class UIController extends JPanel{
 		this.data = data;
 		
 		//Instantiating the openButton.  
-		openButton = new JButton("Open Source File");
+		openButton = new JButton("Open .txt File");
 		
 		//Setting the ActionListener for 'openButton'. An anonymous inner class is used because this code is used no where else in the program.
 		openButton.addActionListener(new ActionListener(){
