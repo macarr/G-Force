@@ -74,7 +74,7 @@ public class UIMiddleLayer{
 	public void saveFile(final String fontName, final float fontSize, final float spacing) {
 		JFileChooser fc = new JFileChooser();
 		final ArrayList<ArrayList<String>> fileContents = new ArrayList<ArrayList<String>>();
-		
+		fc.setSelectedFile(new File("*.pdf"));
 		int returnVal = fc.showSaveDialog(outputArea);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
