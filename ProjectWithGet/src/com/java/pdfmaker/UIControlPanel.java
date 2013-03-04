@@ -224,7 +224,8 @@ public class UIControlPanel extends JPanel{
 				data.saveFile(chosenFontName, chosenFontSize, chosenSpacing);
 				//Once the file has been saved, the saveButton is set to inactive again because no new change has been made to the file
 				//yet, and therefore nothing new needs to be saved at this point.
-				saveButton.setEnabled(false);
+				//MATT NOTE: perhaps the client wants to be able to save to a different location - I'm commenting this line out for now
+				//saveButton.setEnabled(false);
 
 			}
 		});

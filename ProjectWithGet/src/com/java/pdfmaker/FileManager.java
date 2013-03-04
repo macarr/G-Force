@@ -81,18 +81,18 @@ public class FileManager{
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			destinationPath = fc.getSelectedFile().toString();
+	
+			outputArea.displayStatusUpdate("Saving Pdf File...", false);
+			Thread PdfMakerThread = new Thread(){
+				public void run(){
+					new PdfMaker(in, new Rectangle(pageWidth, pageHeight), destinationPath, fontName, fontSize, spacing).createPDF();
+					interrupt();
+					outputArea.displayStatusUpdate("File Saved.", false);
+				}
+			};
+	
+			PdfMakerThread.start();
 		}
-
-		outputArea.displayStatusUpdate("Saving Pdf File...", false);
-		Thread PdfMakerThread = new Thread(){
-			public void run(){
-				new PdfMaker(in, new Rectangle(pageWidth, pageHeight), destinationPath, fontName, fontSize, spacing).createPDF();
-				interrupt();
-				outputArea.displayStatusUpdate("File Saved.", false);
-			}
-		};
-
-		PdfMakerThread.start();
 	}
 
 	//'convertFile' converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
