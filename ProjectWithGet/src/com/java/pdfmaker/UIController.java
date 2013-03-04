@@ -21,9 +21,7 @@ import com.itextpdf.text.pdf.BaseFont;
 //Class 'UIController' sets up the components on the right-hand side of the User-Interface
 public class UIController extends JPanel{
 	
-	/**
-	 * 
-	 */
+	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 228385549718664150L;
 
 	//To open an ascii file.

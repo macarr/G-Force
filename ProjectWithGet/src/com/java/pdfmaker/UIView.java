@@ -17,9 +17,7 @@ import org.icepdf.ri.common.SwingController;
 //'UIView' is where all the screen output is displayed. 
 public class UIView extends JPanel{
 	
-	/**
-	 * 
-	 */
+	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 3272926203643823070L;
 
 	//JPanel on which both Ascii and PDf documents are displayed.

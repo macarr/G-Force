@@ -12,9 +12,7 @@ import java.io.File;
 import javax.swing.JFrame;
 
 public class GUI extends JFrame{
-	/**
-	 * 
-	 */
+	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 4168022201508007551L;
 
 	public GUI(){

@@ -7,9 +7,8 @@ import javax.swing.JTextPane;
 
 //To show the help-screen.
 public class HelpView extends JFrame{
-	/**
-	 * 
-	 */
+	
+	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = -2695173424680673513L;
 
 	public HelpView(){
