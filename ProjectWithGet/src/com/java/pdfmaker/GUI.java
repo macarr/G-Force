@@ -37,6 +37,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 
 import org.icepdf.ri.common.ComponentKeyBinding;
@@ -365,7 +366,7 @@ class UIMiddleLayer{
 	String inputPath = "";
 	
 	//The temporary output path.
-	String outputPath = "files/temp.pdf";
+	String outputPath = "Temp";
 	
 	//If the user decides to save the file, the file-path would be stored in 'destinationPath'.
 	String destinationPath = "";
@@ -452,14 +453,20 @@ class UIMiddleLayer{
 		outputArea.displayStatusUpdate("Converting to Pdf...", true);
 		
 		//We use a 'Thread' for the conversion.
-		Thread PdfMakerThread = new Thread(){
+		final Thread pdfMakerThread = new Thread(){
 			public void run(){
+				File tempFolder = new File(outputPath);
+				if(!tempFolder.isDirectory()){
+					tempFolder.mkdir();
+				}
 				
 				//The 'createPdf' method of 'PdfMaker' returns true if all the music data fit on the screen. Otherwise it returns false.
-				boolean fullSuccess = new PdfMaker(contents.get(0), fileContents, new Rectangle(pageWidth, pageHeight), outputPath, fontName, fontSize, spacing).createPDF();
+				boolean fullSuccess = new PdfMaker(contents.get(0), fileContents, new Rectangle(pageWidth, pageHeight), outputPath + "/temp.pdf", fontName, fontSize, spacing).createPDF();
+				
+				
 				
 				//The 'showPdf' method of the 'UIView' class takes in the outputPath (The location where the temporary Pdf file is stored).
-				outputArea.showPdfFile(outputPath);
+				outputArea.showPdfFile(outputPath + "/temp.pdf");
 				
 				//Following the conversion, the 'saveButton' is enabled.
 				saveButton.setEnabled(true);
@@ -474,7 +481,7 @@ class UIMiddleLayer{
 			}
 		};
 		
-		PdfMakerThread.start();
+		pdfMakerThread.start();
 	}
 	
 	public ArrayList<ArrayList<String>> inputConverter(String inputPath){
@@ -601,16 +608,54 @@ class UIView extends JPanel{
 	
 	//This method shows the Pdf file using the open-source library 'JPedal', developed by IDR Solutions.
 	public void showPdfFile(String outputPath) {
-		centerPane.removeAll();
+		
 		controller = new SwingController();
 
-		SwingViewBuilder factory = new SwingViewBuilder(controller);
+		SwingViewBuilderPane factory = new SwingViewBuilderPane(controller);
 		JPanel viewerComponentPanel = factory.buildViewerPanel();
 		ComponentKeyBinding.install(controller, viewerComponentPanel);
-		centerPane.add(viewerComponentPanel);
-		displayStatusUpdate(" ", false);
 		controller.openDocument(outputPath);
+		
+		centerPane.removeAll();
+		centerPane.add(viewerComponentPanel);
+		centerPane.revalidate();
+		
+		
+		
+		displayStatusUpdate(" ", false);
+		
 	}
+}
+
+class SwingViewBuilderPane extends SwingViewBuilder{
+	public SwingViewBuilderPane(SwingController controller){
+		super(controller);
+	}
+	
+	public JToggleButton buildSelectToolButton(){
+		return null;
+	}
+	
+	public JToggleButton buildTextSelectToolButton(){
+		return null;
+	}
+	
+	public JToggleButton buildLinkAnnotationToolButton(){
+		return null;
+	}
+	
+	public JButton buildShowHideUtilityPaneButton(){
+		return null;
+	}
+	
+	public JToggleButton buildPanToolButton(){
+		return null;
+	}
+	
+	public JButton buildSaveAsFileButton(){
+		return null;
+	}
+	
 }
 
 public class GUI extends JFrame{
@@ -630,7 +675,7 @@ public class GUI extends JFrame{
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				outputArea.closePdfFile();
-				new File("files/temp.pdf").delete();
+				new File("C:/CSE2311/temp.pdf").delete();
 			}
 		});
 	
