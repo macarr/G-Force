@@ -130,7 +130,7 @@ public class PdfMaker {
 		return fullPdfWritten;
 	}
 
-	public void processUnitLine(){
+	private void processUnitLine(){
 		//the idea is to absorb the characters starting with '|' or '||' and ending right before
 		//the next '|' or '||'s
 		for(charNum = dIndexes.get(curDIndex).index + skip; curDIndex + 1 < dIndexes.size() && charNum < (dIndexes.get(curDIndex+1).index);){
@@ -218,7 +218,7 @@ public class PdfMaker {
 		}
 	}
 
-	public void processMidBlockReInit(){
+	private void processMidBlockReInit(){
 		margin = xPos;
 		yPos = document.top() - yIncrement;
 
@@ -239,7 +239,7 @@ public class PdfMaker {
 		}
 	}
 
-	public void processEndBlockReInit(){
+	private void processEndBlockReInit(){
 		margin = xPos;
 		yPos = document.top() - yIncrement;
 
@@ -256,7 +256,7 @@ public class PdfMaker {
 		curDIndex = 0;
 	}
 
-	public void processInsufficientSpaceReInit(){
+	private void processInsufficientSpaceReInit(){
 		//first draw the 6 horizontal lines at the end of the current block
 		tUB.processEndingHorizontalLines(xPos, yPos);
 		yPos = document.top()-yIncrement;
