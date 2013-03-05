@@ -76,7 +76,7 @@ public class FileManager{
 	public void saveFile(final String fontName, final float fontSize, final float spacing) {
 		JFileChooser fc = new JFileChooser();
 
-		fc.setSelectedFile(new File("*.pdf"));
+		fc.setSelectedFile(new File(in.getTitle() + ".pdf"));
 		int returnVal = fc.showSaveDialog(outputArea);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {

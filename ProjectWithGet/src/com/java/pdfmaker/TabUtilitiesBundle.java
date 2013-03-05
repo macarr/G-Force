@@ -21,13 +21,14 @@ public class TabUtilitiesBundle{
     float fyRote  = (float)(Math.sin(angle)); 
     PdfTemplate angularRect = null;
     
-	public TabUtilitiesBundle(PdfContentByte cB, String fontName, float fontSize, float spacing, Rectangle pageSize){
+    public TabUtilitiesBundle(PdfContentByte cB, String fontName, float fontSize, float spacing, Rectangle pageSize){
 		this.cB = cB;
 		this.fontName = fontName;
 		this.fontSize = fontSize;
 		this.spacing = spacing;
 		this.pageSize = pageSize;
-
+		
+		//Instantiating the font object.
 		try{
 			bF = BaseFont.createFont(fontName,
 					BaseFont.WINANSI, BaseFont.EMBEDDED);
@@ -35,11 +36,12 @@ public class TabUtilitiesBundle{
 		catch(Exception ex){
 			ex.printStackTrace();
 		}
-
+		
+		//Instantiating the PdfTemplate and drawing the tilted square on it.
 		angularRect = cB.createTemplate(fontSize/4f, fontSize/4f);                
 		angularRect.rectangle(0f, 0f, fontSize/4f, fontSize/4f);
 		angularRect.stroke();
-
+		
 	}
 
 	public void setFontSize(float fontSize){
