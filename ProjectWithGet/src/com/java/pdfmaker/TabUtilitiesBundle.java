@@ -6,28 +6,44 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 
+/**
+ * TabUtilitiesBundle --- This class performs output operations to the pdf document associated with it. 
+ */
 public class TabUtilitiesBundle{
-	PdfContentByte cB;
-	BaseFont bF;
-	String fontName;
-	float fontSize;
-	float spacing;
-	Rectangle pageSize;
+	PdfContentByte cB;	//Helps output characters to the pdf document that it belongs to.
+	BaseFont bF;		//The font that is being used in the pdf document.
+	String fontName;  	//The name of the font being used in the pdf document.
+	float fontSize;		//The size of the font being used in the pdf document.
+	float spacing;		//The spacing value.
+	Rectangle pageSize;	//The size of the pdf document.
 
-	float angle   = (float)(-45 * (Math.PI / 180)); 
-    float fxScale = (float)(Math.cos(angle)); 
-    float fyScale = (float)(Math.cos(angle)); 
-    float fxRote  = (float)(-Math.sin(angle)); 
-    float fyRote  = (float)(Math.sin(angle)); 
-    PdfTemplate angularRect = null;
-    
-    public TabUtilitiesBundle(PdfContentByte cB, String fontName, float fontSize, float spacing, Rectangle pageSize){
+	private class TiltedSquare{
+		
+		//variables related to the PdfTemplate.
+		float tiltAngle = (float)(-45 * (Math.PI / 180));
+		float scaleX = (float)(Math.cos(tiltAngle)); 		
+		float scaleY = (float)(Math.cos(tiltAngle)); 
+		float tiltX  = (float)(-Math.sin(tiltAngle)); 
+		float tiltY  = (float)(Math.sin(tiltAngle)); 
+	}
+	    
+	PdfTemplate angularRect = null;		//The tilted square would be drawn onto the following PdfTemplate first.
+	    
+	/**
+	 * 	The TabUtilitiesBundle constructor.
+	 * @param cB The PdfContentByte attached to the pdf document that would be written to.
+	 * @param fontName The font-name that would be used.
+	 * @param fontSize The font-size that would be used.
+	 * @param spacing The spacing value.
+	 * @param pageSize The page-size.
+	 */
+	public TabUtilitiesBundle(PdfContentByte cB, String fontName, float fontSize, float spacing, Rectangle pageSize){
 		this.cB = cB;
 		this.fontName = fontName;
 		this.fontSize = fontSize;
 		this.spacing = spacing;
 		this.pageSize = pageSize;
-		
+			
 		//Instantiating the font object.
 		try{
 			bF = BaseFont.createFont(fontName,
@@ -36,22 +52,38 @@ public class TabUtilitiesBundle{
 		catch(Exception ex){
 			ex.printStackTrace();
 		}
-		
+			
 		//Instantiating the PdfTemplate and drawing the tilted square on it.
 		angularRect = cB.createTemplate(fontSize/4f, fontSize/4f);                
 		angularRect.rectangle(0f, 0f, fontSize/4f, fontSize/4f);
 		angularRect.stroke();
-		
+			
 	}
 
+	/**
+	 * Sets the font-size to the value contained in variable fontSize.
+	 * @param fontSize Value that the size of the font would be set to.
+	 */
 	public void setFontSize(float fontSize){
+		
+		//Calling the setFontAndSize method of class PdfContentByte.
 		cB.setFontAndSize(bF, fontSize);
 	}
 
+	/**
+	 * Sets the width of the line.
+	 * @param lineWidth Value that the width of lines would be set to.
+	 */
 	public void setLineWidth(float lineWidth){
 		cB.setLineWidth(lineWidth);
 	}
 
+	/**
+	 * Writes the header in the pdf document.
+	 * @param in The inputParser object responsible for the input.
+	 * @param docWidth The width of the pdf document.
+	 * @param yPos The vertical position with respect to which the header and sub-header would be written.
+	 */
 	public void processHeader(inputParser in, float docWidth, float yPos){
 		setFontSize(20f);
 		cB.beginText();
@@ -69,7 +101,8 @@ public class TabUtilitiesBundle{
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, number, xPos, yPos, 0);	
 		cB.endText();
 
-		cB.addTemplate(angularRect, fxScale, fxRote, fyScale, fyRote, xPos + bF.getWidthPoint(number, fontSize), yPos + fontSize/2);
+		TiltedSquare tS = new TiltedSquare();
+		cB.addTemplate(angularRect, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos + bF.getWidthPoint(number, fontSize), yPos + fontSize/2);
 		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize) + fontSize/3f, yPos+fontSize/2f);
 		cB.lineTo(xPos + ((number.length()+2)*spacing), yPos+fontSize/2f);
 		cB.stroke();
