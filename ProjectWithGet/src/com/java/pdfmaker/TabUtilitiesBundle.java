@@ -126,7 +126,7 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * Draws the bars that appear within a line. The last set of bars are excluded.
+	 * Draws single bars at the beginning of a unit if the parent block was split in the middle.
 	 * @param numLines The number of lines.
 	 * @param xPos The horizontal position where the output shall be written.
 	 * @param yPos The vertical position where the output shall be written.
@@ -193,22 +193,42 @@ public class TabUtilitiesBundle{
 	 * @param yPos THe vertical position where the output shall be written.
 	 * @param lastNumPos An ArrayList that stores the horizontal position of the last digit on the same line.
 	 */
-	public void processDigit(String number, int lineNum, String line, int charNum, float xPos, float yPos, float [] lastNumPos){
-
+	public void processDigit(String number, int lineNum, String line, int charNum, float xPos, float yPos, float [] lastNumXPos, float [] lastNumYPos, float rightMargin){
 		if(line.charAt(charNum-(number.length()+1)) == 'p'){
-			cB.arc(lastNumPos[lineNum], yPos+fontSize/2, xPos + (number.length()*spacing)/2, yPos+fontSize, 25, 130);
-			cB.setFontAndSize(bF, fontSize/2);
-			cB.beginText();
-			cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(lastNumPos[lineNum] + xPos + (number.length()*spacing)/2)/2, yPos+fontSize+(fontSize/10), 0);	
-			cB.endText();
-			cB.setFontAndSize(bF, fontSize);
+			
+			//If the pull-off can be processed on the same line
+			if(yPos == lastNumYPos[lineNum]){
+				cB.arc(lastNumXPos[lineNum], yPos+fontSize/2, xPos + (number.length()*spacing)/2, yPos+fontSize, 25, 130);
+				cB.setFontAndSize(bF, fontSize/2);
+				cB.beginText();
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(lastNumXPos[lineNum] + xPos + (number.length()*spacing)/2)/2, yPos+fontSize+(fontSize/10), 0);	
+				cB.endText();
+				cB.setFontAndSize(bF, fontSize);
+			}
+			
+			//Else if the digits associated with the pull-off are on two different lines.
+			else{
+				cB.setFontAndSize(bF, fontSize/2);
+				cB.beginText();
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", lastNumXPos[lineNum] + 10, lastNumYPos[lineNum]+fontSize+(fontSize/10), 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", xPos - 10, yPos + fontSize+(fontSize/10), 0); 
+				cB.endText();
+				cB.setFontAndSize(bF, fontSize);
+				
+				cB.arc(lastNumXPos[lineNum], lastNumYPos[lineNum]+fontSize/2, lastNumXPos[lineNum] + 30, lastNumYPos[lineNum]+fontSize, 90, 90);
+				cB.arc(xPos + (number.length()*spacing)/2, yPos+fontSize/2, xPos - 30, yPos+fontSize, 0, 90); 
+				
+			}
 		}
 
+		//Writing the digit.
 		cB.beginText();
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, number, xPos, yPos, 0);	
 		cB.endText();
 
-		lastNumPos[lineNum] = xPos + (number.length()*spacing)/2;
+		//Saving the horizontal and vertical positions of the current digit for any later pull-offs that may appear.
+		lastNumXPos[lineNum] = xPos + (number.length()*spacing)/2;
+		lastNumYPos[lineNum] = yPos;
 
 		//if a very short line is to be inserted between numbers with no gaps in between then 
 		//the if statement needs to be removed
@@ -220,6 +240,11 @@ public class TabUtilitiesBundle{
 
 	}
 
+	/**
+	 * Processes a slide-up
+	 * @param xPos The horizontal position where the slide-up character shall be drawn.
+	 * @param yPos The vertical position where the slide-up character shall be drawn.
+	 */
 	public void slideUp(float xPos, float yPos){
 		cB.beginText();
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "/", xPos+1, yPos+fontSize/6f, 0);	
@@ -228,27 +253,40 @@ public class TabUtilitiesBundle{
 		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
 	}
 
-	public void processRepeat(float xPos, float yPos){
+	/**
+	 * To process the star character in the ascii file.
+	 * @param xPos The horizontal position where the representation of the star character (a filled circle) shall be drawn.
+	 * @param yPos The vertical position where the representation of the star character (a filled circle) shall be drawn.
+	 */
+	public void processStar(float xPos, float yPos){
 		cB.circle(xPos, yPos + fontSize/2f, fontSize/5f);
 		cB.fillStroke();
 		cB.moveTo(xPos + fontSize/5f, yPos+fontSize/2f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
 		cB.stroke();
-
 	}
 
-	//draws the horizontal lines before the block
+	/**
+	 * Draws the horizontal lines before the block.
+	 * @param numLines Number of lines in the block
+	 * @param leftMargin The left margin
+	 * @param yPos The vertical position with respect to which the lines would be drawn.
+	 */
 	public void processBeginningHorizontalLines(int numLines, float leftMargin, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 			if(lineNum < 6){
 				cB.moveTo(0, yPos+fontSize/2);
-				//or document.left()
 				cB.lineTo(leftMargin, yPos+fontSize/2);
 				yPos -= fontSize;
 			}
 		}
 	}
 
+	/**
+	 * Draws the horizontal lines after the block
+	 * @param xPos The horizontal position that marks the beginning of the lines
+	 * @param yPos The vertical position with respect to which the lines would be drawn.
+	 */
 	public void processEndingHorizontalLines(float xPos, float yPos){
 		for(int lineNum = 0; lineNum < 6; lineNum++){
 			if(lineNum < 6){
@@ -260,6 +298,17 @@ public class TabUtilitiesBundle{
 		cB.stroke();
 	}
 
+	/**
+	 * Processes the bars that appear within a block. The last set of bars within a block are not processed by this method.
+	 * @param curDIndex The index used to mark the current unit within the parent block.
+	 * @param lineNum The current line-number.
+	 * @param charNum The current character-number.
+	 * @param barFreq The number of bars within a set of bars.
+	 * @param repIndex The index of the repeat-information, if available.
+	 * @param repNum The number of repeats, if available.
+	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
+	 * @param yPos The vertical position where the bars would be drawn.
+	 */
 	public void processCurrentBars(int curDIndex, int lineNum, int charNum, int barFreq, int repIndex, char repNum, float xPos, float yPos){
 		int barNum = 0;
 		//If the repeat message has to be printed
@@ -299,6 +348,19 @@ public class TabUtilitiesBundle{
 		}
 	}
 
+	/**
+	 * Draws the ending set of bars.
+	 * @param curDIndex curDIndex The index used to mark the current unit within the parent block.
+	 * @param numLines The number of lines in the block.
+	 * @param charNum The current character-number.
+	 * @param barFreq barFreq The number of bars within a set of bars.
+	 * @param repIndex The index of the repeat-information, if available.
+	 * @param repNum The number of repeats, if available.
+	 * @param margin The position at which the first bar from the set would be drawn.
+	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
+	 * @param yPos The vertical position where the bars would be drawn.
+	 * @return
+	 */
 	public float processTrailingBars(int curDIndex, int numLines, int charNum, int barFreq, int repIndex, char repNum, float margin, float xPos, float yPos){
 		int numOfBars = barFreq;
 
@@ -352,6 +414,13 @@ public class TabUtilitiesBundle{
 		return xPos;
 	}
 
+	/**
+	 * Processes input with chord-id.
+	 * @param line The actual line from the unit that the input-digit came from.
+	 * @param charNum The current character-number.
+	 * @param xPos The horizontal position with respect to which the output shall be written.
+	 * @param yPos The vertical position with respect to which the output shall be written.
+	 */
 	public void processChordID(String line, int charNum, float xPos, float yPos){
 		cB.beginText();
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, Character.toString(line.charAt(charNum)), xPos+1, yPos+fontSize/6f, 0);	

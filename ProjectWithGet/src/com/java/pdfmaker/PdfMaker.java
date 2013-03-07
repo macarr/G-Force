@@ -30,7 +30,8 @@ public class PdfMaker {
 
 	private int skip = 0;
 
-	private float []lastNumPos = new float[6];
+	private float []lastNumXPos = new float[6];
+	private float []lastNumYPos = new float[6];
 
 	private TabUtilitiesBundle tUB;
 
@@ -170,7 +171,7 @@ public class PdfMaker {
 						number += line.charAt(charNum);
 					}
 
-					tUB.processDigit(number, lineNum, line, charNum, xPos, yPos, lastNumPos);
+					tUB.processDigit(number, lineNum, line, charNum, xPos, yPos, lastNumXPos, lastNumYPos, document.right());
 					xPos += (number.length())*spacing;
 				}
 
@@ -181,7 +182,7 @@ public class PdfMaker {
 				}
 
 				else if(line.charAt(charNum) == '*') {
-					tUB.processRepeat(xPos, yPos);
+					tUB.processStar(xPos, yPos);
 					xPos += spacing;
 					charNum++;
 				}
