@@ -150,7 +150,7 @@ public class PdfMaker {
 
 					//need to advance charNum one more time to point right after the '>'
 					charNum++;
-					tUB.processInputWithinTriangle(line, number, xPos, yPos);
+					tUB.processInputWithinTriangle(number, xPos, yPos);
 					xPos += (number.length()+2)*spacing;
 				}	
 

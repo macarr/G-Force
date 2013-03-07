@@ -71,7 +71,7 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * Sets the width of the line.
+	 * Sets the width of the lines.
 	 * @param lineWidth Value that the width of lines would be set to.
 	 */
 	public void setLineWidth(float lineWidth){
@@ -87,28 +87,50 @@ public class TabUtilitiesBundle{
 	public void processHeader(inputParser in, float docWidth, float yPos){
 		setFontSize(20f);
 		cB.beginText();
+		
+		//Writing the header.
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_CENTER, in.getTitle(), docWidth/2, yPos, 0);	
 		cB.setFontAndSize(bF, 10f);
+		
+		//Writing the sub-header.
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_CENTER, in.getSubtitle(), docWidth/2, yPos - 15, 0);
 		cB.endText();
 
+		//Setting the font-size back to the user's preference.
 		setFontSize(fontSize);
 	}
 
-	public void processInputWithinTriangle(String line, String number, float xPos, float yPos){
-
+	/**
+	 * Processes input within triangular-brackets and displays it in the proper format on the pdf document.
+	 * @param number The number that appears within triangular brackets.
+	 * @param xPos The horizontal position where the output shall be written.  
+	 * @param yPos The vertical position where the output shall be written.
+	 */
+	public void processInputWithinTriangle(String number, float xPos, float yPos){
 		cB.beginText();
+		//Writing the number.
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, number, xPos, yPos, 0);	
 		cB.endText();
 
+		//The object that stores the data about how to draw the PdfTemplate named angularRect.
 		TiltedSquare tS = new TiltedSquare();
+		
+		//Drawing the Pdftemplate named angularRect on the pdf document.
 		cB.addTemplate(angularRect, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos + bF.getWidthPoint(number, fontSize), yPos + fontSize/2);
+		
+		//Giving a slight touch-up to the look of the document by drawing a short line. 
 		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize) + fontSize/3f, yPos+fontSize/2f);
 		cB.lineTo(xPos + ((number.length()+2)*spacing), yPos+fontSize/2f);
 		cB.stroke();
 
 	}
 
+	/**
+	 * Draws the bars that appear within a line. The last set of bars are excluded.
+	 * @param numLines The number of lines.
+	 * @param xPos The horizontal position where the output shall be written.
+	 * @param yPos The vertical position where the output shall be written.
+	 */
 	public void drawSingleBars(int numLines, float xPos, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 			if(lineNum < 5){
@@ -119,31 +141,59 @@ public class TabUtilitiesBundle{
 		}
 	}
 
+	/**
+	 * Draws a line instead of a dash on the pdf document.
+	 * @param xPos The horizontal position where the line shall be drawn.
+	 * @param yPos The vertical position where the line shall be drawn.
+	 */
 	public void processDashes(float xPos, float yPos){
 		cB.moveTo(xPos, yPos+fontSize/2f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
 		cB.stroke();
 	}
 
+	/**
+	 * Processes a hammer-on that appears in the ascii file.
+	 * @param xPos The horizontal position where the symbol shall be drawn.
+	 * @param yPos The vertical position where the symbol shall be drawn. 
+	 */
 	public void processH(float xPos, float yPos){
 		cB.moveTo(xPos, yPos+fontSize/2f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
+		
+		//Drawing the arc symbolizing the hammer-on.
 		cB.arc(xPos, yPos+fontSize/2, xPos + spacing, yPos+fontSize, 25, 130);
 		cB.stroke();
 		cB.setFontAndSize(bF, fontSize/2);
 		cB.beginText();
+		
+		//Writing the 'h' character on the arc.
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", xPos+(spacing/3f), yPos+fontSize+(fontSize/10), 0);	
 		cB.endText();
 		cB.setFontAndSize(bF, fontSize);
 	}
 
+	/**
+	 * Processes a pull-off that appears in the ascii file.
+	 * @param xPos The horizontal position where the pull-off symbol shall be written.
+	 * @param yPos The vertical position where the pull-off symbol shall be written.
+	 */
 	public void processP(float xPos, float yPos){
 		cB.moveTo(xPos, yPos+fontSize/2f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
 	}
 
+	/**
+	 * Writes a digit to the pdf file
+	 * @param number The digit to be written to the pdf file.
+	 * @param lineNum The lineNum from the unit that the input-digit came from.
+	 * @param line The actual line from the unit that the input-digit came from. 
+	 * @param charNum The character-number from the line that the input-digit came from.
+	 * @param xPos The horizontal position where the output shall be written.
+	 * @param yPos THe vertical position where the output shall be written.
+	 * @param lastNumPos An ArrayList that stores the horizontal position of the last digit on the same line.
+	 */
 	public void processDigit(String number, int lineNum, String line, int charNum, float xPos, float yPos, float [] lastNumPos){
-
 
 		if(line.charAt(charNum-(number.length()+1)) == 'p'){
 			cB.arc(lastNumPos[lineNum], yPos+fontSize/2, xPos + (number.length()*spacing)/2, yPos+fontSize, 25, 130);
