@@ -70,26 +70,51 @@ class inputParser {
 			
 			
 			int line = 1;
+			int blockNum = 1;
+
+			//Instantiate a character counter that will contain 6 line lengths at a time
+			int [] charCount = new int[6];
+			charCount[0] = current.length();
 	 	
 			while(current != null) {
 				//Any empty lines and garbage lines (i.e. lines that don't start with '|' are passed over
 				if(current.equals("") || current.charAt(0) != '|');
 				else if (line > 6)
 				{
-					this.contents.add(block);
+					//Check if all lengths of the block are the same. 
+					if(lengthChecker(charCount))
+					{
+						this.contents.add(block);
+					}
+					else
+					{
+						//TO DO: give error to say that blockNum was not printed since it did 
+						//not have equal number of characters on each line. 
+						System.out.println("The " + blockNum + "th set of lines were not printed due to a mismatching number of characters on each line.");
+					}
+					blockNum++;
 					block = new ArrayList<String>();
-		 			line = 2;
 		 			block.add(current);
+		 			
+					charCount = new int[6];
+					charCount[0] = current.length();
+		 			line = 2;
 				}
 				else{
 		 			block.add(current);
-		 			line++;
+		 			charCount[line - 1] = current.length();
+		 			line++;		 					
 				}
 				current = in.readLine();
 			}
 			
 			if(!block.isEmpty())
-				this.contents.add(block);
+				if(lengthChecker(charCount) && line == 6)
+					this.contents.add(block);
+				else
+					System.out.println("Not proper >:C");
+			//Must throw error that says that the music may not have printed properly, and some or all music was not printed...
+			//Send users to formatting guidelines (make one) saying that music needs to be in sets of 6 lines!
 			
 			in.close();
 		}
@@ -114,4 +139,84 @@ class inputParser {
 	{
 		return this.contents;
 	}
+	
+	private boolean lengthChecker(int[] A)
+	{
+		for(int i = 1; i < 6; i++)
+		{
+			if(A[i] != A[0])
+				return false;
+		}
+		
+		return true;
+	}
+	
+	/*
+	 * Method equalizes the lengths of the array by 
+	 * 1)Finding the largest number of characters between each bar
+	 * 2)Add characters between bars to make them equal
+	 */
+	/*
+	private ArrayList<String> lengthEqualizer (ArrayList<String> block, int blockNum)
+	{
+		ArrayList<String> newBlock = new ArrayList<String>();
+		
+		//Regex consists of a vertical bar and any character following (or not if last character)
+		//This is to account for the case where we have repeat signs, and the first character will have
+		//a number following a bar where the other lines do not..
+		//However, this will be a problem if we have double bars somewhere and not on a line that should...
+		String[] tokens = block.get(0).split("|(.?)");
+		
+		//tokenNum holds the number of bars 
+		int tokenNum = tokens.length;
+		
+		//Array holds the number of characters between each bar
+		int[] max = new int[tokens.length];				
+		for (int i = 0; i < tokens.length; i++)
+		     max[i] = tokens[i].length();
+		
+		String[][] tokenArray = new String[6][tokens.length];
+		tokenArray[0] = tokens;
+		
+		for (int i = 1; i < block.size(); i++)
+		{
+			tokens = block.get(i).split("|(.?)");
+			
+			if(tokens.length != tokenNum)
+			{
+				//MUST throw error that says that this block does not have equal number of bars
+				//Program must ask the user to reformat this bar, and reject this input.
+			}
+			
+			for (int j = 0; j < tokens.length; j++)
+			{
+				if (tokens[j].length() > max[j])
+					max[j] = tokens[j].length();
+			}
+
+		}
+		
+		String line = "";
+		String add = "";
+		
+		for (int j = 0; j < tokenArray.length; j++)
+		{
+			for(int k = 0; k < tokenArray[j].length; k++)
+			{
+				if(tokenArray[j][k].length() != max[k])
+				{
+					for (int i = 1; i <= (max[k] - tokenArray[j][k].length()); i ++)
+						add = add + "-";
+					line  = line + tokenArray[j][k] + add;
+				}
+				else
+					line = line + tokenArray[j][k];
+			}
+			newBlock.add(line);
+		}
+		
+		return newBlock;
+		
+	}
+	*/
 }
