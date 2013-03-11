@@ -18,7 +18,7 @@ public class GUI extends JFrame{
 	private static final long serialVersionUID = 4168022201508007551L;
 	String filePath;
 
-	public GUI(int flag) throws NullPointerException {
+	public GUI() throws NullPointerException {
 		
 		filePath = "assets/splash.jpg";
 		
@@ -116,42 +116,7 @@ public class GUI extends JFrame{
 		
 	}
 	
-	public GUI() {
-		
-		//terminates the program when the window is closed
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		//creates a container for the GUI
-		Container c = getContentPane();
-
-		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-		final UIView outputArea = new UIView();
-		FileManager data = new FileManager(outputArea);
-		UIControlPanel ui = new UIControlPanel(new Dimension(size.width/5, size.height/3), data);
-		
-		//Container c = getContentPane();
-		c.setLayout(new BorderLayout());
-		
-		c.add(outputArea, BorderLayout.CENTER);
-		c.add(ui, BorderLayout.EAST);
-		
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		addWindowListener(new WindowAdapter(){
-			public void windowClosing(WindowEvent e){
-				outputArea.closePdfFile();
-				new File("Temp/temp.pdf").delete();
-			}
-		});
-		
-		setVisible(true);
-	}
-	
 	public static void main(String args[]){
-		try {
-			new GUI(1);
-		} catch (NullPointerException e) {
-			System.err.println("Splash image not found!");
-			new GUI();
-		}
+		new GUI();
 	}
 }
