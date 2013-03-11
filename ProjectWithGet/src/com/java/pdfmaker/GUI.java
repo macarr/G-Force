@@ -29,7 +29,7 @@ public class GUI extends JFrame{
 		//Start SplashScreen
 			
 		//loads the image file into an ImageIcon object
-		ImageIcon img = new ImageIcon(getClass().getResource("assets/splash.jpg"));
+		ImageIcon img = new ImageIcon("/assets/splash.jpg");
 	
 		//removes the title bar
     	setUndecorated(true);
