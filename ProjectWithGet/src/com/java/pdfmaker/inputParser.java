@@ -2,10 +2,7 @@ package com.java.pdfmaker;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.itextpdf.text.DocumentException;
 
 class inputParser {
 

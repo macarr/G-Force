@@ -45,9 +45,6 @@ public class UIControlPanel extends JPanel{
 	//JComboBox holding the spacing values.
 	private JComboBox<String> spacingCombo;
 	
-	//Reference to the 'UIMiddleLayer'.
-	private final FileManager data;
-	
 	//'chosenFontName' is an object that holds the selected value from the 'fontNamesCombo' and makes this value accessible from
 	//multiple methods.  
 	private String chosenFontName;
@@ -76,9 +73,6 @@ public class UIControlPanel extends JPanel{
 		
 		//Setting the amount of space on the UI that this 'UIController' would occupy.
 		setPreferredSize(new Dimension(size.width, size.height));
-		
-		//this.data holds the reference to the 'MiddleLayer' object 
-		this.data = data;
 		
 		//Instantiating the openButton.  
 		openButton = new JButton("Open .txt File");

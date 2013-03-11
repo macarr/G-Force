@@ -1,7 +1,6 @@
 package com.java.pdfmaker;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -22,9 +21,6 @@ public class FileManager{
 
 	//If the user decides to save the file, the file-path would be stored in 'destinationPath'.
 	String destinationPath = "";
-
-	//'The contents of the input file are stored in the ArrayList 'contents'.
-	private ArrayList<ArrayList<String>> contents;
 
 	private inputParser in;
 
@@ -58,10 +54,6 @@ public class FileManager{
 			}
 
 			in = new inputParser(inputPath);
-
-			//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
-			//the contents of the file.
-			contents = in.getData();
 
 			//The Ascii file is displayed on the screen.
 			outputArea.showAsciiFile(in);

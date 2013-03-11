@@ -31,7 +31,6 @@ public class UIView extends JPanel{
 	
 	//The progressbar
 	private JProgressBar progressBar;
-	private JScrollPane scroller;
 	
 	//Class 'SwingController' is from the open-source library 'IcePdf' to enable displaying Pdf documents within java applications. 
 	SwingController controller;

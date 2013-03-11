@@ -1,6 +1,5 @@
 package com.java.pdfmaker;
 
-import java.util.ArrayList;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
