@@ -11,7 +11,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import java.io.File;
+import java.util.Date;
+
+import java.io.*;
 
 import javax.swing.JFrame;
 
@@ -37,7 +39,11 @@ public class TabUIMainWindow extends JFrame{
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				outputArea.closePdfFile();
-				new File("Temp/temp.pdf").delete();
+				String osVersion = System.getProperty("os.name");
+				if(osVersion.startsWith("Windows"))
+					new File("%temp%/temp.pdf").delete();
+				else
+					new File("/tmp/temp.pdf").delete();
 				System.exit(0);
 			}
 		});
@@ -55,6 +61,25 @@ public class TabUIMainWindow extends JFrame{
 	}
 	
 	public static void main(String args[]){
+		String osVersion = System.getProperty("os.name");
+		String errorLog;
+		if(osVersion.startsWith("Windows"))
+			errorLog = "%temp%/T2PDFErr.txt";
+		else
+			errorLog = "/tmp/T2PDFErr.txt";
+		File errorFile = new File(errorLog);
+		try {
+			if(!(errorFile.exists()))
+				errorFile.createNewFile();
+			PrintStream out = new PrintStream(new FileOutputStream(errorLog, true));
+			Date date = new Date();
+			out.println("["+date+"]");
+			System.setErr(out);
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 		new TabUIMainWindow();
 	}
 }
