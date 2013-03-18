@@ -1,7 +1,0 @@
-Well guys, at this point I have to say that the only two people who have been making some serious contribution to this
-project are myself and Joy. Please be reminded that in order to get at least a 'B' from me for the project, each
-individual  has to implement at least one important aspect of this project. Sorry to say this, but taking care of the 
-reports is not really a big help. There still are coding defects in the project which need to be solved. For example, 
-the icepdf is throwing a message on the console which needs to be fixed. I would hope that the team-members who have
-made zero or close to zero contribution would spend some time on finding out how to fix the icepdf problem. Someone also
-needs to make a splash-screen for the application.
