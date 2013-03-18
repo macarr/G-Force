@@ -1,6 +1,6 @@
 package com.java.pdfmaker;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -15,13 +15,14 @@ public class TabFileManager{
 	public TabUIViewPane outputArea;
 
 	//String 'input' holds the input file path, which is initially empty.
-	String inputPath = "";
+	String inputPath;
 
 	//The temporary output path.
-	String outputPath = "Temp";
+	String outputPath;
 
 	//If the user decides to save the file, the file-path would be stored in 'destinationPath'.
 	String destinationPath = "";
+	
 
 	//'The contents of the input file are stored in the ArrayList 'contents'.
 	private ArrayList<ArrayList<String>> contents;
@@ -37,44 +38,66 @@ public class TabFileManager{
 	//The 'UIMiddleLayer' constructor, which takes as parameter a reference to the UIView where all screen output is rendered.
 	public TabFileManager(TabUIViewPane outputArea){
 		this.outputArea = outputArea;
+		String osVersion = System.getProperty("os.name");
+		if(osVersion.startsWith("Windows"))
+			outputPath = "%temp%";
+		else
+			outputPath = "/tmp/";
 	}
 
 	//'loadFile' displays the 'JFileChooser' which allows the user to choose the input file.  
 	public int loadFile(){
-		JFileChooser fC = new JFileChooser();
+		JFileChooser fC;
+		if(inputPath == null)
+			fC = new JFileChooser();
+		else
+			fC = new JFileChooser(inputPath);
 
 		//'status' is a flag which is returned to the caller of the 'loadFile', based on which, the caller enables some buttons.  
 		int status = 0;
 
+		
 		int returnVal = fC.showOpenDialog(outputArea);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			inputPath = fC.getSelectedFile().toString();
-
-			if(!(inputPath.substring(inputPath.length()-4).equals(".txt"))) {
-				JOptionPane.showMessageDialog(outputArea, ""+inputPath+" is not a .txt file. " +
-						"Please select a file with the .txt extension", "Invalid file", JOptionPane.ERROR_MESSAGE);
-				return status;
+			File inputFile = new File(inputPath);
+			try {
+				InputStreamReader r = new InputStreamReader(new FileInputStream(inputFile));
+				if(!(r.getEncoding().equals("US-ASCII") || r.getEncoding().equals("UTF8")))
+				{
+					System.out.println(r.getEncoding());
+					JOptionPane.showMessageDialog(outputArea, ""+inputPath+" is not encoded in a format supported by" +
+							" Tab2PDF. Please select a file encoded with either an ASCII or UTF-8 character set.", 
+							"Invalid file", JOptionPane.ERROR_MESSAGE);
+					return status;
+				}
+	
+				in = new InputParser(inputPath);
+	
+				//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
+				//the contents of the file.
+				contents = in.getData();
+	
+				//The Ascii file is displayed on the screen.
+				outputArea.showAsciiFile(in);
+	
+				//'Status' = 1 means that now it is OK to enable the 'convertButton'.
+				status = 1;
+			} catch(FileNotFoundException e) {
+				e.printStackTrace();
 			}
-
-			in = new InputParser(inputPath);
-
-			//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
-			//the contents of the file.
-			contents = in.getData();
-
-			//The Ascii file is displayed on the screen.
-			outputArea.showAsciiFile(in);
-
-			//'Status' = 1 means that now it is OK to enable the 'convertButton'.
-			status = 1;
 		}
 		return status;
 	}
 
 	//'saveFile' allows the user to save a file by displaying a file-saver dialog-box.
 	public void saveFile(final String fontName, final float fontSize, final float spacing) {
-		JFileChooser fc = new JFileChooser();
+		JFileChooser fc;
+		if(destinationPath == null)
+			fc = new JFileChooser();
+		else
+			fc = new JFileChooser(destinationPath);
 
 		fc.setSelectedFile(new File(in.getTitle() + ".pdf"));
 		int returnVal = fc.showSaveDialog(outputArea);
