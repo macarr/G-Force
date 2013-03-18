@@ -22,7 +22,7 @@ import javax.swing.border.TitledBorder;
 import com.itextpdf.text.pdf.BaseFont;
 
 //Class 'UIController' sets up the components on the right-hand side of the User-Interface
-public class UIControlPanel extends JPanel{
+public class TabUIControlPane extends JPanel{
   
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 228385549718664150L;
@@ -81,7 +81,7 @@ public class UIControlPanel extends JPanel{
 	
 	//The 'UIController' constructor. It takes two parameters- one defining the preferred size for this 'UIConstructor', and the second one
 	//carrying the reference to the 'UIMiddleLayer'.  
-	public UIControlPanel(Dimension size, final TabFileManager data){
+	public TabUIControlPane(Dimension size, final TabFileManager data){
 		
 		//this.data holds the reference to the 'MiddleLayer' object 
 		this.data = data;
@@ -282,12 +282,12 @@ public class UIControlPanel extends JPanel{
 						data.convertFile(chosenFontName, chosenFontSize, chosenSpacing, saveButton, launchPdfButton);
 					}
 					catch(NumberFormatException ex){
-						JOptionPane.showMessageDialog(UIControlPanel.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				
 				else{
-					JOptionPane.showMessageDialog(UIControlPanel.this.getParent(), "Please enter both font-Size and spacing.", "Value Missing", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Please enter both font-Size and spacing.", "Value Missing", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

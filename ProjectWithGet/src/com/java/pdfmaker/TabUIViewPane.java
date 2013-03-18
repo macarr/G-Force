@@ -15,8 +15,8 @@ import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
 
 //'UIView' is where all the screen output is displayed. 
-public class UIView extends JPanel{
-	
+public class TabUIViewPane extends JPanel{
+  
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 3272926203643823070L;
 
@@ -31,12 +31,13 @@ public class UIView extends JPanel{
 	
 	//The progressbar
 	private JProgressBar progressBar;
+	private JScrollPane scroller;
 	
 	//Class 'SwingController' is from the open-source library 'IcePdf' to enable displaying Pdf documents within java applications. 
 	SwingController controller;
 	
 	//UIView constructor.
-	public UIView(){
+	public TabUIViewPane(){
 		setLayout(new BorderLayout());
 		statusUpdateLabel = new JLabel(" ");
 		statusUpdateLabel.setForeground(new Color(98, 0, 255));
@@ -68,7 +69,7 @@ public class UIView extends JPanel{
 	}
 	
 	//This method displays the Ascii file when the user opens it.
-	public void showAsciiFile(inputParser in){
+	public void showAsciiFile(InputParser in){
 		//First making the status-label blank 
 		statusUpdateLabel.setText(" ");
 		asciiDisplay = new JTextArea(100, 100);

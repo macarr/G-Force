@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import com.itextpdf.text.DocumentException;
 
-class InputParser {
+public class InputParser {
 
   String title = "";
 	String subtitle = "";
@@ -18,8 +18,6 @@ class InputParser {
 		
 		ArrayList<String> block = new ArrayList<String>();
 		this.contents = new ArrayList<ArrayList<String>>();
-		Boolean Btitle = true;
-		Boolean Bsubtitle = true;
 		
 		try{
 		
@@ -27,73 +25,91 @@ class InputParser {
 			BufferedReader in = new BufferedReader(new FileReader(inputPath));
 			
 			//Get rid of all preceding empty lines
-			String current = in.readLine();
-			while(current.equals(""))
+			String current = "";
+			
+			current = in.readLine();
+			while(current != null && current.equals("")) {
 				current = in.readLine();
-					
+			}		
+			
 			//Reading in the title.
-			if(current.toLowerCase().startsWith("title"))
+			if(current.toLowerCase().startsWith("title")){
 				this.title = current.substring(6);
-			else if(current.charAt(0) != '|' && current.charAt(0) != '-' )
+			}
+			else if(current.charAt(0) != '|' && current.charAt(0) != '-' ){
 				this.title = current;
-			else{
+			}
+			else if(current.charAt(0) == '|' || current.charAt(0) == '-'){
 				this.title = "Not given";
-				Btitle = false;
-				Bsubtitle = false;
+				block.add(current);
 			}
 					
 			//Get rid of all empty lines, provided a title was provided
-			if(Btitle == true)
-			{
+			current = in.readLine();
+			while(current != null && current.equals("")) {	
 				current = in.readLine();
-				while(current.equals(""))
-					current = in.readLine();
 			}
-					
+			
 			//Reading in the subtitle
-			if(current.toLowerCase().startsWith("subtitle"))
+			if(current.toLowerCase().startsWith("subtitle")){
 				this.subtitle = current.substring(9);
-			else if(current.charAt(0) != '|' && current.charAt(0) != '-' )
+			}
+			else if(current.charAt(0) != '|' && current.charAt(0) != '-' ){
 				this.subtitle = current;
-			else{
+			}
+			else if(current.charAt(0) == '|' || current.charAt(0) == '-'){
 				this.subtitle = "Not given";
-				Bsubtitle = false;
+				block.add(current);
 			}
 			
-			//Get rid of all empty lines, provided a subtitle was provided
-			if(Bsubtitle == true)
-			{
-				current = in.readLine();
-				while(current != null && (current.equals("") || current.charAt(0) != '|' ))
-					current = in.readLine();
-			}
+			current = in.readLine();
 			
-			
-			int line = 1;
-	 	
 			while(current != null) {
 				//Any empty lines and garbage lines (i.e. lines that don't start with '|' are passed over
-				if(current.equals(""));
-				
 				//Use for loop all the way until the next blank line
-				else if (current.matches("((\\|+|[0-9EBGDAebgda-]).+(\\|+|-))(.+)(-|\\|+|[0-9])$")){
-		 			if(line <= 6){
+				if (current.matches("((\\|+|[0-9EBGDAebgda-]).*(\\|+|-))(.+)(-|\\|+|[0-9A-Za-z])$") && current.contains("-")){
+		 			if(block.size() == 0){
+		 				//System.out.println("if: " + current);
 		 				block.add(current);
-		 				line++;
 		 			}
+		 			else if(current.length() == block.get(block.size()-1).length()){
+		 				//System.out.println("else if: " + current);
+		 				block.add(current);
+		 			}
+		 			
 		 			else{
+		 				//System.out.println("else: " + current);
 		 				contents.add(block);
 		 				block = new ArrayList<String>();
-		 				line = 2;
 		 				block.add(current);
 		 			}
 				}
+				
+				else if(current.equals("")){
+					//System.out.println("other else: ");
+					if(block.size() > 0){
+						contents.add(block);
+						block = new ArrayList<String>();
+					}
+	 			}
+				
 				current = in.readLine();
 			}
 			
-			if(!block.isEmpty())
+			if(!block.isEmpty()){
 				this.contents.add(block);
+			}
 			
+			for(int i = 0; i < contents.size(); i++){
+				if(contents.get(i).size() < 6){
+					contents.remove(i);
+				}
+			}
+			
+			if(contents.get(contents.size()-1).size() < 6){
+				contents.remove(contents.size()-1);
+			}
+						
 			in.close();
 		}
 		

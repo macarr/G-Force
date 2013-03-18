@@ -1,6 +1,7 @@
 package com.java.pdfmaker;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -9,9 +10,9 @@ import javax.swing.JOptionPane;
 import com.itextpdf.text.Rectangle;
 
 //UIMiddleLayer takes care of the File input/output and miscellaneous tasks.
-public class FileManager{
-	//'outputArea' is the 'UIView' where the screen output takes place. 
-	public UIView outputArea;
+public class TabFileManager{
+  //'outputArea' is the 'UIView' where the screen output takes place. 
+	public TabUIViewPane outputArea;
 
 	//String 'input' holds the input file path, which is initially empty.
 	String inputPath = "";
@@ -22,7 +23,10 @@ public class FileManager{
 	//If the user decides to save the file, the file-path would be stored in 'destinationPath'.
 	String destinationPath = "";
 
-	private inputParser in;
+	//'The contents of the input file are stored in the ArrayList 'contents'.
+	private ArrayList<ArrayList<String>> contents;
+
+	private InputParser in;
 
 	//Width of the pdf document's pages, which is the standard paper-width.
 	int pageWidth=612;
@@ -31,7 +35,7 @@ public class FileManager{
 	int pageHeight=792;
 
 	//The 'UIMiddleLayer' constructor, which takes as parameter a reference to the UIView where all screen output is rendered.
-	public FileManager(UIView outputArea){
+	public TabFileManager(TabUIViewPane outputArea){
 		this.outputArea = outputArea;
 	}
 
@@ -53,7 +57,11 @@ public class FileManager{
 				return status;
 			}
 
-			in = new inputParser(inputPath);
+			in = new InputParser(inputPath);
+
+			//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
+			//the contents of the file.
+			contents = in.getData();
 
 			//The Ascii file is displayed on the screen.
 			outputArea.showAsciiFile(in);
@@ -77,8 +85,7 @@ public class FileManager{
 			outputArea.displayStatusUpdate("Saving Pdf File...", false);
 			Thread PdfMakerThread = new Thread(){
 				public void run(){
-					new PdfMaker(in, new Rectangle(pageWidth, pageHeight), destinationPath, fontName, fontSize, spacing).createPDF();
-					interrupt();
+					new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), destinationPath, fontName, fontSize, spacing).createPDF();
 					outputArea.displayStatusUpdate("File Saved.", false);
 				}
 			};
@@ -105,9 +112,7 @@ public class FileManager{
 				}
 
 				//The 'createPdf' method of 'PdfMaker' returns true if all the music data fit on the screen. Otherwise it returns false.
-				boolean fullSuccess = new PdfMaker(in, new Rectangle(pageWidth, pageHeight), outputPath + "/temp.pdf", fontName, fontSize, spacing).createPDF();
-
-
+				boolean fullSuccess = new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "/temp.pdf", fontName, fontSize, spacing).createPDF();
 
 				//The 'showPdf' method of the 'UIView' class takes in the outputPath (The location where the temporary Pdf file is stored).
 				outputArea.showPdfFile(outputPath + "/temp.pdf");
@@ -119,9 +124,6 @@ public class FileManager{
 				if(!fullSuccess){
 					JOptionPane.showMessageDialog(outputArea, "Some Music Could not Fully Fit due to the Large Size.", "Message", JOptionPane.INFORMATION_MESSAGE);
 				}
-
-				//Interrupting the 'Thread'.
-				interrupt();
 			}
 		};
 

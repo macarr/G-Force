@@ -9,7 +9,7 @@ import javax.swing.JTextPane;
 
 //The class that helps bind the F1 key to the help-screen.
 public class HelpAction extends AbstractAction{
-	
+  
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 6891593475959299916L;
 

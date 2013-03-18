@@ -7,7 +7,7 @@ import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.SwingViewBuilder;
 
 public class SwingViewBuilderPane extends SwingViewBuilder{
-	public SwingViewBuilderPane(SwingController controller){
+  public SwingViewBuilderPane(SwingController controller){
 		super(controller);
 	}
 	

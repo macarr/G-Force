@@ -1,5 +1,6 @@
 package com.java.pdfmaker;
 
+import java.util.ArrayList;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -9,7 +10,7 @@ import com.itextpdf.text.pdf.PdfTemplate;
  * TabUtilitiesBundle --- This class performs output operations to the pdf document associated with it. 
  */
 public class TabUtilitiesBundle{
-	PdfContentByte cB;	//Helps output characters to the pdf document that it belongs to.
+  PdfContentByte cB;	//Helps output characters to the pdf document that it belongs to.
 	BaseFont bF;		//The font that is being used in the pdf document.
 	String fontName;  	//The name of the font being used in the pdf document.
 	float fontSize;		//The size of the font being used in the pdf document.
@@ -27,6 +28,7 @@ public class TabUtilitiesBundle{
 	}
 	    
 	PdfTemplate angularRect = null;		//The tilted square would be drawn onto the following PdfTemplate first.
+	PdfTemplate slideLine = null;
 	    
 	/**
 	 * 	The TabUtilitiesBundle constructor.
@@ -53,9 +55,14 @@ public class TabUtilitiesBundle{
 		}
 			
 		//Instantiating the PdfTemplate and drawing the tilted square on it.
-		angularRect = cB.createTemplate(fontSize/4f, fontSize/4f);                
-		angularRect.rectangle(0f, 0f, fontSize/4f, fontSize/4f);
+		angularRect = cB.createTemplate(fontSize/2f, fontSize/2f);                
+		angularRect.rectangle(0.5f, 0.5f, fontSize/3f, fontSize/3f);
 		angularRect.stroke();
+		
+		slideLine = cB.createTemplate(spacing*1.2f, 2f);
+		slideLine.moveTo(0f, 1f);
+		slideLine.lineTo(spacing, 1f);
+		slideLine.stroke();
 			
 	}
 
@@ -83,7 +90,7 @@ public class TabUtilitiesBundle{
 	 * @param docWidth The width of the pdf document.
 	 * @param yPos The vertical position with respect to which the header and sub-header would be written.
 	 */
-	public void processHeader(inputParser in, float docWidth, float yPos){
+	public void processHeader(InputParser in, float docWidth, float yPos){
 		setFontSize(20f);
 		cB.beginText();
 		
@@ -115,11 +122,11 @@ public class TabUtilitiesBundle{
 		TiltedSquare tS = new TiltedSquare();
 		
 		//Drawing the Pdftemplate named angularRect on the pdf document.
-		cB.addTemplate(angularRect, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos + bF.getWidthPoint(number, fontSize), yPos + fontSize/2);
+		cB.addTemplate(angularRect, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos + bF.getWidthPoint(number, fontSize), yPos + fontSize/2.5f);
 		
 		//Giving a slight touch-up to the look of the document by drawing a short line. 
-		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize) + fontSize/3f, yPos+fontSize/2f);
-		cB.lineTo(xPos + ((number.length()+2)*spacing), yPos+fontSize/2f);
+		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize) + fontSize/2f, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + ((number.length()+2)*spacing), yPos+fontSize/2.5f);
 		cB.stroke();
 
 	}
@@ -130,14 +137,20 @@ public class TabUtilitiesBundle{
 	 * @param xPos The horizontal position where the output shall be written.
 	 * @param yPos The vertical position where the output shall be written.
 	 */
-	public void drawSingleBars(int numLines, float xPos, float yPos){
+	public void processSingleBars(int numLines, float xPos, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 			if(lineNum < 5){
-				cB.moveTo(xPos, yPos-fontSize/2f);
-				cB.lineTo(xPos, yPos+fontSize/2f);
+				cB.moveTo(xPos, yPos-fontSize/1.5f);
+				cB.lineTo(xPos, yPos+fontSize/2.5f);
+				
+				cB.moveTo(xPos, yPos+fontSize/2.5f);
+				cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
+				
 				yPos -= fontSize;
 			}
 		}
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
 
 	/**
@@ -146,8 +159,8 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the line shall be drawn.
 	 */
 	public void processDashes(float xPos, float yPos){
-		cB.moveTo(xPos, yPos+fontSize/2f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 		cB.stroke();
 	}
 
@@ -157,19 +170,8 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the symbol shall be drawn. 
 	 */
 	public void processH(float xPos, float yPos){
-		cB.moveTo(xPos, yPos+fontSize/2f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
-		
-		//Drawing the arc symbolizing the hammer-on.
-		cB.arc(xPos, yPos+fontSize/2, xPos + spacing, yPos+fontSize, 25, 130);
-		cB.stroke();
-		cB.setFontAndSize(bF, fontSize/2);
-		cB.beginText();
-		
-		//Writing the 'h' character on the arc.
-		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", xPos+(spacing/3f), yPos+fontSize+(fontSize/10), 0);	
-		cB.endText();
-		cB.setFontAndSize(bF, fontSize);
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
 
 	/**
@@ -178,8 +180,13 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the pull-off symbol shall be written.
 	 */
 	public void processP(float xPos, float yPos){
-		cB.moveTo(xPos, yPos+fontSize/2f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
+	}
+	
+	public void processUnknown(float xPos, float yPos){
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
 
 	/**
@@ -197,7 +204,7 @@ public class TabUtilitiesBundle{
 			
 			//If the pull-off can be processed on the same line
 			if(yPos == lastNumYPos[lineNum]){
-				cB.arc(lastNumXPos[lineNum], yPos+fontSize/2, xPos + (number.length()*spacing)/2, yPos+fontSize, 25, 130);
+				cB.arc(lastNumXPos[lineNum], yPos+fontSize/2, xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize, 25, 130);
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
 				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(lastNumXPos[lineNum] + xPos + (number.length()*spacing)/2)/2, yPos+fontSize+(fontSize/10), 0);	
@@ -215,10 +222,38 @@ public class TabUtilitiesBundle{
 				cB.setFontAndSize(bF, fontSize);
 				
 				cB.arc(lastNumXPos[lineNum], lastNumYPos[lineNum]+fontSize/2, lastNumXPos[lineNum] + 30, lastNumYPos[lineNum]+fontSize, 90, 90);
-				cB.arc(xPos + (number.length()*spacing)/2, yPos+fontSize/2, xPos - 30, yPos+fontSize, 0, 90); 
+				cB.arc(xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize/2, xPos - 30, yPos+fontSize, 0, 90); 
 				
 			}
 		}
+		
+		else if(line.charAt(charNum-(number.length()+1)) == 'h'){
+			
+			//If the pull-off can be processed on the same line
+			if(yPos == lastNumYPos[lineNum]){
+				cB.arc(lastNumXPos[lineNum], yPos+fontSize/2, xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize, 25, 130);
+				cB.setFontAndSize(bF, fontSize/2);
+				cB.beginText();
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h",(lastNumXPos[lineNum] + xPos + (number.length()*spacing)/2)/2, yPos+fontSize+(fontSize/10), 0);	
+				cB.endText();
+				cB.setFontAndSize(bF, fontSize);
+			}
+			
+			//Else if the digits associated with the pull-off are on two different lines.
+			else{
+				cB.setFontAndSize(bF, fontSize/2);
+				cB.beginText();
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", lastNumXPos[lineNum] + 10, lastNumYPos[lineNum]+fontSize+(fontSize/10), 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", xPos - 10, yPos + fontSize+(fontSize/10), 0); 
+				cB.endText();
+				cB.setFontAndSize(bF, fontSize);
+				
+				cB.arc(lastNumXPos[lineNum], lastNumYPos[lineNum]+fontSize/2, lastNumXPos[lineNum] + 30, lastNumYPos[lineNum]+fontSize, 90, 90);
+				cB.arc(xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize/2, xPos - 30, yPos+fontSize, 0, 90); 
+				
+			}
+		}
+
 
 		//Writing the digit.
 		cB.beginText();
@@ -226,14 +261,14 @@ public class TabUtilitiesBundle{
 		cB.endText();
 
 		//Saving the horizontal and vertical positions of the current digit for any later pull-offs that may appear.
-		lastNumXPos[lineNum] = xPos + (number.length()*spacing)/2;
+		lastNumXPos[lineNum] = xPos + (bF.getWidthPoint(number, fontSize))/2;
 		lastNumYPos[lineNum] = yPos;
 
 		//if a very short line is to be inserted between numbers with no gaps in between then 
 		//the if statement needs to be removed
 		//if(line.charAt(charNum) != ' '){
-		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize), yPos+fontSize/2f);
-		cB.lineTo(xPos + ((number.length())*spacing), yPos+fontSize/2f);
+		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize), yPos+fontSize/2.5f);
+		cB.lineTo(xPos + ((number.length())*spacing), yPos+fontSize/2.5f);
 		cB.stroke();
 		//}
 
@@ -244,12 +279,16 @@ public class TabUtilitiesBundle{
 	 * @param xPos The horizontal position where the slide-up character shall be drawn.
 	 * @param yPos The vertical position where the slide-up character shall be drawn.
 	 */
-	public void slideUp(float xPos, float yPos){
-		cB.beginText();
-		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "/", xPos+1, yPos+fontSize/6f, 0);	
-		cB.endText();
-		cB.moveTo(xPos, yPos+fontSize/2f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
+	public void processSlideUp(float xPos, float yPos){
+		//cB.beginText();
+		//cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "/", xPos+1, yPos+fontSize/6f, 0);	
+		//cB.endText();
+		TiltedSquare tS = new TiltedSquare();
+		cB.addTemplate(slideLine, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos + spacing/8f, yPos + fontSize/3.5f);
+		
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
+		
 	}
 
 	/**
@@ -258,10 +297,10 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the representation of the star character (a filled circle) shall be drawn.
 	 */
 	public void processStar(float xPos, float yPos){
-		cB.circle(xPos, yPos + fontSize/2f, fontSize/5f);
+		cB.circle(xPos, yPos + fontSize/2.5f, fontSize/5f);
 		cB.fillStroke();
-		cB.moveTo(xPos + fontSize/5f, yPos+fontSize/2f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
+		cB.moveTo(xPos + fontSize/5f, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 		cB.stroke();
 	}
 
@@ -274,8 +313,8 @@ public class TabUtilitiesBundle{
 	public void processBeginningHorizontalLines(int numLines, float leftMargin, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 			if(lineNum < 6){
-				cB.moveTo(0, yPos+fontSize/2);
-				cB.lineTo(leftMargin, yPos+fontSize/2);
+				cB.moveTo(0, yPos+fontSize/2.5f);
+				cB.lineTo(leftMargin, yPos+fontSize/2.5f);
 				yPos -= fontSize;
 			}
 		}
@@ -289,8 +328,8 @@ public class TabUtilitiesBundle{
 	public void processEndingHorizontalLines(float xPos, float yPos){
 		for(int lineNum = 0; lineNum < 6; lineNum++){
 			if(lineNum < 6){
-				cB.moveTo(xPos, yPos+fontSize/2);
-				cB.lineTo(pageSize.getWidth(), yPos+fontSize/2);
+				cB.moveTo(xPos, yPos+fontSize/2.5f);
+				cB.lineTo(pageSize.getWidth(), yPos+fontSize/2.5f);
 				yPos -= fontSize;
 			}
 		}
@@ -308,7 +347,7 @@ public class TabUtilitiesBundle{
 	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
 	 * @param yPos The vertical position where the bars would be drawn.
 	 */
-	public void processCurrentBars(int curDIndex, int lineNum, int charNum, int barFreq, int repIndex, char repNum, float xPos, float yPos){
+	public void processCurrentBars(int curDIndex, int lineNum, int charNum, int barFreq, int repIndex, String repNum, float xPos, float yPos){
 		int barNum = 0;
 		//If the repeat message has to be printed
 		if(lineNum == 0 && barFreq == 2 && repIndex > -1){
@@ -329,8 +368,8 @@ public class TabUtilitiesBundle{
 					cB.setLineWidth(2.0f);
 				}
 
-				cB.moveTo(xPos, yPos-fontSize/2f);
-				cB.lineTo(xPos, yPos+fontSize/2f);
+				cB.moveTo(xPos, yPos-fontSize/1.5f);
+				cB.lineTo(xPos, yPos+fontSize/2.5f);
 				cB.stroke();
 			}
 			barNum++;
@@ -338,8 +377,8 @@ public class TabUtilitiesBundle{
 
 
 			//horizontal lines
-			cB.moveTo(xPos, yPos+fontSize/2);
-			cB.lineTo(xPos + spacing, yPos+fontSize/2);
+			cB.moveTo(xPos, yPos+fontSize/2.5f);
+			cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 			xPos += spacing;
 
 
@@ -360,7 +399,7 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the bars would be drawn.
 	 * @return
 	 */
-	public float processTrailingBars(int curDIndex, int numLines, int charNum, int barFreq, int repIndex, char repNum, float margin, float xPos, float yPos){
+	public float processTrailingBars(int curDIndex, int numLines, int charNum, int barFreq, int repIndex, String repNum, float margin, float xPos, float yPos){
 		int numOfBars = barFreq;
 
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
@@ -387,20 +426,18 @@ public class TabUtilitiesBundle{
 						cB.setLineWidth(2.0f);
 					}
 
-					cB.moveTo(xPos, yPos-fontSize/2);
-					cB.lineTo(xPos, yPos+fontSize/2);
+					cB.moveTo(xPos, yPos-fontSize/1.5f);
+					cB.lineTo(xPos, yPos+fontSize/2.5f);
 					cB.stroke();
 				}
 				barNum++;
 				cB.setLineWidth(0.5f);
 				//horizontal lines;
 				if(barNum < barFreq){
-					cB.moveTo(xPos, yPos+fontSize/2);
-					cB.lineTo(xPos + spacing, yPos+fontSize/2);
+					cB.moveTo(xPos, yPos+fontSize/2.5f);
+					cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 					xPos += spacing;
 				}
-
-				//charNum++;
 			}
 
 			cB.stroke();
@@ -424,7 +461,7 @@ public class TabUtilitiesBundle{
 		cB.beginText();
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, Character.toString(line.charAt(charNum)), xPos+1, yPos+fontSize/6f, 0);	
 		cB.endText();
-		cB.moveTo(xPos, yPos+fontSize/2f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2f);
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
+		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
 }
