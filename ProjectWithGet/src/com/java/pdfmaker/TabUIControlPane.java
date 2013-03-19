@@ -75,8 +75,8 @@ public class TabUIControlPane extends JPanel{
 	private int buttonHeightFactor = 8;
 	
 	//The font-names that shall be used
-	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_OBLIQUE, BaseFont.HELVETICA_BOLD, BaseFont.HELVETICA_BOLDOBLIQUE,
-			BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, BaseFont.TIMES_BOLDITALIC };
+	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_BOLD, BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, 
+								   BaseFont.TIMES_BOLDITALIC };
 	
 	
 	//The 'UIController' constructor. It takes two parameters- one defining the preferred size for this 'UIConstructor', and the second one
