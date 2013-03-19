@@ -61,7 +61,7 @@ public class TabFileManager{
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			inputPath = fC.getSelectedFile().toString();
-			File inputFile = new File(inputPath);
+			/*******************File inputFile = new File(inputPath);
 			try {
 				InputStreamReader r = new InputStreamReader(new FileInputStream(inputFile));
 				if(!(r.getEncoding().equals("US-ASCII") || r.getEncoding().equals("UTF8")))
@@ -71,7 +71,7 @@ public class TabFileManager{
 							" Tab2PDF. Please select a file encoded with either an ASCII or UTF-8 character set.", 
 							"Invalid file", JOptionPane.ERROR_MESSAGE);
 					return status;
-				}
+				}******************/
 	
 				in = new InputParser(inputPath);
 	
@@ -84,9 +84,9 @@ public class TabFileManager{
 	
 				//'Status' = 1 means that now it is OK to enable the 'convertButton'.
 				status = 1;
-			} catch(FileNotFoundException e) {
+			/*******************} catch(FileNotFoundException e) {
 				e.printStackTrace();
-			}
+			}********************/
 		}
 		return status;
 	}
