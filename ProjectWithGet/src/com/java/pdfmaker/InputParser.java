@@ -9,10 +9,9 @@ import com.itextpdf.text.DocumentException;
 
 public class InputParser {
 
-	String title = "";
+  String title = "";
 	String subtitle = "";
 	ArrayList<ArrayList<String>> contents;
-	ArrayList<ArrayList<String>> contentsCopy;
 	
 	public InputParser(String inputPath)
 	{
@@ -68,7 +67,7 @@ public class InputParser {
 			while(current != null) {
 				//Any empty lines and garbage lines (i.e. lines that don't start with '|' are passed over
 				//Use for loop all the way until the next blank line
-				if (current.matches("((\\|+|[EBGDA0-9ebgda-]).*(\\|+|-))(.+)(-|\\|+|[A-Z0-9a-z])$") && current.contains("-")){
+				if (current.matches("((\\|+|[0-9EBGDAebgda-]).*(\\|+|-))(.+)(-|\\|+|[0-9A-Za-z])$") && current.contains("-")){
 		 			if(block.size() == 0){
 		 				//System.out.println("if: " + current);
 		 				block.add(current);
@@ -101,16 +100,15 @@ public class InputParser {
 				this.contents.add(block);
 			}
 			
-			contentsCopy = new ArrayList<ArrayList<String>>();
-			
 			for(int i = 0; i < contents.size(); i++){
-				if(!(contents.get(i).size() < 6) && !(contents.get(i).size() > 6)){
-					contentsCopy.add(contents.get(i));
+				if(contents.get(i).size() < 6){
+					contents.remove(i);
 				}
 			}
 			
-			contents = contentsCopy;
-			contentsCopy = null;
+			if(contents.get(contents.size()-1).size() < 6){
+				contents.remove(contents.size()-1);
+			}
 						
 			in.close();
 		}

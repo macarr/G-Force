@@ -75,7 +75,7 @@ public class TabUIControlPane extends JPanel{
 	private int buttonHeightFactor = 8;
 	
 	//The font-names that shall be used
-	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_BOLD,
+	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_OBLIQUE, BaseFont.HELVETICA_BOLD, BaseFont.HELVETICA_BOLDOBLIQUE,
 			BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, BaseFont.TIMES_BOLDITALIC };
 	
 	
@@ -133,7 +133,7 @@ public class TabUIControlPane extends JPanel{
 	
 	private JPanel initilizeOpenPane(){
 		//Instantiating the openButton.  
-		openButton = new JButton("Open .txt File");
+		openButton = new JButton("Open Input File");
 			
 		//Setting the ActionListener for 'openButton'. An anonymous inner class is used because this code is used no where else in the program.
 		openButton.addActionListener(new ActionListener(){
