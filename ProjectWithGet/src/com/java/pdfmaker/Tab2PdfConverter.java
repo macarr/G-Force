@@ -7,9 +7,10 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 
 public class Tab2PdfConverter {
-  private Document document;
-  private PdfWriter writer;
+	private Document document;
+	private PdfWriter writer;
 	private ArrayList<ArrayList<String>> contents;
+	ArrayList<Integer> starIndexes = null;
 	private InputParser in;
 
 	private float fontSize;
@@ -59,13 +60,19 @@ public class Tab2PdfConverter {
 
 	public boolean createPDF() {
 		boolean fullPdfWritten = true;
+		
 
 		margin = document.left();
 		xPos = margin;
 		yPos = document.top() - yIncrement;
 
 		currBlockInfo = new TabUnitsBlock(contents.get(0), spacing);
- 
+		starIndexes = currBlockInfo.getStarIndexes();
+		
+		//for(int i = 0; i < starIndexes.size(); i++){
+			//System.out.println(starIndexes.size() + " " + starIndexes.get(i).toString());
+		//}
+		
 		//looping through all the blocks in order to extract their contents and create the pdf 
 		//file using the right format.
 		for(blockNum = 0; blockNum < contents.size();){
@@ -114,9 +121,10 @@ public class Tab2PdfConverter {
 				processEndBlockReInit();
 			}
 
-			if(blockNum < contents.size())
+			/*if(blockNum < contents.size()){
 				currBlockInfo = new TabUnitsBlock(contents.get(blockNum), spacing);
-
+				starIndexes = currBlockInfo.getStarIndexes();
+			}*/	
 			//if there is no more space left to join the next block right after the current block, set the margin
 			//to the left end of the document, and yIncrement is increased to set the gap between the current block
 			//and the next.
@@ -138,7 +146,11 @@ public class Tab2PdfConverter {
 		for(charNum = currBlockInfo.getUnitStats(curDIndex).getBeginningBarIndex() + skip; curDIndex + 1 < currBlockInfo.getSize() && charNum < (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarIndex());){
 			if(xPos <= document.right()){
 				if(line.charAt(charNum) == '|' || contents.get(blockNum).get(1).charAt(charNum) == '|'){
-					tUB.processCurrentBars(curDIndex, lineNum, charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), xPos, yPos);
+					tUB.processCurrentBars(starIndexes, lineNum, charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
+							currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), 
+							xPos, yPos);
+					
+					
 					charNum += currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq();
 					xPos += currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq() * spacing;
 				}
@@ -185,6 +197,7 @@ public class Tab2PdfConverter {
 				else if(line.charAt(charNum) == '*') {
 					tUB.processStar(xPos, yPos);
 					xPos += spacing;
+					
 					charNum++;
 				}
 
@@ -235,8 +248,10 @@ public class Tab2PdfConverter {
 
 			//if a block was split from the middle, the trailing '|'s should be printed before the split.
 			//processTrailingBars does that. Also the ending 6 horizontal lines are printed
-			xPos = tUB.processTrailingBars(curDIndex, contents.get(blockNum).size(), charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
-					currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
+			xPos = tUB.processTrailingBars(starIndexes, contents.get(blockNum).size(), charNum, 
+					currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
+					currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), 
+					currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
 
 			yPos = document.top()-yIncrement;
 
@@ -253,7 +268,7 @@ public class Tab2PdfConverter {
 
 		//If all the units of a block have been printed, it is time to call 'processtrailingBars to print
 		//the last set of '|'s.
-		xPos = tUB.processTrailingBars(curDIndex, contents.get(blockNum).size(), charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
+		xPos = tUB.processTrailingBars(starIndexes, contents.get(blockNum).size(), charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
 
 		//margin and yPosition needs to be reset after processTrailingBars returns, so that the next
 		//line that would be output is done at the proper location. 
@@ -261,6 +276,10 @@ public class Tab2PdfConverter {
 		yPos = document.top() - yIncrement;
 
 		blockNum++;
+		if(blockNum < contents.size()){
+			currBlockInfo = new TabUnitsBlock(contents.get(blockNum), spacing);
+			starIndexes = currBlockInfo.getStarIndexes();
+		}	
 		curDIndex = 0;
 	}
 

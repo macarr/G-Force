@@ -10,7 +10,7 @@ import com.itextpdf.text.pdf.PdfTemplate;
  * TabUtilitiesBundle --- This class performs output operations to the pdf document associated with it. 
  */
 public class TabUtilitiesBundle{
-  PdfContentByte cB;	//Helps output characters to the pdf document that it belongs to.
+	PdfContentByte cB;	//Helps output characters to the pdf document that it belongs to.
 	BaseFont bF;		//The font that is being used in the pdf document.
 	String fontName;  	//The name of the font being used in the pdf document.
 	float fontSize;		//The size of the font being used in the pdf document.
@@ -347,8 +347,9 @@ public class TabUtilitiesBundle{
 	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
 	 * @param yPos The vertical position where the bars would be drawn.
 	 */
-	public void processCurrentBars(int curDIndex, int lineNum, int charNum, int barFreq, int repIndex, String repNum, float xPos, float yPos){
+	public void processCurrentBars(ArrayList<Integer> starIndexes, int lineNum, int charNum, int barFreq, int repIndex, String repNum, float xPos, float yPos){
 		int barNum = 0;
+		
 		//If the repeat message has to be printed
 		if(lineNum == 0 && barFreq == 2 && repIndex > -1){
 			String message = "Repeat " + repNum + " times";
@@ -359,13 +360,17 @@ public class TabUtilitiesBundle{
 
 		for(; barNum < barFreq;){
 			if(lineNum < 5){
-				if(barNum == 0 && curDIndex == 0 && barFreq == 2){
+				if(barNum == 0 && barFreq == 2 && starIndexes.size() > 0 && starIndexes.get(0) == charNum + 2){
 					cB.stroke();
 					cB.setLineWidth(2.0f);
+					if(lineNum >= 4)
+						starIndexes.remove(0).toString();
 				}
-				else if(barNum ==1 && curDIndex > 0 && barFreq == 2){
+				else if(barNum ==1 && barFreq == 2 && starIndexes.size() > 0 && starIndexes.get(0) == charNum - 2){
 					cB.stroke();
 					cB.setLineWidth(2.0f);
+					if(lineNum >= 4)
+						starIndexes.remove(0).toString();
 				}
 
 				cB.moveTo(xPos, yPos-fontSize/1.5f);
@@ -399,9 +404,12 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the bars would be drawn.
 	 * @return
 	 */
-	public float processTrailingBars(int curDIndex, int numLines, int charNum, int barFreq, int repIndex, String repNum, float margin, float xPos, float yPos){
+	public float processTrailingBars(ArrayList<Integer> starIndexes, int numLines, int charNum, int barFreq, int repIndex, String repNum, float margin, float xPos, float yPos){
 		int numOfBars = barFreq;
-
+		boolean removeElement = false;
+		int chNum = charNum;
+		//System.out.println(starIndexes.get(0) + " " + charNum);
+		
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 
 			//Writing the repeat message on the Pdf document.
@@ -417,20 +425,34 @@ public class TabUtilitiesBundle{
 			for(int barNum = 0; barNum < numOfBars;){
 				if(lineNum < 5){
 
-					if(barNum == 0 && curDIndex == 0 && barFreq == 2){
+				/*	if(barNum == 0 && barFreq == 2 && starIndexes.get(0) == charNum + 2){
+						System.out.println("bar0");
 						cB.stroke();
 						cB.setLineWidth(2.0f);
-					}
-					else if(barNum ==1 && curDIndex > 0 && barFreq == 2){
+						removeElement = true;
+						//if(lineNum >= 6){
+							//starIndexes.remove(0);
+						//}
+						
+					}*/
+					if(barNum ==1 && barFreq == 2 && starIndexes.size() > 0 && starIndexes.get(0) == chNum - 2){
+						//System.out.println(starIndexes.get(0) + " " + chNum);
 						cB.stroke();
 						cB.setLineWidth(2.0f);
+						removeElement = true;
+						//if(lineNum >= 6){
+						//	starIndexes.remove(0);
+						//}
 					}
 
 					cB.moveTo(xPos, yPos-fontSize/1.5f);
 					cB.lineTo(xPos, yPos+fontSize/2.5f);
 					cB.stroke();
 				}
+				
 				barNum++;
+				chNum++;
+				
 				cB.setLineWidth(0.5f);
 				//horizontal lines;
 				if(barNum < barFreq){
@@ -441,10 +463,18 @@ public class TabUtilitiesBundle{
 			}
 
 			cB.stroke();
+			
 			if(lineNum < 5){
 				xPos = margin;
 				yPos -= fontSize;
 			}
+			
+			chNum = charNum;
+		}
+		
+		if(removeElement){
+			//System.out.println("removed");
+			starIndexes.remove(0);
 		}
 
 		return xPos;
