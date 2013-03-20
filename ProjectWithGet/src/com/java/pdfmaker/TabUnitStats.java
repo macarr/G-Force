@@ -1,7 +1,7 @@
 package com.java.pdfmaker;
 
 public class TabUnitStats{
-  private int beginningBarIndex;
+	private int beginningBarIndex;
 	private int beginningBarFreq;
 	private int repValueIndex;
 	private String repValue;

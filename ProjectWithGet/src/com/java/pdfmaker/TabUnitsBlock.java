@@ -3,14 +3,38 @@ package com.java.pdfmaker;
 import java.util.ArrayList;
 
 public class TabUnitsBlock{
-  ArrayList<TabUnitStats> blockOfTabUnits;
+	ArrayList<TabUnitStats> blockOfTabUnits;
 	ArrayList<String> block;
+	ArrayList<Integer> starIndexes;
 	TabUnitStats unit;
 	
 	public TabUnitsBlock(ArrayList<String> block, float spacing){
 		this.block = block;
 		setUnitStats(block.get(1), spacing);
+		setStarIndexes();
+	}
+	
+	public ArrayList<Integer> getStarIndexes(){
+		ArrayList<Integer> listCopy = new ArrayList<Integer>();
 		
+		for(int i = 0; i < starIndexes.size(); i++){
+			listCopy.add(starIndexes.get(i));
+			//System.out.println(starIndexes.get(i));
+		}
+		
+		return listCopy;
+	}
+	
+	private void setStarIndexes(){
+		starIndexes = new ArrayList<Integer>();
+		
+		String line = block.get(2);
+		
+		for(int i = 0; i < line.length(); i++){
+			if(line.charAt(i) == '*'){
+				starIndexes.add(new Integer(i));
+			}
+		}
 	}
 	
 	public void setUnitStats(String source, float spacing) {
@@ -80,10 +104,6 @@ public class TabUnitsBlock{
 		for(int ind = 0; ind < blockOfTabUnits.size()-1; ind++){
 			blockOfTabUnits.get(ind).setHorizontalSpaceNeeds(((blockOfTabUnits.get(ind + 1).getBeginningBarIndex() + blockOfTabUnits.get(ind + 1).getBeginningBarFreq())-(blockOfTabUnits.get(ind).getBeginningBarIndex()) - numOfBlanks)*spacing);
 		}
-	}
-	
-	public ArrayList<TabUnitStats> getIterator(){
-		return blockOfTabUnits;
 	}
 	
 	public TabUnitStats getUnitStats(int unitIndex){
