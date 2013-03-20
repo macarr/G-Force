@@ -255,7 +255,7 @@ public class TabUIControlPane extends JPanel{
 		convertButton = new JButton("Convert to Pdf");
 		
 		//'convertButton' is initially disabled because no Ascii file has yet been selected.
-		convertButton.setEnabled(false);
+		//convertButton.setEnabled(false);
 		
 		//An anonymous inner class is used as the event-listener for the 'convertButton'. The anonymous class is used because this code
 		//is not being used anywhere else in the program.
@@ -303,7 +303,7 @@ public class TabUIControlPane extends JPanel{
 		saveButton = new JButton("Save Current Pdf");
 		
 		//'saveButton' is initially not active because the file has not yet been converted to Pdf. 
-		saveButton.setEnabled(false);
+		//saveButton.setEnabled(false);
 		
 		//Anonymous inner class is being used as 'ActionListener' because this code is not in use anywhere else in the program
 		saveButton.addActionListener(new ActionListener(){
@@ -375,7 +375,7 @@ public class TabUIControlPane extends JPanel{
 		
 		launchPdfButton = new JButton("View in Acrobat");
 		
-		launchPdfButton.setEnabled(false);
+		//launchPdfButton.setEnabled(false);
 		
 		launchPdfButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
