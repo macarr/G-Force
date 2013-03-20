@@ -40,7 +40,7 @@ public class TabFileManager{
 		this.outputArea = outputArea;
 		String osVersion = System.getProperty("os.name");
 		if(osVersion.startsWith("Windows"))
-			outputPath = System.getenv("TEMP");
+			outputPath = "%temp%";
 		else
 			outputPath = "/tmp/";
 	}
@@ -61,7 +61,7 @@ public class TabFileManager{
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			inputPath = fC.getSelectedFile().toString();
-			File inputFile = new File(inputPath);
+			/*******************File inputFile = new File(inputPath);
 			try {
 				InputStreamReader r = new InputStreamReader(new FileInputStream(inputFile));
 				if(!(r.getEncoding().equals("US-ASCII") || r.getEncoding().equals("UTF8")))
@@ -71,7 +71,7 @@ public class TabFileManager{
 							" Tab2PDF. Please select a file encoded with either an ASCII or UTF-8 character set.", 
 							"Invalid file", JOptionPane.ERROR_MESSAGE);
 					return status;
-				}
+				}******************/
 	
 				in = new InputParser(inputPath);
 	
@@ -84,15 +84,15 @@ public class TabFileManager{
 	
 				//'Status' = 1 means that now it is OK to enable the 'convertButton'.
 				status = 1;
-			} catch(FileNotFoundException e) {
+			/*******************} catch(FileNotFoundException e) {
 				e.printStackTrace();
-			}
+			}********************/
 		}
 		return status;
 	}
 
 	//'saveFile' allows the user to save a file by displaying a file-saver dialog-box.
-	public void saveFile(final String fontName, final float fontSize, final float spacing) {
+	public String saveFile(final String fontName, final float fontSize, final float spacing) {
 		JFileChooser fc;
 		if(destinationPath == null)
 			fc = new JFileChooser();
@@ -115,10 +115,12 @@ public class TabFileManager{
 	
 			PdfMakerThread.start();
 		}
+		
+		return destinationPath;
 	}
 
 	//'convertFile' converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
-	public void convertFile(final String fontName, final float fontSize, final float spacing, final JButton saveButton, final JButton launchPdfButton){
+	public void convertFile(final String fontName, final float fontSize, final float spacing){
 
 		//First making the outputArea's status-label blank 
 		outputArea.displayStatusUpdate(" ", false);
@@ -141,7 +143,6 @@ public class TabFileManager{
 				outputArea.showPdfFile(outputPath + "/temp.pdf");
 
 				//Following the conversion, the 'saveButton' is enabled.
-				saveButton.setEnabled(true);
 
 				//If any of the music could not fit on the page, need to notify the user through a dialog-box.
 				if(!fullSuccess){
