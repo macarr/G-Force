@@ -3,9 +3,11 @@ package com.java.pdfmaker;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -47,6 +49,8 @@ public class TabUIControlPane extends JPanel{
 	
 	//JComboBox holding the spacing values.
 	private JTextField spacingField = null;
+	
+	private String destinationPath;
 	
 	private JPanel fontNamesComboPane;
 	private JPanel fontSizeFieldPane;
@@ -95,37 +99,15 @@ public class TabUIControlPane extends JPanel{
 		setLayout(new BorderLayout());
 		
 		initializeComponents();
-		disableRelevantControls();
 	}
-	
-	private void disableRelevantControls(){
-		//'fontnamesCombo' is initially disabled, because the user has not yet opened any Ascii file.
-		fontNamesCombo.setEnabled(false);
-		fontNamesComboPane.setEnabled(false);
-		
-		//'fontSizesCombo' is initially disabled, because the user has not yet opened any Ascii file.
-		fontSizeField.setEnabled(false);
-		fontSizeFieldPane.setEnabled(false);
-		
-		//'spacingCombo' is initially disabled, because the user has not yet opened any Ascii file.
-		spacingField.setEnabled(false);
-		spacingFieldPane.setEnabled(false);
-		
-		//'convertButton' is initially disabled because no Ascii file has yet been selected.
-		convertButton.setEnabled(false);
-		
-		//'saveButton' is initially not active because the file has not yet been converted to Pdf. 
-		saveButton.setEnabled(false);
-		
-		launchPdfButton.setEnabled(false);
-	}
+
 	
 	public void initializeComponents(){
 		JPanel openPane = initilizeOpenPane();
 		JPanel convertSavePane = initializeConvertSavePane();
 		JPanel controlPane = initializeControlPane(openPane, convertSavePane);		
 		JPanel launchPdfPane = initializeLaunchPdfPane();
-		JPanel finalControlPane = initializeFinalControlPane("Press F1 on Keyboard for Help.", controlPane, launchPdfPane); 		
+		JPanel finalControlPane = initializeFinalControlPane("", controlPane, launchPdfPane); 		
 				
 		
 		add(finalControlPane, BorderLayout.NORTH);
@@ -187,8 +169,12 @@ public class TabUIControlPane extends JPanel{
 	private JPanel initializeConvertSavePane(){
 		
 		//'fontNamesCombo' is a JComboBox that holds the font-names that the user can select from.
-		if(fontNamesCombo == null)
+		if(fontNamesCombo == null){
 			fontNamesCombo = new JComboBox<String>(fontNames);
+			
+			//'fontnamesCombo' is initially disabled, because the user has not yet opened any Ascii file.
+			fontNamesCombo.setEnabled(false);
+		}
 		
 		//setting the default item of 'fontNamesCombo'
 		fontNamesCombo.setSelectedIndex(0);
@@ -206,13 +192,16 @@ public class TabUIControlPane extends JPanel{
 		
 		//Setting a titled border for the 'fontNameCombo'.
 		fontNamesComboBorder = new TitledBorder("Select Font from Below:");
-		fontNamesComboBorder.setTitleColor(new Color(190, 190, 190));
+		fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
 		fontNamesComboPane.setBorder(fontNamesComboBorder);
 		
 		//'fontSizesCombo' is a JComboBox that holds the font-sizes that the user can select from.
-		if(fontSizeField == null)
+		if(fontSizeField == null){
 			fontSizeField = new JTextField();
 		
+			//'fontSizeField' is initially disabled, because the user has not yet opened any Ascii file.
+			fontSizeField.setEnabled(false);
+		}
 		
 		fontSizeField.setEditable(true);
 		fontSizeField.setBackground(new Color(238, 238, 238));
@@ -230,13 +219,17 @@ public class TabUIControlPane extends JPanel{
 		
 		//Setting a titled border for the 'fontSizeFieldPane'.
 		fontSizeFieldBorder = new TitledBorder("Enter Font Size Below:");
-		fontSizeFieldBorder.setTitleColor(new Color(190, 190, 190));
+		fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
 		fontSizeFieldPane.setBorder(fontSizeFieldBorder);
 		
 		//'spacingCombo' is a JComboBox that holds the spacing values that the user can select from. The user can input numbers into
 		//'spacingCombo'.
-		if(spacingField == null)
+		if(spacingField == null){
 			spacingField = new JTextField();
+			
+			//'spacingField' is initially disabled, because the user has not yet opened any Ascii file.
+			spacingField.setEnabled(false);
+		}
 		
 		spacingField.setEditable(true);
 		spacingField.setBackground(new Color(238, 238, 238));
@@ -254,14 +247,15 @@ public class TabUIControlPane extends JPanel{
 		
 		//Setting a titled border for the 'spacingCombo'.
 		spacingFieldBorder = new TitledBorder("Enter Spacing Below:");
-		spacingFieldBorder.setTitleColor(new Color(190, 190, 190));
+		spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
 		spacingFieldPane.setBorder(spacingFieldBorder);
 
 		
 		//'convertButton' sets in motion the steps needed to convert the selected Ascii file to a proper Pdf file.
 		convertButton = new JButton("Convert to Pdf");
 		
-	
+		//'convertButton' is initially disabled because no Ascii file has yet been selected.
+		convertButton.setEnabled(false);
 		
 		//An anonymous inner class is used as the event-listener for the 'convertButton'. The anonymous class is used because this code
 		//is not being used anywhere else in the program.
@@ -279,7 +273,8 @@ public class TabUIControlPane extends JPanel{
 				
 						//Invoking the 'data.convertButton', which creates the 'PdfMaker' object, and invokes its 'createPdf' method. The saveButton
 						//and launchButton are passed as references so that they be made active after the current file has been converted to Pdf.
-						data.convertFile(chosenFontName, chosenFontSize, chosenSpacing, saveButton, launchPdfButton);
+						data.convertFile(chosenFontName, chosenFontSize, chosenSpacing);
+						saveButton.setEnabled(true);
 					}
 					catch(NumberFormatException ex){
 						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
@@ -307,18 +302,20 @@ public class TabUIControlPane extends JPanel{
 		//'saveButton' sets in motion the steps needed to save a file.
 		saveButton = new JButton("Save Current Pdf");
 		
-	
+		//'saveButton' is initially not active because the file has not yet been converted to Pdf. 
+		saveButton.setEnabled(false);
 		
 		//Anonymous inner class is being used as 'ActionListener' because this code is not in use anywhere else in the program
 		saveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				
 				//'data.saveFile' is being invoked to save the current Pdf file.
-				data.saveFile(chosenFontName, chosenFontSize, chosenSpacing);
+				destinationPath = data.saveFile(chosenFontName, chosenFontSize, chosenSpacing);
 				//Once the file has been saved, the saveButton is set to inactive again because no new change has been made to the file
 				//yet, and therefore nothing new needs to be saved at this point.
 				//MATT NOTE: perhaps the client wants to be able to save to a different location - I'm commenting this line out for now
 				//saveButton.setEnabled(false);
+				launchPdfButton.setEnabled(true);
 
 			}
 		});
@@ -378,6 +375,19 @@ public class TabUIControlPane extends JPanel{
 		
 		launchPdfButton = new JButton("View in Acrobat");
 		
+		launchPdfButton.setEnabled(false);
+		
+		launchPdfButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				try{
+					Desktop.getDesktop().open(new File(destinationPath));
+				}
+				catch(Exception ex){
+					ex.printStackTrace();
+				}
+			}
+		});
+				
 		
 		launchPdfButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		launchPdfButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
@@ -407,15 +417,8 @@ public class TabUIControlPane extends JPanel{
 
 	
 	private JPanel initializeFinalControlPane(String message, JPanel controlPane, JPanel launchPdfPane){
-		JLabel helpTip = new JLabel(message);
-		helpTip.setForeground(new Color(150, 0, 165));
-		helpTip.setHorizontalAlignment(JLabel.CENTER);
-		helpTip.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
-
-				
 		//Declaring 'finalControlPane' and adding the three JPanel objects.
 		JPanel finalControlPane = new JPanel(new BorderLayout());
-		finalControlPane.add(helpTip, BorderLayout.NORTH);
 		finalControlPane.add(controlPane, BorderLayout.CENTER);
 		finalControlPane.add(launchPdfPane, BorderLayout.SOUTH);
 

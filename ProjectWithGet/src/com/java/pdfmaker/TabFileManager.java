@@ -92,7 +92,7 @@ public class TabFileManager{
 	}
 
 	//'saveFile' allows the user to save a file by displaying a file-saver dialog-box.
-	public void saveFile(final String fontName, final float fontSize, final float spacing) {
+	public String saveFile(final String fontName, final float fontSize, final float spacing) {
 		JFileChooser fc;
 		if(destinationPath == null)
 			fc = new JFileChooser();
@@ -115,10 +115,12 @@ public class TabFileManager{
 	
 			PdfMakerThread.start();
 		}
+		
+		return destinationPath;
 	}
 
 	//'convertFile' converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
-	public void convertFile(final String fontName, final float fontSize, final float spacing, final JButton saveButton, final JButton launchPdfButton){
+	public void convertFile(final String fontName, final float fontSize, final float spacing){
 
 		//First making the outputArea's status-label blank 
 		outputArea.displayStatusUpdate(" ", false);
@@ -141,7 +143,6 @@ public class TabFileManager{
 				outputArea.showPdfFile(outputPath + "/temp.pdf");
 
 				//Following the conversion, the 'saveButton' is enabled.
-				saveButton.setEnabled(true);
 
 				//If any of the music could not fit on the page, need to notify the user through a dialog-box.
 				if(!fullSuccess){
