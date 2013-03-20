@@ -41,7 +41,7 @@ public class TabUIMainWindow extends JFrame{
 				outputArea.closePdfFile();
 				String osVersion = System.getProperty("os.name");
 				if(osVersion.startsWith("Windows"))
-					new File("%temp%/temp.pdf").delete();
+					new File(""+System.getenv("TEMP")+"/temp.pdf").delete();
 				else
 					new File("/tmp/temp.pdf").delete();
 				System.exit(0);
@@ -64,7 +64,7 @@ public class TabUIMainWindow extends JFrame{
 		String osVersion = System.getProperty("os.name");
 		String errorLog;
 		if(osVersion.startsWith("Windows"))
-			errorLog = "%temp%/T2PDFErr.txt";
+			errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
 		else
 			errorLog = "/tmp/T2PDFErr.txt";
 		File errorFile = new File(errorLog);

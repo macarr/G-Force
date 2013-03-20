@@ -40,7 +40,7 @@ public class TabFileManager{
 		this.outputArea = outputArea;
 		String osVersion = System.getProperty("os.name");
 		if(osVersion.startsWith("Windows"))
-			outputPath = "%temp%";
+			outputPath = System.getenv("TEMP");
 		else
 			outputPath = "/tmp/";
 	}
