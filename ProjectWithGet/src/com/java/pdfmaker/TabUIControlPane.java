@@ -52,6 +52,8 @@ public class TabUIControlPane extends JPanel{
 	
 	private String destinationPath;
 	
+	private boolean needToDisable = true;
+	
 	private JPanel fontNamesComboPane;
 	private JPanel fontSizeFieldPane;
 	private JPanel spacingFieldPane;
@@ -136,7 +138,7 @@ public class TabUIControlPane extends JPanel{
 					fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
 					spacingField.setEnabled(true);
 					spacingField.setBackground(new Color(255, 255, 255));
-					spacingField.setText("10");
+					spacingField.setText("5");
 					spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
 					convertButton.setEnabled(true);
 				}
@@ -259,9 +261,12 @@ public class TabUIControlPane extends JPanel{
 		//'convertButton' sets in motion the steps needed to convert the selected Ascii file to a proper Pdf file.
 		convertButton = new JButton("Convert to Pdf");
 		
-		//'convertButton' is initially disabled because no Ascii file has yet been selected.
-		//convertButton.setEnabled(false);
-		
+		//if(needToDisable){
+			//System.out.println("hehe");
+			//'convertButton' is initially disabled because no Ascii file has yet been selected.
+			convertButton.setEnabled(false);
+			//needToDisable = false;
+	//	}
 		//An anonymous inner class is used as the event-listener for the 'convertButton'. The anonymous class is used because this code
 		//is not being used anywhere else in the program.
 		convertButton.addActionListener(new ActionListener(){
@@ -303,7 +308,6 @@ public class TabUIControlPane extends JPanel{
 		convertButton.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
 		convertButton.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
 		convertButton.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		convertButton.setEnabled(false);
 		
 		//'saveButton' sets in motion the steps needed to save a file.
 		saveButton = new JButton("Save Current Pdf");

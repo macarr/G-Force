@@ -119,4 +119,12 @@ public class TabUnitsBlock{
 	public int getSize(){
 		return blockOfTabUnits.size();
 	}
+	
+	public int getBlockSize(){
+		return block.size();
+	}
+	
+	public String get(int lineNum){
+		return block.get(lineNum);
+	}
 }
