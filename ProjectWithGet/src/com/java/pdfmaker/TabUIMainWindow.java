@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 public class TabUIMainWindow extends JFrame{
   // serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 4168022201508007551L;
+	private boolean windowIsShown = false;
 
 	public TabUIMainWindow(){
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
@@ -50,10 +51,12 @@ public class TabUIMainWindow extends JFrame{
 		
 		addComponentListener(new ComponentAdapter(){  
 			public void componentResized(ComponentEvent e) {
-				conPan.resize(new Dimension(getSize().width/5, getSize().height/3));
-				conPan.revalidate();
-				conPan.repaint();
+					conPan.resize(new Dimension(getSize().width/5, getSize().height/3));
+					conPan.revalidate();
+					conPan.repaint();
+				
 		    }
+			
 		});
 		
 		//setMinimumSize(new Dimension(size.width - 250, size.height - 200));

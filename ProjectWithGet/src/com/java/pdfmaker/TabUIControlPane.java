@@ -28,9 +28,321 @@ public class TabUIControlPane extends JPanel{
   
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 228385549718664150L;
+	
+	private class OpenPane extends JPanel{
+		//To open an ascii file.
+		private JButton openButton = null;
+			
+		public OpenPane(int buttonWidth, int buttonHeight){
+			
+			
+			//Instantiating the openButton.  
+			openButton = new JButton("Open Input File");
+				
+			//Setting the ActionListener for 'openButton'. An anonymous inner class is used because this code is used no where else in the program.
+			openButton.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+						
+					//The method 'data.loadFile()' is invoked to display the 'JFileChooser', so that the user can choose her/his desired file.
+					int status  = data.loadFile();
+					
+					//If status is '1', it means that the user chose a file, and therefore, the following GUI components need to be made active.
+					//A '0' means that the user decided to close the 'JFileChooser' without selecting any file. 
+					if(status == 1){
+						fontNamesCombo.setEnabled(true);
+						fontNamesCombo.setBackground(new Color(255, 255, 255));
+						fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
+						fontSizeField.setEnabled(true);
+						fontSizeField.setBackground(new Color(255, 255, 255));
+						fontSizeField.setText("10");
+						fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
+						spacingField.setEnabled(true);
+						spacingField.setBackground(new Color(255, 255, 255));
+						spacingField.setText("5");
+						spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
+						convertButton.setEnabled(true);
+						convertDisabled = false;
+					}
+				}
+			});
+				
+			//Setting  the horizontal alignment of the 'openButton'.
+			openButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+				
+			//When 'openButton' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
+			openButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
+			openButton.getActionMap().put("showHelp", new HelpAction());
+				
+			//Setting the maximum and minimum size of the 'openButton'.
+			openButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+			openButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+			openButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+		
+			//The 'BoxLayout' helps us in rendering a properly sized 'openButton' for this particular application.
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+						
+			//Adding some extra space before the 'openButton'.
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+				
+			//Adding the 'openButton' to the 'openPane'.
+			add(openButton);
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+		}
+	}
+	
+	private class ConvertSavePane extends JPanel{
+		
+		public ConvertSavePane(int buttonWidth, int buttonHeight){
+			
+			//'fontNamesCombo' is a JComboBox that holds the font-names that the user can select from.
+			if(fontNamesCombo == null){
+				fontNamesCombo = new JComboBox<String>(fontNames);
+				
+				
+			}
+			
+			//setting the default item of 'fontNamesCombo'
+			fontNamesCombo.setSelectedIndex(0);
+			
+			fontNamesCombo.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+			fontNamesCombo.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+			fontNamesCombo.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			
+			fontNamesComboPane = new JPanel(new BorderLayout());
+			fontNamesComboPane.add(fontNamesCombo);
+			
+			//Setting a titled border for the 'fontNameCombo'.
+			fontNamesComboBorder = new TitledBorder("Select Font from Below:");
+			fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
+			fontNamesComboPane.setBorder(fontNamesComboBorder);
+			
+			//'fontSizesCombo' is a JComboBox that holds the font-sizes that the user can select from.
+			if(fontSizeField == null){
+				fontSizeField = new JTextField();
+			}
+			
+			fontSizeField.setEditable(true);
+			fontSizeField.setBackground(new Color(238, 238, 238));
+		
+			//When 'fontSizesCombo' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
+			fontSizeField.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
+			fontSizeField.getActionMap().put("showHelp", new HelpAction());
+			
+			fontSizeField.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+			fontSizeField.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+			fontSizeField.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			
+			fontSizeFieldPane = new JPanel(new BorderLayout());
+			fontSizeFieldPane.add(fontSizeField);
+			
+			//Setting a titled border for the 'fontSizeFieldPane'.
+			fontSizeFieldBorder = new TitledBorder("Enter Font Size Below:");
+			fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
+			fontSizeFieldPane.setBorder(fontSizeFieldBorder);
+			
+			//'spacingCombo' is a JComboBox that holds the spacing values that the user can select from. The user can input numbers into
+			//'spacingCombo'.
+			if(spacingField == null){
+				spacingField = new JTextField();
+				
+			}
+			
+			spacingField.setEditable(true);
+			spacingField.setBackground(new Color(238, 238, 238));
+		
+			//When 'spacingSizesCombo' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
+			spacingField.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
+			spacingField.getActionMap().put("showHelp", new HelpAction());
 
-	//To open an ascii file.
-	private JButton openButton = null;
+			spacingField.setMaximumSize(new Dimension(new Dimension(buttonWidth, buttonHeight)));
+			spacingField.setMinimumSize(new Dimension(new Dimension(buttonWidth, buttonHeight)));
+			spacingField.setPreferredSize(new Dimension(new Dimension(buttonWidth, buttonHeight)));
+			
+			spacingFieldPane = new JPanel(new BorderLayout());
+			spacingFieldPane.add(spacingField);
+			
+			//Setting a titled border for the 'spacingCombo'.
+			spacingFieldBorder = new TitledBorder("Enter Spacing Below:");
+			spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
+			spacingFieldPane.setBorder(spacingFieldBorder);
+
+			
+			//'convertButton' sets in motion the steps needed to convert the selected Ascii file to a proper Pdf file.
+			convertButton = new JButton("Convert to Pdf");
+			
+			//An anonymous inner class is used as the event-listener for the 'convertButton'. The anonymous class is used because this code
+			//is not being used anywhere else in the program.
+			convertButton.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					
+					//extracting the chosen values from the three 'JComboBoxes' and assigning them to the corresponding value-holder. These
+					//value-holders make the job of extracting the 'JComboBox' values easier later on in the program.
+					chosenFontName = fontNamesCombo.getSelectedItem().toString();
+					
+					if(!fontSizeField.getText().equals("") && !spacingField.getText().equals("")){
+						try{
+							chosenFontSize = Float.parseFloat(fontSizeField.getText());
+							chosenSpacing = Float.parseFloat(spacingField.getText());
+					
+							//Invoking the 'data.convertButton', which creates the 'PdfMaker' object, and invokes its 'createPdf' method. The saveButton
+							//and launchButton are passed as references so that they be made active after the current file has been converted to Pdf.
+							data.convertFile(chosenFontName, chosenFontSize, chosenSpacing);
+							saveButton.setEnabled(true);
+							saveDisabled = false;
+						}
+						catch(NumberFormatException ex){
+							JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+					
+					else{
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Please enter both font-Size and spacing.", "Value Missing", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+		
+			//Setting the horizontal alignment of the convertButton.
+			convertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+			
+			//When 'convertButton' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
+			convertButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
+			convertButton.getActionMap().put("showHelp", new HelpAction());
+			
+			//Setting the maximum and minimum size of the 'convertButton.
+			convertButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+			convertButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+			convertButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			
+			//'saveButton' sets in motion the steps needed to save a file.
+			saveButton = new JButton("Save Current Pdf");
+			
+			if(saveDisabled){
+				saveButton.setEnabled(false);
+			}
+			
+			//'saveButton' is initially not active because the file has not yet been converted to Pdf. 
+			//saveButton.setEnabled(false);
+			
+			//Anonymous inner class is being used as 'ActionListener' because this code is not in use anywhere else in the program
+			saveButton.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					
+					//'data.saveFile' is being invoked to save the current Pdf file.
+					destinationPath = data.saveFile(chosenFontName, chosenFontSize, chosenSpacing);
+					//Once the file has been saved, the saveButton is set to inactive again because no new change has been made to the file
+					//yet, and therefore nothing new needs to be saved at this point.
+					//MATT NOTE: perhaps the client wants to be able to save to a different location - I'm commenting this line out for now
+					//saveButton.setEnabled(false);
+					if(destinationPath != ""){
+						launchPdfButton.setEnabled(true);
+					}
+
+				}
+			});
+			
+			//Setting the horizontal alignment of the 'saveButton'
+			saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+			saveButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
+			saveButton.getActionMap().put("showHelp", new HelpAction());
+			
+			saveButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+			saveButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+			saveButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			
+			//convertSavePane would hold the drop-down menus, the 'convertButton', and the 'saveButton'.
+			//JPanel convertSavePane = new JPanel();
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			
+			add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
+			
+			//Adding the items to the 'convertSavePane'.
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			add(fontNamesComboPane);
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			add(fontSizeFieldPane);
+			add(Box.createRigidArea(new Dimension(0,buttonHeight/2)));
+			add(spacingFieldPane);
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			add(convertButton);
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			add(saveButton);
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			
+			//Setting up a top border for converSavePane that is 4 pixels wide.
+			setBorder(BorderFactory.createMatteBorder(4, 0, 0, 0, new Color(156, 138, 165)));
+			
+		}
+		
+		public void disableComponents(){
+			//'fontnamesCombo' is initially disabled, because the user has not yet opened any Ascii file.
+			fontNamesCombo.setEnabled(false);
+			
+			//'fontSizeField' is initially disabled, because the user has not yet opened any Ascii file.
+			fontSizeField.setEnabled(false);
+			
+			//'spacingField' is initially disabled, because the user has not yet opened any Ascii file.
+			spacingField.setEnabled(false);
+			
+			convertButton.setEnabled(false);
+		}
+	}
+	
+	private class ControlPane extends JPanel{
+		public ControlPane(JPanel openPane, JPanel convertSavePane){
+			//Setting the layout of controlPane to BoxLayout.
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+						
+			//Adding the 'openPane and 'convertSavePane' to 'controlPane'.
+			add(openPane);
+			add(convertSavePane);
+						
+			//Setting up a bottom border for the 'controlPane' that is 4 pixels wide.
+			setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
+		}
+	}
+	
+	private class LaunchPdfPane extends JPanel{
+		public LaunchPdfPane(int buttonWidth, int buttonHeight){
+			
+			//Initializing the 'launchPdfButton'.
+			launchPdfButton = new JButton("View in Acrobat");
+				
+			if(pdfLaunchDisabled){
+				launchPdfButton.setEnabled(false);
+			}
+				
+			launchPdfButton.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					try{
+						Desktop.getDesktop().open(new File(destinationPath));
+					}
+					catch(Exception ex){
+						ex.printStackTrace();
+					}
+				}
+			});
+						
+				
+			launchPdfButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+			launchPdfButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
+			launchPdfButton.getActionMap().put("showHelp", new HelpAction());
+						
+			launchPdfButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
+			launchPdfButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
+			launchPdfButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+								
+			//Setting the layout of the 'launchPdfPane' to BoxLayout.
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+								
+			//Adding some extra space before and after the 'launchPdfButton'.
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			add(launchPdfButton);
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+						
+			//Adding bottom border for launchPdfpane. 
+			setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
+		}
+	}
 	
 	//To convert to Pdf.
 	private JButton convertButton = null;
@@ -52,7 +364,9 @@ public class TabUIControlPane extends JPanel{
 	
 	private String destinationPath;
 	
-	private boolean needToDisable = true;
+	private boolean convertDisabled = true;
+	private boolean saveDisabled = true;
+	private boolean pdfLaunchDisabled = true;
 	
 	private JPanel fontNamesComboPane;
 	private JPanel fontSizeFieldPane;
@@ -105,323 +419,18 @@ public class TabUIControlPane extends JPanel{
 
 	
 	public void initializeComponents(){
-		JPanel openPane = initilizeOpenPane();
-		JPanel convertSavePane = initializeConvertSavePane();
-		JPanel controlPane = initializeControlPane(openPane, convertSavePane);		
-		JPanel launchPdfPane = initializeLaunchPdfPane();
+		OpenPane openPane = new OpenPane(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor);
+		
+		ConvertSavePane convertSavePane = new ConvertSavePane(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor);
+		if(convertDisabled){
+			convertSavePane.disableComponents();
+		}
+		
+		JPanel controlPane = new ControlPane(openPane, convertSavePane);		
+		JPanel launchPdfPane = new LaunchPdfPane(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor);
 		JPanel finalControlPane = initializeFinalControlPane("", controlPane, launchPdfPane); 		
 				
-		
 		add(finalControlPane, BorderLayout.NORTH);
-	}
-	
-	private JPanel initilizeOpenPane(){
-		//Instantiating the openButton.  
-		openButton = new JButton("Open Input File");
-			
-		//Setting the ActionListener for 'openButton'. An anonymous inner class is used because this code is used no where else in the program.
-		openButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-					
-				//The method 'data.loadFile()' is invoked to display the 'JFileChooser', so that the user can choose her/his desired file.
-				int status  = data.loadFile();
-				
-				//If status is '1', it means that the user chose a file, and therefore, the following GUI components need to be made active.
-				//A '0' means that the user decided to close the 'JFileChooser' without selecting any file. 
-				if(status == 1){
-					fontNamesCombo.setEnabled(true);
-					fontNamesCombo.setBackground(new Color(255, 255, 255));
-					fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
-					fontSizeField.setEnabled(true);
-					fontSizeField.setBackground(new Color(255, 255, 255));
-					fontSizeField.setText("10");
-					fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
-					spacingField.setEnabled(true);
-					spacingField.setBackground(new Color(255, 255, 255));
-					spacingField.setText("5");
-					spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
-					convertButton.setEnabled(true);
-				}
-			}
-		});
-			
-		//Setting  the horizontal alignment of the 'openButton'.
-		openButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-			
-		//When 'openButton' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
-		openButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		openButton.getActionMap().put("showHelp", new HelpAction());
-			
-		//Setting the maximum and minimum size of the 'openButton'.
-		openButton.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		openButton.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		openButton.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-			
-		//'openPane' holds the 'openButton'.
-		JPanel openPane = new JPanel();
-			
-		//The 'BoxLayout' helps us in rendering a properly sized 'openButton' for this particular application.
-		openPane.setLayout(new BoxLayout(openPane, BoxLayout.Y_AXIS));
-					
-		//Adding some extra space before the 'openButton'.
-		openPane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-			
-		//Adding the 'openButton' to the 'openPane'.
-		openPane.add(openButton);
-		openPane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-
-		return openPane;
-	}
-	
-	private JPanel initializeConvertSavePane(){
-		
-		//'fontNamesCombo' is a JComboBox that holds the font-names that the user can select from.
-		if(fontNamesCombo == null){
-			fontNamesCombo = new JComboBox<String>(fontNames);
-			
-			//'fontnamesCombo' is initially disabled, because the user has not yet opened any Ascii file.
-			fontNamesCombo.setEnabled(false);
-		}
-		
-		//setting the default item of 'fontNamesCombo'
-		fontNamesCombo.setSelectedIndex(0);
-		
-		//When 'fontNamesCombo' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
-		fontNamesCombo.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		fontNamesCombo.getActionMap().put("showHelp", new HelpAction());
-		
-		fontNamesCombo.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		fontNamesCombo.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		fontNamesCombo.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		
-		fontNamesComboPane = new JPanel(new BorderLayout());
-		fontNamesComboPane.add(fontNamesCombo);
-		
-		//Setting a titled border for the 'fontNameCombo'.
-		fontNamesComboBorder = new TitledBorder("Select Font from Below:");
-		fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
-		fontNamesComboPane.setBorder(fontNamesComboBorder);
-		
-		//'fontSizesCombo' is a JComboBox that holds the font-sizes that the user can select from.
-		if(fontSizeField == null){
-			fontSizeField = new JTextField();
-		
-			//'fontSizeField' is initially disabled, because the user has not yet opened any Ascii file.
-			fontSizeField.setEnabled(false);
-		}
-		
-		fontSizeField.setEditable(true);
-		fontSizeField.setBackground(new Color(238, 238, 238));
-	
-		//When 'fontSizesCombo' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
-		fontSizeField.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		fontSizeField.getActionMap().put("showHelp", new HelpAction());
-		
-		fontSizeField.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		fontSizeField.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		fontSizeField.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		
-		fontSizeFieldPane = new JPanel(new BorderLayout());
-		fontSizeFieldPane.add(fontSizeField);
-		
-		//Setting a titled border for the 'fontSizeFieldPane'.
-		fontSizeFieldBorder = new TitledBorder("Enter Font Size Below:");
-		fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
-		fontSizeFieldPane.setBorder(fontSizeFieldBorder);
-		
-		//'spacingCombo' is a JComboBox that holds the spacing values that the user can select from. The user can input numbers into
-		//'spacingCombo'.
-		if(spacingField == null){
-			spacingField = new JTextField();
-			
-			//'spacingField' is initially disabled, because the user has not yet opened any Ascii file.
-			spacingField.setEnabled(false);
-		}
-		
-		spacingField.setEditable(true);
-		spacingField.setBackground(new Color(238, 238, 238));
-	
-		//When 'spacingSizesCombo' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
-		spacingField.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		spacingField.getActionMap().put("showHelp", new HelpAction());
-
-		spacingField.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		spacingField.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		spacingField.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		
-		spacingFieldPane = new JPanel(new BorderLayout());
-		spacingFieldPane.add(spacingField);
-		
-		//Setting a titled border for the 'spacingCombo'.
-		spacingFieldBorder = new TitledBorder("Enter Spacing Below:");
-		spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
-		spacingFieldPane.setBorder(spacingFieldBorder);
-
-		
-		//'convertButton' sets in motion the steps needed to convert the selected Ascii file to a proper Pdf file.
-		convertButton = new JButton("Convert to Pdf");
-		
-		//if(needToDisable){
-			//System.out.println("hehe");
-			//'convertButton' is initially disabled because no Ascii file has yet been selected.
-			convertButton.setEnabled(false);
-			//needToDisable = false;
-	//	}
-		//An anonymous inner class is used as the event-listener for the 'convertButton'. The anonymous class is used because this code
-		//is not being used anywhere else in the program.
-		convertButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
-				//extracting the chosen values from the three 'JComboBoxes' and assigning them to the corresponding value-holder. These
-				//value-holders make the job of extracting the 'JComboBox' values easier later on in the program.
-				chosenFontName = fontNamesCombo.getSelectedItem().toString();
-				
-				if(!fontSizeField.getText().equals("") && !spacingField.getText().equals("")){
-					try{
-						chosenFontSize = Float.parseFloat(fontSizeField.getText());
-						chosenSpacing = Float.parseFloat(spacingField.getText());
-				
-						//Invoking the 'data.convertButton', which creates the 'PdfMaker' object, and invokes its 'createPdf' method. The saveButton
-						//and launchButton are passed as references so that they be made active after the current file has been converted to Pdf.
-						data.convertFile(chosenFontName, chosenFontSize, chosenSpacing);
-						saveButton.setEnabled(true);
-					}
-					catch(NumberFormatException ex){
-						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-				
-				else{
-					JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Please enter both font-Size and spacing.", "Value Missing", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-	
-		//Setting the horizontal alignment of the convertButton.
-		convertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		//When 'convertButton' has focus, pressing the 'F1' key would trigger a 'HelpAction', which would display the 'HelpView'.
-		convertButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		convertButton.getActionMap().put("showHelp", new HelpAction());
-		
-		//Setting the maximum and minimum size of the 'convertButton.
-		convertButton.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		convertButton.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		convertButton.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		
-		//'saveButton' sets in motion the steps needed to save a file.
-		saveButton = new JButton("Save Current Pdf");
-		
-		//'saveButton' is initially not active because the file has not yet been converted to Pdf. 
-		saveButton.setEnabled(false);
-		
-		//Anonymous inner class is being used as 'ActionListener' because this code is not in use anywhere else in the program
-		saveButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
-				//'data.saveFile' is being invoked to save the current Pdf file.
-				destinationPath = data.saveFile(chosenFontName, chosenFontSize, chosenSpacing);
-				//Once the file has been saved, the saveButton is set to inactive again because no new change has been made to the file
-				//yet, and therefore nothing new needs to be saved at this point.
-				//MATT NOTE: perhaps the client wants to be able to save to a different location - I'm commenting this line out for now
-				//saveButton.setEnabled(false);
-				launchPdfButton.setEnabled(true);
-
-			}
-		});
-		
-		//Setting the horizontal alignment of the 'saveButton'
-		saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		saveButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		saveButton.getActionMap().put("showHelp", new HelpAction());
-		
-		saveButton.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		saveButton.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		saveButton.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		
-		//convertSavePane would hold the drop-down menus, the 'convertButton', and the 'saveButton'.
-		JPanel convertSavePane = new JPanel();
-		convertSavePane.setLayout(new BoxLayout(convertSavePane, BoxLayout.Y_AXIS));
-		
-		convertSavePane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-		
-		//Adding the items to the 'convertSavePane'.
-		convertSavePane.add(fontNamesComboPane);
-		convertSavePane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-		convertSavePane.add(fontSizeFieldPane);
-		convertSavePane.add(Box.createRigidArea(new Dimension(0,getPreferredSize().height/12)));
-		convertSavePane.add(spacingFieldPane);
-		convertSavePane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-		convertSavePane.add(convertButton);
-		convertSavePane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-		convertSavePane.add(saveButton);
-		convertSavePane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-		
-		//Setting up a top border for converSavePane that is 4 pixels wide.
-		convertSavePane.setBorder(BorderFactory.createMatteBorder(4, 0, 0, 0, new Color(156, 138, 165)));
-	
-		return convertSavePane;
-	}
-	
-	private JPanel initializeControlPane(JPanel openPane, JPanel convertSavePane){
-		//'controlPane' holds the JPanels 'openPane' 'launchPdfPane', and 'convertSavePane'.
-		JPanel controlPane = new JPanel();
-				
-		//Setting the layout of controlPane to BoxLayout.
-		controlPane.setLayout(new BoxLayout(controlPane, BoxLayout.Y_AXIS));
-				
-		//Adding the 'openPane and 'convertSavePane' to 'controlPane'.
-		controlPane.add(openPane);
-		controlPane.add(convertSavePane);
-				
-		//Setting up a bottom border for the 'controlPane' that is 4 pixels wide.
-		controlPane.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
-
-		return controlPane;
-	}
-	
-	private JPanel initializeLaunchPdfPane(){
-		//Initializing the 'launchPdfButton'.
-		
-		launchPdfButton = new JButton("View in Acrobat");
-		
-		//launchPdfButton.setEnabled(false);
-		
-		launchPdfButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				try{
-					Desktop.getDesktop().open(new File(destinationPath));
-				}
-				catch(Exception ex){
-					ex.printStackTrace();
-				}
-			}
-		});
-				
-		
-		launchPdfButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		launchPdfButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
-		launchPdfButton.getActionMap().put("showHelp", new HelpAction());
-				
-		launchPdfButton.setMaximumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		launchPdfButton.setMinimumSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-		launchPdfButton.setPreferredSize(new Dimension(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor));
-						
-		//'launchPdfPane' holds the 'launchPdfButton'.
-		JPanel launchPdfPane = new JPanel(); 
-						
-		//Setting the layout of the 'launchPdfPane' to BoxLayout.
-		launchPdfPane.setLayout(new BoxLayout(launchPdfPane, BoxLayout.Y_AXIS));
-						
-		//Adding some extra space before and after the 'launchPdfButton'.
-		launchPdfPane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-		launchPdfPane.add(launchPdfButton);
-		launchPdfPane.add(Box.createRigidArea(new Dimension(0, getPreferredSize().height/12)));
-				
-		//Adding bottom border for launchPdfpane. 
-		launchPdfPane.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
-
-		return launchPdfPane;
 	}
 	
 
