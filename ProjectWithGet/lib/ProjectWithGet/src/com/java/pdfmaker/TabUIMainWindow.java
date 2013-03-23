@@ -27,7 +27,7 @@ public class TabUIMainWindow extends JFrame{
 		final TabUIViewPane outputArea = new TabUIViewPane();
 		TabFileManager data = new TabFileManager(outputArea);
 		
-		setSize(new Dimension(size.width - 250, size.height - 200));
+		setSize(new Dimension(size.width - 300, size.height - 200));
 		final TabUIControlPane conPan = new TabUIControlPane(new Dimension(getSize().width/5, getSize().height/3), data);
 		
 		Container c = getContentPane();

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,7 +34,7 @@ public class TabUIControlPane extends JPanel{
 		//To open an ascii file.
 		private JButton openButton = null;
 			
-		public OpenPane(int buttonWidth, int buttonHeight){
+		public OpenPane(int buttonHeight){
 			
 			
 			//Instantiating the openButton.  
@@ -73,10 +74,14 @@ public class TabUIControlPane extends JPanel{
 			openButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
 			openButton.getActionMap().put("showHelp", new HelpAction());
 				
+			 FontMetrics metrics = getFontMetrics(getFont()); 
+			 int buttonWidth = metrics.stringWidth("Save Current Pdf");
+			 int height = metrics.getHeight();
+			
 			//Setting the maximum and minimum size of the 'openButton'.
-			openButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-			openButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-			openButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			openButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			openButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			openButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
 		
 			//The 'BoxLayout' helps us in rendering a properly sized 'openButton' for this particular application.
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -92,7 +97,10 @@ public class TabUIControlPane extends JPanel{
 	
 	private class ConvertSavePane extends JPanel{
 		
-		public ConvertSavePane(int buttonWidth, int buttonHeight){
+		public ConvertSavePane(int buttonHeight){
+			
+			FontMetrics metrics = getFontMetrics(getFont()); 
+			int buttonWidth = metrics.stringWidth("Save Current Pdf");
 			
 			//'fontNamesCombo' is a JComboBox that holds the font-names that the user can select from.
 			if(fontNamesCombo == null){
@@ -165,7 +173,6 @@ public class TabUIControlPane extends JPanel{
 			spacingFieldBorder = new TitledBorder("Enter Spacing Below:");
 			spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
 			spacingFieldPane.setBorder(spacingFieldBorder);
-
 			
 			//'convertButton' sets in motion the steps needed to convert the selected Ascii file to a proper Pdf file.
 			convertButton = new JButton("Convert to Pdf");
@@ -208,10 +215,11 @@ public class TabUIControlPane extends JPanel{
 			convertButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
 			convertButton.getActionMap().put("showHelp", new HelpAction());
 			
+			
 			//Setting the maximum and minimum size of the 'convertButton.
-			convertButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-			convertButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-			convertButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			convertButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			convertButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			convertButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
 			
 			//'saveButton' sets in motion the steps needed to save a file.
 			saveButton = new JButton("Save Current Pdf");
@@ -245,9 +253,9 @@ public class TabUIControlPane extends JPanel{
 			saveButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
 			saveButton.getActionMap().put("showHelp", new HelpAction());
 			
-			saveButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-			saveButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-			saveButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			saveButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			saveButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			saveButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
 			
 			//convertSavePane would hold the drop-down menus, the 'convertButton', and the 'saveButton'.
 			//JPanel convertSavePane = new JPanel();
@@ -302,7 +310,10 @@ public class TabUIControlPane extends JPanel{
 	}
 	
 	private class LaunchPdfPane extends JPanel{
-		public LaunchPdfPane(int buttonWidth, int buttonHeight){
+		public LaunchPdfPane(int buttonHeight){
+			
+			FontMetrics metrics = getFontMetrics(getFont()); 
+			int buttonWidth = metrics.stringWidth("Save Current Pdf");
 			
 			//Initializing the 'launchPdfButton'.
 			launchPdfButton = new JButton("View in Acrobat");
@@ -313,11 +324,12 @@ public class TabUIControlPane extends JPanel{
 				
 			launchPdfButton.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
-					try{
-						Desktop.getDesktop().open(new File(destinationPath));
+					try {
+						File myFile = new File(destinationPath);
+					    Desktop.getDesktop().open(myFile);
 					}
-					catch(Exception ex){
-						ex.printStackTrace();
+					catch (Exception ex) {
+					        // no application registered for PDFs
 					}
 				}
 			});
@@ -327,9 +339,9 @@ public class TabUIControlPane extends JPanel{
 			launchPdfButton.getInputMap().put(KeyStroke.getKeyStroke("F1"), "showHelp");
 			launchPdfButton.getActionMap().put("showHelp", new HelpAction());
 						
-			launchPdfButton.setMaximumSize(new Dimension(buttonWidth, buttonHeight));
-			launchPdfButton.setMinimumSize(new Dimension(buttonWidth, buttonHeight));
-			launchPdfButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+			launchPdfButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			launchPdfButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
+			launchPdfButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
 								
 			//Setting the layout of the 'launchPdfPane' to BoxLayout.
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -419,25 +431,30 @@ public class TabUIControlPane extends JPanel{
 
 	
 	public void initializeComponents(){
-		OpenPane openPane = new OpenPane(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor);
+		OpenPane openPane = new OpenPane(getPreferredSize().height/buttonHeightFactor);
 		
-		ConvertSavePane convertSavePane = new ConvertSavePane(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor);
+		ConvertSavePane convertSavePane = new ConvertSavePane(getPreferredSize().height/buttonHeightFactor);
 		if(convertDisabled){
 			convertSavePane.disableComponents();
 		}
 		
 		JPanel controlPane = new ControlPane(openPane, convertSavePane);		
-		JPanel launchPdfPane = new LaunchPdfPane(getPreferredSize().width - buttonWidthVaccum, getPreferredSize().height/buttonHeightFactor);
-		JPanel finalControlPane = initializeFinalControlPane("", controlPane, launchPdfPane); 		
+		JPanel launchPdfPane = new LaunchPdfPane(getPreferredSize().height/buttonHeightFactor);
+		JPanel finalControlPane = initializeFinalControlPane(controlPane, launchPdfPane); 		
 				
 		add(finalControlPane, BorderLayout.NORTH);
 	}
 	
 
 	
-	private JPanel initializeFinalControlPane(String message, JPanel controlPane, JPanel launchPdfPane){
+	private JPanel initializeFinalControlPane(JPanel controlPane, JPanel launchPdfPane){
 		//Declaring 'finalControlPane' and adding the three JPanel objects.
 		JPanel finalControlPane = new JPanel(new BorderLayout());
+		
+		JLabel filler = new JLabel(" ");
+		filler.setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
+		
+		finalControlPane.add(filler, BorderLayout.NORTH);
 		finalControlPane.add(controlPane, BorderLayout.CENTER);
 		finalControlPane.add(launchPdfPane, BorderLayout.SOUTH);
 
@@ -445,9 +462,12 @@ public class TabUIControlPane extends JPanel{
 	}
 	
 	public void resize(Dimension size){
-		setMaximumSize(size);
-		setMinimumSize(size);
-		setPreferredSize(size);
+		FontMetrics metrics = getFontMetrics(getFont()); 
+		int buttonWidth = metrics.stringWidth("Select Font from Below");
+		
+		setMaximumSize(new Dimension(buttonWidth + 40 + size.width/3, size.height));
+		setMinimumSize(new Dimension(buttonWidth + 40 + size.width/3, size.height));
+		setPreferredSize(new Dimension(buttonWidth + 40 + size.width/3, size.height));
 		
 		removeAll();
 		initializeComponents();

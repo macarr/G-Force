@@ -164,7 +164,7 @@ public class Tab2PdfConverter {
 				else if(line.charAt(charNum) == '<'){
 					String number = "";
 					charNum++;
-					for(; line.charAt(charNum) != '>'; charNum++) {
+					for(; Character.isDigit(line.charAt(charNum)); charNum++) {
 						number += line.charAt(charNum);
 					}
 
