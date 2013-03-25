@@ -51,7 +51,7 @@ public class TabUIMainWindow extends JFrame{
 		
 		addComponentListener(new ComponentAdapter(){  
 			public void componentResized(ComponentEvent e) {
-					conPan.resize(new Dimension(getSize().width/5, getSize().height/3));
+					conPan.resizeComponent(new Dimension(getSize().width/5, getSize().height/3));
 					conPan.revalidate();
 					conPan.repaint();
 				
@@ -59,7 +59,7 @@ public class TabUIMainWindow extends JFrame{
 			
 		});
 		
-		//setMinimumSize(new Dimension(size.width - 250, size.height - 200));
+		setMinimumSize(new Dimension(193, size.height - 400));
 		setVisible(true);
 	}
 	

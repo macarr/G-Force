@@ -150,7 +150,9 @@ public class Tab2PdfConverter {
 		//the idea is to absorb the characters starting with '|' or '||' and ending right before
 		//the next '|' or '||'s
 		for(charNum = currBlockInfo.getUnitStats(curDIndex).getBeginningBarIndex() + skip; curDIndex + 1 < currBlockInfo.getSize() && charNum < (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarIndex());){
-			if(xPos <= document.right()){
+			if(xPos + (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq()*spacing) -
+			(currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq() - 1) * 5 <= document.right()){
+				
 				if(line.charAt(charNum) == '|' || contents.get(blockNum).get(1).charAt(charNum) == '|'){
 					tUB.processCurrentBars(starIndexes, lineNum, charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
 							currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), 
@@ -158,7 +160,7 @@ public class Tab2PdfConverter {
 					
 					
 					charNum += currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq();
-					xPos += currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq() * spacing;
+					xPos += ((currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq()-1) * 5) + spacing;
 				}
 
 				else if(line.charAt(charNum) == '<'){
@@ -226,8 +228,8 @@ public class Tab2PdfConverter {
 
 				else if(line.charAt(charNum) == 'e' || line.charAt(charNum) == 'B' || line.charAt(charNum) == 'G' || line.charAt(charNum) == 'D'
 				|| line.charAt(charNum) == 'A' || line.charAt(charNum) == 'E'){
-					tUB.processChordID(line, charNum, xPos, yPos);
-					xPos += spacing;
+					//tUB.processChordID(line, charNum, xPos, yPos);
+					//xPos += spacing;
 					charNum++;
 				}
 				else{

@@ -102,7 +102,10 @@ public class TabUnitsBlock{
 		}
 
 		for(int ind = 0; ind < blockOfTabUnits.size()-1; ind++){
-			blockOfTabUnits.get(ind).setHorizontalSpaceNeeds(((blockOfTabUnits.get(ind + 1).getBeginningBarIndex() + blockOfTabUnits.get(ind + 1).getBeginningBarFreq())-(blockOfTabUnits.get(ind).getBeginningBarIndex()) - numOfBlanks)*spacing);
+			blockOfTabUnits.get(ind).setHorizontalSpaceNeeds((((blockOfTabUnits.get(ind + 1).getBeginningBarIndex() + 
+					blockOfTabUnits.get(ind + 1).getBeginningBarFreq())-(blockOfTabUnits.get(ind).getBeginningBarIndex()) - 
+					numOfBlanks)*spacing) - ((blockOfTabUnits.get(ind).getBeginningBarFreq()-1)*5) - 
+					((blockOfTabUnits.get(ind+1).getBeginningBarFreq()-1)*5));
 		}
 	}
 	

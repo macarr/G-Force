@@ -59,9 +59,9 @@ public class TabUtilitiesBundle{
 		angularRect.rectangle(0.5f, 0.5f, fontSize/3f, fontSize/3f);
 		angularRect.stroke();
 		
-		slideLine = cB.createTemplate(spacing*1.2f, 2f);
-		slideLine.moveTo(0f, 1f);
-		slideLine.lineTo(spacing, 1f);
+		slideLine = cB.createTemplate(fontSize/2.0f, fontSize/2.0f);
+		slideLine.moveTo(0f, fontSize/4.0f);
+		slideLine.lineTo(fontSize/2.0f, fontSize/4.0f);
 		slideLine.stroke();
 			
 	}
@@ -200,6 +200,7 @@ public class TabUtilitiesBundle{
 	 * @param lastNumPos An ArrayList that stores the horizontal position of the last digit on the same line.
 	 */
 	public void processDigit(String number, int lineNum, String line, int charNum, float xPos, float yPos, float [] lastNumXPos, float [] lastNumYPos, float rightMargin){
+		
 		if(line.charAt(charNum-(number.length()+1)) == 'p'){
 			
 			//If the pull-off can be processed on the same line
@@ -284,7 +285,7 @@ public class TabUtilitiesBundle{
 		//cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "/", xPos+1, yPos+fontSize/6f, 0);	
 		//cB.endText();
 		TiltedSquare tS = new TiltedSquare();
-		cB.addTemplate(slideLine, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos + spacing/8f, yPos + fontSize/3.5f);
+		cB.addTemplate(slideLine, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos, yPos+fontSize/2.5f);
 		
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
@@ -382,9 +383,16 @@ public class TabUtilitiesBundle{
 
 
 			//horizontal lines
-			cB.moveTo(xPos, yPos+fontSize/2.5f);
-			cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
-			xPos += spacing;
+			if(barNum < barFreq){
+				cB.moveTo(xPos, yPos+fontSize/2.5f);
+				cB.lineTo(xPos + 5, yPos+fontSize/2.5f);
+				xPos += 5;
+			}
+			else{
+				cB.moveTo(xPos, yPos+fontSize/2.5f);
+				cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
+				xPos += spacing;
+			}
 
 
 			charNum++;
@@ -457,9 +465,14 @@ public class TabUtilitiesBundle{
 				//horizontal lines;
 				if(barNum < barFreq){
 					cB.moveTo(xPos, yPos+fontSize/2.5f);
-					cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
-					xPos += spacing;
+					cB.lineTo(xPos + 5, yPos+fontSize/2.5f);
+					xPos += 5;
 				}
+				//else{
+				//	cB.moveTo(xPos, yPos+fontSize/2.5f);
+				//	cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
+				//	xPos += spacing;
+				//}
 			}
 
 			cB.stroke();

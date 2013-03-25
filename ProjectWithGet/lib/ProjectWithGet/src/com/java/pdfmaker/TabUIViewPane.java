@@ -97,8 +97,8 @@ public class TabUIViewPane extends JPanel{
 		
 		controller = new SwingController();
 
-		SwingViewBuilderPane factory = new SwingViewBuilderPane(controller);
-		JPanel viewerComponentPanel = factory.buildViewerPanel();
+		SwingViewBuilderPane viewPane = new SwingViewBuilderPane(controller);
+		JPanel viewerComponentPanel = viewPane.buildViewerPanel();
 		ComponentKeyBinding.install(controller, viewerComponentPanel);
 		controller.openDocument(outputPath);
 		
@@ -109,6 +109,5 @@ public class TabUIViewPane extends JPanel{
 		
 		
 		displayStatusUpdate(" ", false);
-		
 	}
 }
