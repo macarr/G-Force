@@ -40,9 +40,10 @@ public class TabFileManager{
 		this.outputArea = outputArea;
 		String osVersion = System.getProperty("os.name");
 		if(osVersion.startsWith("Windows"))
-			outputPath = "%temp%";
+			outputPath = "" + System.getenv("TEMP");
 		else
 			outputPath = "/tmp/";
+		System.exit(0);
 	}
 
 	//'loadFile' displays the 'JFileChooser' which allows the user to choose the input file.  
