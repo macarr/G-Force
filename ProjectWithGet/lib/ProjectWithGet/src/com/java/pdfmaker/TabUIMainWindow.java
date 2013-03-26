@@ -62,27 +62,4 @@ public class TabUIMainWindow extends JFrame{
 		setMinimumSize(new Dimension(193, size.height - 400));
 		setVisible(true);
 	}
-	
-	public static void main(String args[]){
-		String osVersion = System.getProperty("os.name");
-		String errorLog;
-		if(osVersion.startsWith("Windows"))
-			errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
-		else
-			errorLog = "/tmp/T2PDFErr.txt";
-		File errorFile = new File(errorLog);
-		try {
-			if(!(errorFile.exists()))
-				errorFile.createNewFile();
-			PrintStream out = new PrintStream(new FileOutputStream(errorLog, true));
-			Date date = new Date();
-			out.println("["+date+"]");
-			System.setErr(out);
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		new TabUIMainWindow();
-	}
 }
