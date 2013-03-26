@@ -59,14 +59,12 @@ public class Tab2PdfConverter {
 		tUB.processHeader(in, document.getPageSize().getWidth(), document.top());
 	}
 	
-	private void extractTabBlocks(ArrayList<ArrayList<String>> contents, float spacing){
-		this.contents = new ArrayList<TabUnitsBlock>();
+	private void extractTabBlocks(ArrayList<ArrayList<String>> input, float spacing){
+		contents = new ArrayList<TabUnitsBlock>();
 		
-		for(int index = 0; index < contents.size(); index++){
-			this.contents.add(new TabUnitsBlock(contents.get(index), spacing));
+		for(int index = 0; index < input.size(); index++){
+			contents.add(new TabUnitsBlock(input.get(index), spacing));
 		}
-		
-		
 	}
 
 	public boolean createPDF() {
@@ -150,8 +148,8 @@ public class Tab2PdfConverter {
 		//the idea is to absorb the characters starting with '|' or '||' and ending right before
 		//the next '|' or '||'s
 		for(charNum = currBlockInfo.getUnitStats(curDIndex).getBeginningBarIndex() + skip; curDIndex + 1 < currBlockInfo.getSize() && charNum < (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarIndex());){
-			if(xPos + (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq()*spacing) -
-			(currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq() - 1) * 5 <= document.right()){
+			//if(xPos + (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq()*spacing) -
+			//(currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq() - 1) * 5 <= document.right()){
 				
 				if(line.charAt(charNum) == '|' || contents.get(blockNum).get(1).charAt(charNum) == '|'){
 					tUB.processCurrentBars(starIndexes, lineNum, charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
@@ -203,7 +201,8 @@ public class Tab2PdfConverter {
 				}
 
 				else if(line.charAt(charNum) == '*') {
-					tUB.processStar(xPos, yPos);
+					boolean nextCharIsBar = (line.charAt(charNum + 1) == '|');
+					tUB.processStar(xPos, yPos, nextCharIsBar);
 					xPos += spacing;
 					
 					charNum++;
@@ -237,12 +236,12 @@ public class Tab2PdfConverter {
 					charNum++;
 					xPos += spacing;
 				}
-			}
+			//}
 
 
-			else{
-				charNum++;
-			}
+			//else{
+				//charNum++;
+			//}
 		}
 	}
 
