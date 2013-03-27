@@ -19,6 +19,12 @@ public class InputParser {
 	
 	public InputParser(String inputPath)
 	{
+		String osVersion = System.getProperty("os.name");
+		String errorLog;
+		if(osVersion.startsWith("Windows"))
+			errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
+		else
+			errorLog = "/tmp/T2PDFErr.txt";
 		
 		ArrayList<String> block = new ArrayList<String>();
 		this.contents = new ArrayList<ArrayList<String>>();
@@ -32,7 +38,7 @@ public class InputParser {
 			String current = "";
 			
 			//System.out.println(System.getProperty("user.dir"));
-			BufferedWriter out = new BufferedWriter(new FileWriter("C:/CSE2311/errlog.txt"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
 			
 			  
 			current = in.readLine();
