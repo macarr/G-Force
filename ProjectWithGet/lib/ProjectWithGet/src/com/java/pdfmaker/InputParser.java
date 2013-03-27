@@ -1,7 +1,9 @@
 package com.java.pdfmaker;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -13,6 +15,7 @@ public class InputParser {
 	String subtitle = "";
 	ArrayList<ArrayList<String>> contents;
 	ArrayList<ArrayList<String>> contentsCopy;
+	int lineNum = 0;
 	
 	public InputParser(String inputPath)
 	{
@@ -28,47 +31,73 @@ public class InputParser {
 			//Get rid of all preceding empty lines
 			String current = "";
 			
+			//System.out.println(System.getProperty("user.dir"));
+			BufferedWriter out = new BufferedWriter(new FileWriter("C:/CSE2311/errlog.txt"));
+			
+			  
 			current = in.readLine();
+			
+			if(current != null){
+				current = current.trim();
+			}
+			
+			lineNum++;
+			
 			while(current != null && current.equals("")) {
-				current = in.readLine();
+				current = in.readLine().trim();
+				
+				lineNum++;
 			}		
 			
 			//Reading in the title.
 			if(current.toLowerCase().startsWith("title")){
-				this.title = current.substring(6);
+				title = current.substring(6);
 			}
 			else if(current.charAt(0) != '|' && current.charAt(0) != '-' ){
-				this.title = current;
+				title = current;
 			}
 			else if(current.charAt(0) == '|' || current.charAt(0) == '-'){
-				this.title = "Not given";
+				title = "Not given";
 				block.add(current);
 			}
 					
 			//Get rid of all empty lines, provided a title was provided
 			current = in.readLine();
+			
+			if(current != null){
+				current = current.trim();
+			}
+			
+			lineNum++;
 			while(current != null && current.equals("")) {	
-				current = in.readLine();
+				current = in.readLine().trim();
+				lineNum++;
 			}
 			
 			//Reading in the subtitle
 			if(current.toLowerCase().startsWith("subtitle")){
-				this.subtitle = current.substring(9);
+				subtitle = current.substring(9);
 			}
 			else if(current.charAt(0) != '|' && current.charAt(0) != '-' ){
-				this.subtitle = current;
+				subtitle = current;
 			}
 			else if(current.charAt(0) == '|' || current.charAt(0) == '-'){
-				this.subtitle = "Not given";
+				subtitle = "Not given";
 				block.add(current);
 			}
 			
 			current = in.readLine();
 			
+			if(current != null){
+				current = current.trim();
+			}
+			
+			lineNum++;
+			
 			while(current != null) {
 				//Any empty lines and garbage lines (i.e. lines that don't start with '|' are passed over
 				//Use for loop all the way until the next blank line
-				if (current.trim().matches("((\\|+|[EBGDA0-9ebgda-]|-).*(\\|+|-))(.+)(-|\\|+|[A-Z0-9a-z])") && current.contains("-")){
+				if (current.matches("((\\|+|[EBGDA0-9ebgda-]|-).*(\\|+|-))(.+)(-|\\|+|[A-Z0-9a-z])") && current.contains("-")){
 		 			if(block.size() == 0){
 		 				//System.out.println("if: " + current);
 		 				block.add(current);
@@ -94,7 +123,16 @@ public class InputParser {
 					}
 	 			}
 				
+				else{
+					out.append("Line-number " + lineNum + " \"" + current + "\" could not be read.");
+					out.newLine();
+				}
+				
 				current = in.readLine();
+				if(current != null){
+					current = current.trim();
+				}
+				lineNum++;
 			}
 			
 			if(!block.isEmpty()){
@@ -113,6 +151,7 @@ public class InputParser {
 			contentsCopy = null;
 						
 			in.close();
+			out.close();
 		}
 		
 		catch(Exception e){

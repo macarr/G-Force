@@ -36,7 +36,6 @@ public class TabUIControlPane extends JPanel{
 			
 		public OpenPane(int buttonHeight){
 			
-			
 			//Instantiating the openButton.  
 			openButton = new JButton("Open Input File");
 				
@@ -101,8 +100,6 @@ public class TabUIControlPane extends JPanel{
 			//'fontNamesCombo' is a JComboBox that holds the font-names that the user can select from.
 			if(fontNamesCombo == null){
 				fontNamesCombo = new JComboBox<String>(fontNames);
-				
-				
 			}
 			
 			//setting the default item of 'fontNamesCombo'
@@ -188,6 +185,7 @@ public class TabUIControlPane extends JPanel{
 							data.convertFile(chosenFontName, chosenFontSize, chosenSpacing);
 							saveButton.setEnabled(true);
 							saveDisabled = false;
+							enableErrorLog();
 						}
 						catch(NumberFormatException ex){
 							JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
@@ -298,51 +296,7 @@ public class TabUIControlPane extends JPanel{
 		}
 	}
 	
-	private class LaunchPdfPane extends JPanel{
-		public LaunchPdfPane(int buttonHeight){
-			
-			FontMetrics metrics = getFontMetrics(getFont()); 
-			int buttonWidth = metrics.stringWidth("Save Current Pdf");
-			
-			//Initializing the 'launchPdfButton'.
-			launchPdfButton = new JButton("View in Acrobat");
-				
-			if(pdfLaunchDisabled){
-				launchPdfButton.setEnabled(false);
-			}
-				
-			launchPdfButton.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e){
-					try {
-						File myFile = new File(destinationPath);
-					    Desktop.getDesktop().open(myFile);
-					}
-					catch (Exception ex) {
-					        // no application registered for PDFs
-					}
-				}
-			});
-						
-				
-			launchPdfButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-			
-						
-			launchPdfButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			launchPdfButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			launchPdfButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
-								
-			//Setting the layout of the 'launchPdfPane' to BoxLayout.
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-								
-			//Adding some extra space before and after the 'launchPdfButton'.
-			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
-			add(launchPdfButton);
-			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
-						
-			//Adding bottom border for launchPdfpane. 
-			setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
-		}
-	}
+	
 	
 	private class InfoPane extends JPanel{
 		private JButton errLogButton = null;
@@ -372,6 +326,10 @@ public class TabUIControlPane extends JPanel{
 			errLogButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
 			errLogButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
 		
+			if(errLogDisabled){
+				errLogButton.setEnabled(false);
+			}
+			
 			//The 'BoxLayout' helps us in rendering a properly sized 'openButton' for this particular application.
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 						
@@ -410,7 +368,7 @@ public class TabUIControlPane extends JPanel{
 				
 			//Adding the 'openButton' to the 'openPane'.
 			add(helpButton);
-			//add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
+			add(Box.createRigidArea(new Dimension(0, buttonHeight/2)));
 			
 			//Adding bottom border for infoPane. 
 			setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
@@ -422,7 +380,7 @@ public class TabUIControlPane extends JPanel{
 	}
 	
 	private class FinalControlPane extends JPanel{
-		public FinalControlPane(JPanel controlPane, JPanel launchPdfPane){
+		public FinalControlPane(JPanel controlPane, JPanel infoPane){
 			setLayout(new BorderLayout());
 			
 			JLabel filler = new JLabel(" ");
@@ -430,7 +388,7 @@ public class TabUIControlPane extends JPanel{
 			
 			add(filler, BorderLayout.NORTH);
 			add(controlPane, BorderLayout.CENTER);
-			add(launchPdfPane, BorderLayout.SOUTH);
+			add(infoPane, BorderLayout.SOUTH);
 		}
 	}
 	
@@ -456,7 +414,7 @@ public class TabUIControlPane extends JPanel{
 	
 	private boolean convertDisabled = true;
 	private boolean saveDisabled = true;
-	private boolean pdfLaunchDisabled = true;
+	private boolean errLogDisabled = true;
 	
 	private JPanel fontNamesComboPane;
 	private JPanel fontSizeFieldPane;
@@ -465,6 +423,13 @@ public class TabUIControlPane extends JPanel{
 	private TitledBorder fontNamesComboBorder;
 	private TitledBorder fontSizeFieldBorder;
 	private TitledBorder spacingFieldBorder;
+	
+	OpenPane openPane;
+	ConvertSavePane convertSavePane;
+	ControlPane controlPane;
+	InfoPane infoPane;
+	FinalControlPane finalControlPane;
+
 	
 	//Reference to the 'UIMiddleLayer'.
 	private final TabFileManager data;
@@ -481,7 +446,6 @@ public class TabUIControlPane extends JPanel{
 	//multiple methods.
 	private float chosenSpacing;
 	
-	private int buttonWidthVaccum = 90;
 	private int buttonHeightFactor = 8;
 	
 	//The font-names that shall be used
@@ -507,24 +471,25 @@ public class TabUIControlPane extends JPanel{
 		initializeComponents();
 	}
 
+	public void enableErrorLog(){
+		infoPane.errLogButton.setEnabled(true);
+		errLogDisabled = false;
+	}
 	
 	public void initializeComponents(){
-		OpenPane openPane = new OpenPane(getPreferredSize().height/buttonHeightFactor);
+		openPane = new OpenPane(getPreferredSize().height/buttonHeightFactor);
 		
-		ConvertSavePane convertSavePane = new ConvertSavePane(getPreferredSize().height/buttonHeightFactor);
+		convertSavePane = new ConvertSavePane(getPreferredSize().height/buttonHeightFactor);
 		
-		ControlPane controlPane = new ControlPane(openPane, convertSavePane);		
-		LaunchPdfPane launchPdfPane = new LaunchPdfPane(getPreferredSize().height/buttonHeightFactor);
-		InfoPane infoPane = new InfoPane(getPreferredSize().height/buttonHeightFactor);
-		FinalControlPane finalControlPane = new FinalControlPane(controlPane, launchPdfPane); 		
+		controlPane = new ControlPane(openPane, convertSavePane);		
+		
+		infoPane = new InfoPane(getPreferredSize().height/buttonHeightFactor);
+		finalControlPane = new FinalControlPane(controlPane, infoPane); 		
 				
 		add(finalControlPane, BorderLayout.NORTH);
-		add(infoPane, BorderLayout.CENTER);
-		add(new JLabel(" "), BorderLayout.SOUTH);
 		
 		if(convertDisabled){
 			convertSavePane.disableComponents();
-			infoPane.disableComponents();
 		}
 	}
 	

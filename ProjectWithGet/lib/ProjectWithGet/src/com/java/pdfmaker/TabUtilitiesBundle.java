@@ -297,12 +297,19 @@ public class TabUtilitiesBundle{
 	 * @param xPos The horizontal position where the representation of the star character (a filled circle) shall be drawn.
 	 * @param yPos The vertical position where the representation of the star character (a filled circle) shall be drawn.
 	 */
-	public void processStar(float xPos, float yPos){
-		cB.circle(xPos, yPos + fontSize/2.5f, fontSize/5f);
-		cB.fillStroke();
-		cB.moveTo(xPos + fontSize/5f, yPos+fontSize/2.5f);
+	public void processStar(float xPos, float yPos, boolean nextCharIsBar){
+		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 		cB.stroke();
+		
+		if(nextCharIsBar){
+			cB.circle(xPos + (spacing - 5), yPos + fontSize/2.5f, fontSize/5f);
+		}
+		else{
+			cB.circle(xPos - (spacing - 5), yPos + fontSize/2.5f, fontSize/5f);
+		}
+		cB.fillStroke();
+		
 	}
 
 	/**
@@ -348,7 +355,7 @@ public class TabUtilitiesBundle{
 	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
 	 * @param yPos The vertical position where the bars would be drawn.
 	 */
-	public void processCurrentBars(ArrayList<Integer> starIndexes, int lineNum, int charNum, int barFreq, int repIndex, String repNum, float xPos, float yPos){
+	public float processCurrentBars(ArrayList<Integer> starIndexes, int lineNum, int charNum, int barFreq, int repIndex, String repNum, float xPos, float yPos){
 		int barNum = 0;
 		
 		//If the repeat message has to be printed
@@ -397,6 +404,8 @@ public class TabUtilitiesBundle{
 
 			charNum++;
 		}
+		
+		return xPos;
 	}
 
 	/**
