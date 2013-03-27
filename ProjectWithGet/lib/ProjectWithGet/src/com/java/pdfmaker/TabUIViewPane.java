@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -43,6 +44,16 @@ public class TabUIViewPane extends JPanel{
 		statusUpdateLabel.setForeground(new Color(98, 0, 255));
 		centerPane = new JPanel(new BorderLayout());
 		centerPane.setBackground(Color.gray);
+		
+		//displays image on the grey screen before the ascii file is opened
+		try {
+			ImageIcon image = new ImageIcon("assets/splash.jpg");
+			JLabel label = new JLabel("", image, JLabel.CENTER);
+			centerPane.add( label, BorderLayout.CENTER );
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		
 		add(statusUpdateLabel, BorderLayout.NORTH);
 		add(centerPane, BorderLayout.CENTER);
 	}
