@@ -23,6 +23,7 @@ public class TabUIMainWindow extends JFrame{
 	private boolean windowIsShown = false;
 
 	public TabUIMainWindow(){
+		setTitle("Tab2Pdf");
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 		final TabUIViewPane outputArea = new TabUIViewPane();
 		TabFileManager data = new TabFileManager(outputArea);
