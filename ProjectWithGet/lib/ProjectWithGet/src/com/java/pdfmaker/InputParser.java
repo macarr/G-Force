@@ -32,7 +32,7 @@ public class InputParser {
 			String current = "";
 			
 			//System.out.println(System.getProperty("user.dir"));
-			BufferedWriter out = new BufferedWriter(new FileWriter("C:/CSE2311/errlog.txt"));
+			BufferedWriter out = new BufferedWriter(new FileWriter("errlog.txt"));
 			
 			  
 			current = in.readLine();
@@ -95,16 +95,20 @@ public class InputParser {
 			lineNum++;
 			
 			while(current != null) {
-				//Any empty lines and garbage lines (i.e. lines that don't start with '|' are passed over
-				//Use for loop all the way until the next blank line
-				if (current.matches("((\\|+|[EBGDA0-9ebgda-]|-).*(\\|+|-))(.+)(-|\\|+|[A-Z0-9a-z])") && current.contains("-")){
+		
+				if (current.matches("((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*))(.+)(-|\\|+|[A-Z0-9a-z])") && current.contains("-")){
 		 			if(block.size() == 0){
 		 				//System.out.println("if: " + current);
 		 				block.add(current);
 		 			}
 		 			else if(current.length() == block.get(block.size()-1).length()){
-		 				//System.out.println("else if: " + current);
-		 				block.add(current);
+		 				if(Character.isAlphabetic(current.charAt(0)) && 
+		 						Character.isAlphabetic(block.get(block.size() - 1).charAt(0))){
+		 						block.add(current);
+		 				}
+		 				else if(current.charAt(0) == block.get(block.size() - 1).charAt(0)){
+		 					block.add(current);
+		 				}
 		 			}
 		 			
 		 			else{
@@ -124,7 +128,7 @@ public class InputParser {
 	 			}
 				
 				else{
-					out.append("Line-number " + lineNum + " \"" + current + "\" could not be read.");
+					out.append("Line-number " + lineNum + " \"(" + current + "\") could not be extracted.");
 					out.newLine();
 				}
 				

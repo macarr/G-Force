@@ -8,7 +8,9 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -309,8 +311,24 @@ public class TabUIControlPane extends JPanel{
 			//Setting the ActionListener for 'openButton'. An anonymous inner class is used because this code is used no where else in the program.
 			errLogButton.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
+					try{
+						String current = "";
+						InfoView errLogView = new InfoView();
 						
-					
+						BufferedReader in = new BufferedReader(new FileReader("errlog.txt"));
+						
+						current = in.readLine();
+						
+						while(current != null) {
+							errLogView.append(current);
+							current = in.readLine();
+						}
+						
+						in.close();
+					}
+					catch(Exception ex){
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Unexpected Error Occured", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 				
