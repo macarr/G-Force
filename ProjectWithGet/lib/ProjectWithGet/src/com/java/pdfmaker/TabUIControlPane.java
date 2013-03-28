@@ -313,9 +313,17 @@ public class TabUIControlPane extends JPanel{
 				public void actionPerformed(ActionEvent e){
 					try{
 						String current = "";
+						String osVersion = System.getProperty("os.name");
+						String errorLog;
+						
+						if(osVersion.startsWith("Windows"))
+							errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
+						else
+							errorLog = "/tmp/T2PDFErr.txt";
+						
 						InfoView errLogView = new InfoView();
 						
-						BufferedReader in = new BufferedReader(new FileReader("errlog.txt"));
+						BufferedReader in = new BufferedReader(new FileReader(errorLog));
 						
 						current = in.readLine();
 						
