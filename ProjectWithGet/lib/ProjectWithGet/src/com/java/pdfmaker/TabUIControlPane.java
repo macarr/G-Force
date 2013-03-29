@@ -48,9 +48,18 @@ public class TabUIControlPane extends JPanel{
 					//The method 'data.loadFile()' is invoked to display the 'JFileChooser', so that the user can choose her/his desired file.
 					int status  = data.loadFile();
 					
+					//if(status < 0){
+						//initializeComponents();
+					//}
 					//If status is '1', it means that the user chose a file, and therefore, the following GUI components need to be made active.
 					//A '0' means that the user decided to close the 'JFileChooser' without selecting any file. 
-					if(status == 1){
+					if(status == 0){
+						convertSavePane.disableComponents();
+						enableErrorLog();
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display", "Message", JOptionPane.INFORMATION_MESSAGE);
+					}
+					
+					else if(status == 1){
 						fontNamesCombo.setEnabled(true);
 						fontNamesCombo.setBackground(new Color(255, 255, 255));
 						fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
@@ -64,6 +73,7 @@ public class TabUIControlPane extends JPanel{
 						spacingFieldBorder.setTitleColor(new Color(0, 85, 255));
 						convertButton.setEnabled(true);
 						convertDisabled = false;
+						enableErrorLog();
 					}
 				}
 			});
@@ -187,7 +197,7 @@ public class TabUIControlPane extends JPanel{
 							data.convertFile(chosenFontName, chosenFontSize, chosenSpacing);
 							saveButton.setEnabled(true);
 							saveDisabled = false;
-							enableErrorLog();
+							//enableErrorLog();
 						}
 						catch(NumberFormatException ex){
 							JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
@@ -271,6 +281,9 @@ public class TabUIControlPane extends JPanel{
 		}
 		
 		public void disableComponents(){
+			convertDisabled = true;
+			saveDisabled = true;
+			
 			//'fontnamesCombo' is initially disabled, because the user has not yet opened any Ascii file.
 			fontNamesCombo.setEnabled(false);
 			
@@ -281,6 +294,8 @@ public class TabUIControlPane extends JPanel{
 			spacingField.setEnabled(false);
 			
 			convertButton.setEnabled(false);
+			saveButton.setEnabled(false);
+			
 		}
 	}
 	

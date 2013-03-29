@@ -22,7 +22,7 @@ public class TabUIViewPane extends JPanel{
 	private static final long serialVersionUID = 3272926203643823070L;
 
 	//JPanel on which both Ascii and PDf documents are displayed.
-	private JPanel centerPane;
+	private JPanel textPane;
 	
 	//Shows the status of certain tasks.
 	private JLabel statusUpdateLabel;
@@ -42,20 +42,11 @@ public class TabUIViewPane extends JPanel{
 		setLayout(new BorderLayout());
 		statusUpdateLabel = new JLabel(" ");
 		statusUpdateLabel.setForeground(new Color(98, 0, 255));
-		centerPane = new JPanel(new BorderLayout());
-		centerPane.setBackground(Color.gray);
-		
-		//displays image on the grey screen before the ascii file is opened
-		try {
-			ImageIcon image = new ImageIcon("assets/splash.jpg");
-			JLabel label = new JLabel("", image, JLabel.CENTER);
-			centerPane.add( label, BorderLayout.CENTER );
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
+		textPane = new JPanel(new BorderLayout());
+		textPane.setBackground(Color.gray);
 		
 		add(statusUpdateLabel, BorderLayout.NORTH);
-		add(centerPane, BorderLayout.CENTER);
+		add(textPane, BorderLayout.CENTER);
 	}
 	
 	public void closePdfFile(){
@@ -71,11 +62,11 @@ public class TabUIViewPane extends JPanel{
 		if(showProgressBar){
 			progressBar = new JProgressBar();
 			progressBar.setIndeterminate(true);
-			centerPane.removeAll();
-			centerPane.setLayout(new BorderLayout());
-			centerPane.add(progressBar, BorderLayout.NORTH);
-			centerPane.revalidate();
-			centerPane.repaint();
+			textPane.removeAll();
+			textPane.setLayout(new BorderLayout());
+			textPane.add(progressBar, BorderLayout.NORTH);
+			textPane.revalidate();
+			textPane.repaint();
 		}
 	}
 	
@@ -86,8 +77,9 @@ public class TabUIViewPane extends JPanel{
 		asciiDisplay = new JTextArea(100, 100);
 		asciiDisplay.setEditable(false);
 		asciiDisplay.setFont(new Font("MonoSpaced", Font.PLAIN, 15));
-		asciiDisplay.append(in.getTitle() + "\n");
-		asciiDisplay.append(in.getSubtitle() + "\n\n");
+		asciiDisplay.append("                     " + in.getTitle() + "\n");
+		asciiDisplay.append("                     " + in.getSubtitle() + "\n\n");
+		asciiDisplay.setCaretPosition(0);
 		
 		ArrayList<ArrayList<String>> contents = in.getData();
 		
@@ -97,11 +89,13 @@ public class TabUIViewPane extends JPanel{
 			}
 			asciiDisplay.append("\n");
 		}
-		centerPane.removeAll();
-		centerPane.setLayout(new BorderLayout());
-		centerPane.add(new JScrollPane(asciiDisplay), BorderLayout.CENTER);
-		centerPane.revalidate();
-		centerPane.repaint();
+		textPane.removeAll();
+		textPane.setLayout(new BorderLayout());
+		textPane.add(new JScrollPane(asciiDisplay), BorderLayout.CENTER);
+		
+		
+		textPane.revalidate();
+		textPane.repaint();
 	}
 	
 	//This method shows the Pdf file using the open-source library 'JPedal', developed by IDR Solutions.
@@ -114,12 +108,29 @@ public class TabUIViewPane extends JPanel{
 		ComponentKeyBinding.install(controller, viewerComponentPanel);
 		controller.openDocument(outputPath);
 		
-		centerPane.removeAll();
-		centerPane.add(viewerComponentPanel);
-		centerPane.revalidate();
+		textPane.removeAll();
+		textPane.add(viewerComponentPanel);
+		textPane.revalidate();
 		
 		
 		
 		displayStatusUpdate(" ", false);
+	}
+	
+	public void clearTextPane(){
+		textPane.removeAll();
+		textPane.revalidate();
+		textPane.repaint();
+	}
+	
+	public void addImage(){
+		//displays image on the grey screen before the ascii file is opened
+		try {
+			ImageIcon image = new ImageIcon("assets/splash.jpg");
+			JLabel label = new JLabel("", image, JLabel.CENTER);
+			textPane.add( label, BorderLayout.CENTER );
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 	}
 }

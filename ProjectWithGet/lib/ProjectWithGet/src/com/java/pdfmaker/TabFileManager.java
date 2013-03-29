@@ -47,46 +47,37 @@ public class TabFileManager{
 
 	//'loadFile' displays the 'JFileChooser' which allows the user to choose the input file.  
 	public int loadFile(){
-		JFileChooser fC;
-		if(inputPath == null)
-			fC = new JFileChooser();
-		else
-			fC = new JFileChooser(inputPath);
-
 		//'status' is a flag which is returned to the caller of the 'loadFile', based on which, the caller enables some buttons.  
-		int status = 0;
-
+		int status = -1;
+		
+		JFileChooser fC;
+		
+		if(inputPath == null){
+			fC = new JFileChooser();
+		}
+		else{
+			fC = new JFileChooser(inputPath);
+		}
 		
 		int returnVal = fC.showOpenDialog(outputArea);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
+			
+			outputArea.clearTextPane();
+			status = 0;
 			inputPath = fC.getSelectedFile().toString();
-			/*******************File inputFile = new File(inputPath);
-			try {
-				InputStreamReader r = new InputStreamReader(new FileInputStream(inputFile));
-				if(!(r.getEncoding().equals("US-ASCII") || r.getEncoding().equals("UTF8")))
-				{
-					System.out.println(r.getEncoding());
-					JOptionPane.showMessageDialog(outputArea, ""+inputPath+" is not encoded in a format supported by" +
-							" Tab2PDF. Please select a file encoded with either an ASCII or UTF-8 character set.", 
-							"Invalid file", JOptionPane.ERROR_MESSAGE);
-					return status;
-				}******************/
 	
-				in = new InputParser(inputPath);
+			in = new InputParser(inputPath);
 	
-				//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
-				//the contents of the file.
-				contents = in.getData();
+			//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
+			//the contents of the file.
+			//contents = in.getData();
 	
+			if(in.getData().size() > 0){
 				//The Ascii file is displayed on the screen.
 				outputArea.showAsciiFile(in);
-	
-				//'Status' = 1 means that now it is OK to enable the 'convertButton'.
 				status = 1;
-			/*******************} catch(FileNotFoundException e) {
-				e.printStackTrace();
-			}********************/
+			}
 		}
 		return status;
 	}
@@ -122,7 +113,12 @@ public class TabFileManager{
 	//'convertFile' converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
 	public void convertFile(final String fontName, final float fontSize, final float spacing){
 
-		//First making the outputArea's status-label blank 
+		//if(in.getData().size() == 0){
+			//JOptionPane.showMessageDialog(outputArea, "Nothing to display", "Message", JOptionPane.INFORMATION_MESSAGE);
+			//return;
+		//}
+		
+		//First making the outputArea's status-label blank
 		outputArea.displayStatusUpdate(" ", false);
 
 		//Before we begin to convert the Ascii file into Pdf, we notify the user.

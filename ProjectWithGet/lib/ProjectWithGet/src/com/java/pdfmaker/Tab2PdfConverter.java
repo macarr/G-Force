@@ -69,18 +69,19 @@ public class Tab2PdfConverter {
 
 	public boolean createPDF() {
 		
-		document.open();
-
-		tUB = new TabUtilitiesBundle(writer.getDirectContent(), fontName, fontSize, spacing, pageSize);
-		tUB.setLineWidth(0.5f);
-		tUB.processHeader(in, document.getPageSize().getWidth(), document.top());
-		
 		boolean fullPdfWritten = true;
 		
 		margin = document.left();
 		xPos = margin;
 		yPos = document.top() - yIncrement;
 
+		document.open();
+
+		tUB = new TabUtilitiesBundle(writer.getDirectContent(), fontName, fontSize, spacing, pageSize);
+		tUB.setLineWidth(0.5f);
+		tUB.processHeader(in, document.getPageSize().getWidth(), document.top());
+
+		
 		currBlockInfo = contents.get(0);
 		starIndexes = currBlockInfo.getStarIndexes();
 		
