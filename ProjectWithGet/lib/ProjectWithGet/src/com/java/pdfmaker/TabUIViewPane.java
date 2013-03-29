@@ -84,6 +84,7 @@ public class TabUIViewPane extends JPanel{
 		//First making the status-label blank 
 		statusUpdateLabel.setText(" ");
 		asciiDisplay = new JTextArea(100, 100);
+		asciiDisplay.setEditable(false);
 		asciiDisplay.setFont(new Font("MonoSpaced", Font.PLAIN, 15));
 		asciiDisplay.append(in.getTitle() + "\n");
 		asciiDisplay.append(in.getSubtitle() + "\n\n");

@@ -12,9 +12,11 @@ public class Tab2PdfConverter {
 	private ArrayList<TabUnitsBlock> contents;
 	ArrayList<Integer> starIndexes = null;
 	private InputParser in;
-
+	private String fontName;
 	private float fontSize;
 	private float spacing;
+	
+	Rectangle pageSize;
 
 	private TabUnitsBlock currBlockInfo;
 	private int curDIndex = 0;
@@ -39,7 +41,9 @@ public class Tab2PdfConverter {
 	public Tab2PdfConverter(InputParser in, Rectangle pageSize, String filePath, String fontName, float fontSize, float spacing) {
 		this.in = in;
 		this.spacing = spacing;
+		this.fontName = fontName;
 		this.fontSize = fontSize;
+		this.pageSize = pageSize;
 		
 		extractTabBlocks(in.getData(), spacing);
 
@@ -52,11 +56,7 @@ public class Tab2PdfConverter {
 			e.printStackTrace();
 		}
 
-		document.open();
-
-		tUB = new TabUtilitiesBundle(writer.getDirectContent(), fontName, fontSize, spacing, pageSize);
-		tUB.setLineWidth(0.5f);
-		tUB.processHeader(in, document.getPageSize().getWidth(), document.top());
+		
 	}
 	
 	private void extractTabBlocks(ArrayList<ArrayList<String>> input, float spacing){
@@ -68,6 +68,13 @@ public class Tab2PdfConverter {
 	}
 
 	public boolean createPDF() {
+		
+		document.open();
+
+		tUB = new TabUtilitiesBundle(writer.getDirectContent(), fontName, fontSize, spacing, pageSize);
+		tUB.setLineWidth(0.5f);
+		tUB.processHeader(in, document.getPageSize().getWidth(), document.top());
+		
 		boolean fullPdfWritten = true;
 		
 		margin = document.left();
@@ -138,7 +145,9 @@ public class Tab2PdfConverter {
 				processInsufficientSpaceReInit();
 			}
 		}
-
+		
+		tUB.processEndingHorizontalLines(xPos, yPos);
+		
 		document.close();
 
 		return fullPdfWritten;

@@ -76,6 +76,7 @@ public class InputParser {
 			}
 			
 			lineNum++;
+			
 			while(current != null && current.equals("")) {	
 				current = in.readLine().trim();
 				lineNum++;
@@ -97,9 +98,19 @@ public class InputParser {
 			
 			if(current != null){
 				current = current.trim();
+			}	
+			
+			while(!current.matches("((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*))(.+)(-|\\|+|[A-Z0-9a-z])")){
+				current = in.readLine();
+				
+				lineNum++;
+				
+				if(current != null){
+					current = current.trim();
+				}
 			}
 			
-			lineNum++;
+			
 			
 			while(current != null) {
 		
