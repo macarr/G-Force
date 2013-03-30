@@ -56,7 +56,7 @@ public class TabUIControlPane extends JPanel{
 					if(status == 0){
 						convertSavePane.disableComponents();
 						enableErrorLog();
-						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display", "Message", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display.", "Message", JOptionPane.INFORMATION_MESSAGE);
 					}
 					
 					else if(status == 1){
@@ -241,10 +241,6 @@ public class TabUIControlPane extends JPanel{
 					//yet, and therefore nothing new needs to be saved at this point.
 					//MATT NOTE: perhaps the client wants to be able to save to a different location - I'm commenting this line out for now
 					//saveButton.setEnabled(false);
-					if(destinationPath != ""){
-						launchPdfButton.setEnabled(true);
-					}
-
 				}
 			});
 			
@@ -438,9 +434,6 @@ public class TabUIControlPane extends JPanel{
 	
 	//To save the Pdf file.
 	private JButton saveButton = null;
-	
-	//To launch the Pdf file in a real Pdf reader like Acrobat Reader.
-	private JButton launchPdfButton = null;
 	
 	//JComboBox holding the font-name values.
 	private JComboBox<String> fontNamesCombo = null;

@@ -47,6 +47,7 @@ public class TabFileManager{
 
 	//'loadFile' displays the 'JFileChooser' which allows the user to choose the input file.  
 	public int loadFile(){
+		outputArea.displayStatusUpdate("", false);
 		//'status' is a flag which is returned to the caller of the 'loadFile', based on which, the caller enables some buttons.  
 		int status = -1;
 		

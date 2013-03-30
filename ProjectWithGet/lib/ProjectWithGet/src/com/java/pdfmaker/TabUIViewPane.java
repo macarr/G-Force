@@ -45,6 +45,8 @@ public class TabUIViewPane extends JPanel{
 		textPane = new JPanel(new BorderLayout());
 		textPane.setBackground(Color.gray);
 		
+		addImage();
+		
 		add(statusUpdateLabel, BorderLayout.NORTH);
 		add(textPane, BorderLayout.CENTER);
 	}
@@ -119,6 +121,7 @@ public class TabUIViewPane extends JPanel{
 	
 	public void clearTextPane(){
 		textPane.removeAll();
+		addImage();
 		textPane.revalidate();
 		textPane.repaint();
 	}
