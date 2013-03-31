@@ -128,7 +128,7 @@ public class TabUIControlPane extends JPanel{
 			fontNamesComboPane.add(fontNamesCombo);
 			
 			//Setting a titled border for fontNamesComboPane.
-			fontNamesComboBorder = new TitledBorder("Select Font from Below:");
+			fontNamesComboBorder = new TitledBorder("Select Font-Name from Below:");
 			fontNamesComboBorder.setTitleColor(new Color(0, 85, 255));
 			fontNamesComboPane.setBorder(fontNamesComboBorder);
 			
@@ -149,7 +149,7 @@ public class TabUIControlPane extends JPanel{
 			fontSizeFieldPane.add(fontSizeField);
 			
 			//Setting a titled border for fontSizeFieldPane.
-			fontSizeFieldBorder = new TitledBorder("Enter Font Size Below:");
+			fontSizeFieldBorder = new TitledBorder("Enter Font-Size Below:");
 			fontSizeFieldBorder.setTitleColor(new Color(0, 85, 255));
 			fontSizeFieldPane.setBorder(fontSizeFieldBorder);
 			
@@ -333,7 +333,7 @@ public class TabUIControlPane extends JPanel{
 							errorLog = "/tmp/T2PDFErr.txt";
 						
 						//A window where the error-log file shall be displayed.
-						InfoView errLogView = new InfoView();
+						InfoView errLogView = new InfoView("Error Log");
 						
 						//InputStream for the error-log file.
 						BufferedReader in = new BufferedReader(new FileReader(errorLog));
@@ -388,8 +388,17 @@ public class TabUIControlPane extends JPanel{
 			//Setting the ActionListener for helpButton. An anonymous inner class is used because this code is used no where else in the program.
 			helpButton.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
-						
+					String helpMessage = 	"To convert a file to PDF:" +
+							"				\n1) First open a text tablature file by clicking on 'Open Input File'.\n" +
+							 				"2) Select your desired font-name, font-size, and spacing.\n3) Click on 'Convert to PDF'." +
+							 				"\n\nTo make a change to the font settings or spacing:\n1) Make the desired changes in font-name, font-size, or spacing fields.\n" +
+							 				"2) Click on 'Convert to PDF'." +
+							 				"\n\nTo save a file as Pdf:\n1) After clicking on the 'Convert to Pdf' button, wait for the convertion to complete and\n" +
+							 				"the file to be displayed in Pdf format on the left.\n2) Click on the 'Save Current Pdf' button and save the file at the desired location." +
+							 				"\n\nTo view the error-log:\n1) Click on the 'View Error Log' button whenever it is active.";
 					
+					InfoView helpView = new InfoView("Help");	
+					helpView.append(helpMessage);
 				}
 			});
 				
@@ -554,7 +563,7 @@ public class TabUIControlPane extends JPanel{
 	
 	public void resizeComponent(Dimension size){
 		FontMetrics metrics = getFontMetrics(getFont()); 
-		int buttonWidth = metrics.stringWidth("Select Font from Below");
+		int buttonWidth = metrics.stringWidth("Select Font-Name from Below:");
 		
 		//Setting the size for this TabUIControlPane. When the window is resized, the area around buttons changes.
 		setMaximumSize(new Dimension(buttonWidth + 40 + size.width/3, size.height));

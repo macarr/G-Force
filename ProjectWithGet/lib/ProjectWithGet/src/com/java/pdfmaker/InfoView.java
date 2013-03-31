@@ -17,7 +17,8 @@ public class InfoView extends JFrame{
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = -2695173424680673513L;
 	private JTextArea infoArea;
-	public InfoView(){
+	public InfoView(String title){
+		setTitle(title);
 		infoArea = new JTextArea();
 		infoArea.setEditable(false);
 		this.getContentPane().setLayout(new BorderLayout());
