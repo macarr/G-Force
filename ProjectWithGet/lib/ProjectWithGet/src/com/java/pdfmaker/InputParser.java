@@ -244,11 +244,11 @@ public class InputParser {
 				if(!(contents.get(i).size() < 6) && !(contents.get(i).size() > 6)){
 					contentsCopy.add(contents.get(i));
 				}
-				else{
+				else if(contents.get(i).size() > 1){
 					//System.out.println(contents.get(i).size());
 					out.append("Lines (" + lineNumBlocks.get(i).toString() + "-" + (lineNumBlocks.get(i).intValue() + 
 							contents.get(i).size()-1) + ") starting with " + contents.get(i).get(0) + " and ending with " +
-							contents.get(i).get(contents.get(i).size()-1));
+							contents.get(i).get(contents.get(i).size()-1) + " were dropped due to incompatible number of lines." );
 					out.newLine();
 				}
 			}
