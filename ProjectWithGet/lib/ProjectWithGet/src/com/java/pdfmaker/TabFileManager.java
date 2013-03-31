@@ -47,8 +47,9 @@ public class TabFileManager{
 
 	//'loadFile' displays the 'JFileChooser' which allows the user to choose the input file.  
 	public int loadFile(){
-		outputArea.displayStatusUpdate("", false);
-		//'status' is a flag which is returned to the caller of the 'loadFile', based on which, the caller enables some buttons.  
+		outputArea.displayStatusUpdate(" ", false);
+		//'status' is a flag which is returned to the caller of the 'loadFile', based on which the caller enables/disables 
+		//some buttons.  
 		int status = -1;
 		
 		JFileChooser fC;
@@ -64,7 +65,7 @@ public class TabFileManager{
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			
-			outputArea.clearTextPane();
+			outputArea.clearCenterPane();
 			status = 0;
 			inputPath = fC.getSelectedFile().toString();
 	
@@ -114,11 +115,6 @@ public class TabFileManager{
 	//'convertFile' converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
 	public void convertFile(final String fontName, final float fontSize, final float spacing){
 
-		//if(in.getData().size() == 0){
-			//JOptionPane.showMessageDialog(outputArea, "Nothing to display", "Message", JOptionPane.INFORMATION_MESSAGE);
-			//return;
-		//}
-		
 		//First making the outputArea's status-label blank
 		outputArea.displayStatusUpdate(" ", false);
 
@@ -145,6 +141,7 @@ public class TabFileManager{
 				if(!fullSuccess){
 					JOptionPane.showMessageDialog(outputArea, "Some Music Could not Fully Fit due to the Large Size.", "Message", JOptionPane.INFORMATION_MESSAGE);
 				}
+				interrupt();
 			}
 		};
 

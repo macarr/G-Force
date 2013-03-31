@@ -5,6 +5,8 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
+import com.java.paramclasses.CharCoordinates;
+import com.java.paramclasses.TextLine;
 
 /**
  * TabUtilitiesBundle --- This class performs output operations to the pdf document associated with it. 
@@ -199,16 +201,16 @@ public class TabUtilitiesBundle{
 	 * @param yPos THe vertical position where the output shall be written.
 	 * @param lastNumPos An ArrayList that stores the horizontal position of the last digit on the same line.
 	 */
-	public void processDigit(String number, int lineNum, String line, int charNum, float xPos, float yPos, float [] lastNumXPos, float [] lastNumYPos, float rightMargin){
+	public void processDigit(String number, TextLine textLine, CharCoordinates coordinates){
 		
-		if(line.charAt(charNum-(number.length()+1)) == 'p'){
+		if(textLine.line.charAt(textLine.charNum-(number.length()+1)) == 'p'){
 			
 			//If the pull-off can be processed on the same line
-			if(yPos == lastNumYPos[lineNum]){
-				cB.arc(lastNumXPos[lineNum], yPos+fontSize/2, xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize, 25, 130);
+			if(coordinates.yPos == coordinates.lastNumYPos[textLine.lineNum]){
+				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.yPos+fontSize/2, coordinates.xPos + (bF.getWidthPoint(number, fontSize))/2, coordinates.yPos+fontSize, 25, 130);
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(lastNumXPos[lineNum] + xPos + (number.length()*spacing)/2)/2, yPos+fontSize+(fontSize/10), 0);	
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(coordinates.lastNumXPos[textLine.lineNum] + coordinates.xPos + (number.length()*spacing)/2)/2, coordinates.yPos+fontSize+(fontSize/10), 0);	
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 			}
@@ -217,25 +219,25 @@ public class TabUtilitiesBundle{
 			else{
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", lastNumXPos[lineNum] + 10, lastNumYPos[lineNum]+fontSize+(fontSize/10), 0);
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", xPos - 10, yPos + fontSize+(fontSize/10), 0); 
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", coordinates.lastNumXPos[textLine.lineNum] + 10, coordinates.lastNumYPos[textLine.lineNum]+fontSize+(fontSize/10), 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", coordinates.xPos - 10, coordinates.yPos + fontSize+(fontSize/10), 0); 
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 				
-				cB.arc(lastNumXPos[lineNum], lastNumYPos[lineNum]+fontSize/2, lastNumXPos[lineNum] + 30, lastNumYPos[lineNum]+fontSize, 90, 90);
-				cB.arc(xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize/2, xPos - 30, yPos+fontSize, 0, 90); 
+				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.lastNumYPos[textLine.lineNum]+fontSize/2, coordinates.lastNumXPos[textLine.lineNum] + 30, coordinates.lastNumYPos[textLine.lineNum]+fontSize, 90, 90);
+				cB.arc(coordinates.xPos + (bF.getWidthPoint(number, fontSize))/2, coordinates.yPos+fontSize/2, coordinates.xPos - 30, coordinates.yPos+fontSize, 0, 90); 
 				
 			}
 		}
 		
-		else if(line.charAt(charNum-(number.length()+1)) == 'h'){
+		else if(textLine.line.charAt(textLine.charNum-(number.length()+1)) == 'h'){
 			
 			//If the pull-off can be processed on the same line
-			if(yPos == lastNumYPos[lineNum]){
-				cB.arc(lastNumXPos[lineNum], yPos+fontSize/2, xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize, 25, 130);
+			if(coordinates.yPos == coordinates.lastNumYPos[textLine.lineNum]){
+				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.yPos+fontSize/2, coordinates.xPos + (bF.getWidthPoint(number, fontSize))/2, coordinates.yPos+fontSize, 25, 130);
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h",(lastNumXPos[lineNum] + xPos + (number.length()*spacing)/2)/2, yPos+fontSize+(fontSize/10), 0);	
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h",(coordinates.lastNumXPos[textLine.lineNum] + coordinates.xPos + (number.length()*spacing)/2)/2, coordinates.yPos+fontSize+(fontSize/10), 0);	
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 			}
@@ -244,13 +246,13 @@ public class TabUtilitiesBundle{
 			else{
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", lastNumXPos[lineNum] + 10, lastNumYPos[lineNum]+fontSize+(fontSize/10), 0);
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", xPos - 10, yPos + fontSize+(fontSize/10), 0); 
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", coordinates.lastNumXPos[textLine.lineNum] + 10, coordinates.lastNumYPos[textLine.lineNum]+fontSize+(fontSize/10), 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", coordinates.xPos - 10, coordinates.yPos + fontSize+(fontSize/10), 0); 
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 				
-				cB.arc(lastNumXPos[lineNum], lastNumYPos[lineNum]+fontSize/2, lastNumXPos[lineNum] + 30, lastNumYPos[lineNum]+fontSize, 90, 90);
-				cB.arc(xPos + (bF.getWidthPoint(number, fontSize))/2, yPos+fontSize/2, xPos - 30, yPos+fontSize, 0, 90); 
+				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.lastNumYPos[textLine.lineNum]+fontSize/2, coordinates.lastNumXPos[textLine.lineNum] + 30, coordinates.lastNumYPos[textLine.lineNum]+fontSize, 90, 90);
+				cB.arc(coordinates.xPos + (bF.getWidthPoint(number, fontSize))/2, coordinates.yPos+fontSize/2, coordinates.xPos - 30, coordinates.yPos+fontSize, 0, 90); 
 				
 			}
 		}
@@ -258,18 +260,18 @@ public class TabUtilitiesBundle{
 
 		//Writing the digit.
 		cB.beginText();
-		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, number, xPos, yPos, 0);	
+		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, number, coordinates.xPos, coordinates.yPos, 0);	
 		cB.endText();
 
 		//Saving the horizontal and vertical positions of the current digit for any later pull-offs that may appear.
-		lastNumXPos[lineNum] = xPos + (bF.getWidthPoint(number, fontSize))/2;
-		lastNumYPos[lineNum] = yPos;
+		coordinates.lastNumXPos[textLine.lineNum] = coordinates.xPos + (bF.getWidthPoint(number, fontSize))/2;
+		coordinates.lastNumYPos[textLine.lineNum] = coordinates.yPos;
 
 		//if a very short line is to be inserted between numbers with no gaps in between then 
 		//the if statement needs to be removed
 		//if(line.charAt(charNum) != ' '){
-		cB.moveTo(xPos + bF.getWidthPoint(number, fontSize), yPos+fontSize/2.5f);
-		cB.lineTo(xPos + ((number.length())*spacing), yPos+fontSize/2.5f);
+		cB.moveTo(coordinates.xPos + bF.getWidthPoint(number, fontSize), coordinates.yPos+fontSize/2.5f);
+		cB.lineTo(coordinates.xPos + ((number.length())*spacing), coordinates.yPos+fontSize/2.5f);
 		cB.stroke();
 		//}
 

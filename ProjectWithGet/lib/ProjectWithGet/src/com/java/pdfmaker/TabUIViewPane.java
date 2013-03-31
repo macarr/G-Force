@@ -22,7 +22,7 @@ public class TabUIViewPane extends JPanel{
 	private static final long serialVersionUID = 3272926203643823070L;
 
 	//JPanel on which both Ascii and PDf documents are displayed.
-	private JPanel textPane;
+	private JPanel centerPane;
 	
 	//Shows the status of certain tasks.
 	private JLabel statusUpdateLabel;
@@ -42,13 +42,13 @@ public class TabUIViewPane extends JPanel{
 		setLayout(new BorderLayout());
 		statusUpdateLabel = new JLabel(" ");
 		statusUpdateLabel.setForeground(new Color(98, 0, 255));
-		textPane = new JPanel(new BorderLayout());
-		textPane.setBackground(Color.gray);
+		centerPane = new JPanel(new BorderLayout());
+		centerPane.setBackground(Color.gray);
 		
 		addImage();
 		
 		add(statusUpdateLabel, BorderLayout.NORTH);
-		add(textPane, BorderLayout.CENTER);
+		add(centerPane, BorderLayout.CENTER);
 	}
 	
 	public void closePdfFile(){
@@ -64,11 +64,11 @@ public class TabUIViewPane extends JPanel{
 		if(showProgressBar){
 			progressBar = new JProgressBar();
 			progressBar.setIndeterminate(true);
-			textPane.removeAll();
-			textPane.setLayout(new BorderLayout());
-			textPane.add(progressBar, BorderLayout.NORTH);
-			textPane.revalidate();
-			textPane.repaint();
+			centerPane.removeAll();
+			centerPane.setLayout(new BorderLayout());
+			centerPane.add(progressBar, BorderLayout.NORTH);
+			centerPane.revalidate();
+			centerPane.repaint();
 		}
 	}
 	
@@ -91,13 +91,13 @@ public class TabUIViewPane extends JPanel{
 			}
 			asciiDisplay.append("\n");
 		}
-		textPane.removeAll();
-		textPane.setLayout(new BorderLayout());
-		textPane.add(new JScrollPane(asciiDisplay), BorderLayout.CENTER);
+		centerPane.removeAll();
+		centerPane.setLayout(new BorderLayout());
+		centerPane.add(new JScrollPane(asciiDisplay), BorderLayout.CENTER);
 		
 		
-		textPane.revalidate();
-		textPane.repaint();
+		centerPane.revalidate();
+		centerPane.repaint();
 	}
 	
 	//This method shows the Pdf file using the open-source library 'JPedal', developed by IDR Solutions.
@@ -110,20 +110,20 @@ public class TabUIViewPane extends JPanel{
 		ComponentKeyBinding.install(controller, viewerComponentPanel);
 		controller.openDocument(outputPath);
 		
-		textPane.removeAll();
-		textPane.add(viewerComponentPanel);
-		textPane.revalidate();
+		centerPane.removeAll();
+		centerPane.add(viewerComponentPanel);
+		centerPane.revalidate();
 		
 		
 		
 		displayStatusUpdate(" ", false);
 	}
 	
-	public void clearTextPane(){
-		textPane.removeAll();
+	public void clearCenterPane(){
+		centerPane.removeAll();
 		addImage();
-		textPane.revalidate();
-		textPane.repaint();
+		centerPane.revalidate();
+		centerPane.repaint();
 	}
 	
 	public void addImage(){
@@ -131,7 +131,7 @@ public class TabUIViewPane extends JPanel{
 		try {
 			ImageIcon image = new ImageIcon("assets/splash.jpg");
 			JLabel label = new JLabel("", image, JLabel.CENTER);
-			textPane.add( label, BorderLayout.CENTER );
+			centerPane.add( label, BorderLayout.CENTER );
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
+import com.java.paramclasses.CharCoordinates;
+import com.java.paramclasses.TextLine;
 
 public class Tab2PdfConverter {
 	private Document document;
@@ -200,7 +202,7 @@ public class Tab2PdfConverter {
 						number += line.charAt(charNum);
 					}
 
-					tUB.processDigit(number, lineNum, line, charNum, xPos, yPos, lastNumXPos, lastNumYPos, document.right());
+					tUB.processDigit(number, new TextLine(lineNum, line, charNum), new CharCoordinates(xPos, yPos, document.right(), lastNumXPos, lastNumYPos));
 					xPos += (number.length())*spacing;
 				}
 
