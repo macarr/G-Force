@@ -7,6 +7,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.java.paramclasses.CharCoordinates;
 import com.java.paramclasses.TextLine;
+import com.java.tabinput.InputParser;
 
 public class Tab2PdfConverter {
 	private Document document;

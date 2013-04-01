@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.java.paramclasses.CharCoordinates;
 import com.java.paramclasses.TextLine;
+import com.java.tabinput.InputParser;
 
 /**
  * TabUtilitiesBundle --- This class performs output operations to the pdf document associated with it. 

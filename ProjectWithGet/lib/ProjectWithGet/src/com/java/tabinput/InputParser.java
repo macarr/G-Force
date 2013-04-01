@@ -1,4 +1,4 @@
-package com.java.tabpdf;
+package com.java.tabinput;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
 
-import com.java.tabpdf.InputParser;
+import com.java.tabinput.InputParser;
 
 //'UIView' is where all the screen output is displayed. 
 public class TabUIViewPane extends JPanel{
