@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,6 +14,8 @@ import javax.swing.JTextArea;
 
 import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
+
+import com.java.tabpdf.InputParser;
 
 //'UIView' is where all the screen output is displayed. 
 public class TabUIViewPane extends JPanel{

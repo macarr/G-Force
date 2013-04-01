@@ -1,13 +1,14 @@
-package com.java.pdfmaker;
+package com.java.tabui;
 
 import java.io.*;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import com.itextpdf.text.Rectangle;
+import com.java.tabpdf.InputParser;
+import com.java.tabpdf.Tab2PdfConverter;
 
 //UIMiddleLayer takes care of the File input/output and miscellaneous tasks.
 public class TabFileManager{

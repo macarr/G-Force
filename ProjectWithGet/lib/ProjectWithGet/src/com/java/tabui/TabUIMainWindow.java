@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabui;
 
 import java.awt.BorderLayout;
 
@@ -16,6 +16,7 @@ import java.util.Date;
 import java.io.*;
 
 import javax.swing.JFrame;
+
 
 public class TabUIMainWindow extends JFrame{
   // serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown

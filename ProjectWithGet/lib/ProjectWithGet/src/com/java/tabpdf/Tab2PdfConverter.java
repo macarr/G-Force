@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabpdf;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;

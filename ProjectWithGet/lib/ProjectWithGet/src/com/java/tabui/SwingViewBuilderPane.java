@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabui;
 
 import javax.swing.JButton;
 import javax.swing.JToggleButton;

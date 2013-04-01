@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabpdf;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -247,8 +247,8 @@ public class InputParser {
 				else if(contents.get(i).size() > 1){
 					//System.out.println(contents.get(i).size());
 					out.append("Lines (" + lineNumBlocks.get(i).toString() + "-" + (lineNumBlocks.get(i).intValue() + 
-							contents.get(i).size()-1) + ") starting with " + contents.get(i).get(0) + " and ending with " +
-							contents.get(i).get(contents.get(i).size()-1) + " were dropped due to incompatible number of lines." );
+							contents.get(i).size()-1) + ") starting with \"" + contents.get(i).get(0) + "\" and ending with \"" +
+							contents.get(i).get(contents.get(i).size()-1) + "\" were dropped due to incompatible number of lines." );
 					out.newLine();
 				}
 			}

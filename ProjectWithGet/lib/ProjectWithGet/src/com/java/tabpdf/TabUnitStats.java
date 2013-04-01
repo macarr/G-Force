@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabpdf;
 
 public class TabUnitStats{
 	private int beginningBarIndex;

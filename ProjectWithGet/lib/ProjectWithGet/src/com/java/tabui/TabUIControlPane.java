@@ -1,4 +1,4 @@
-package com.java.pdfmaker;
+package com.java.tabui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
