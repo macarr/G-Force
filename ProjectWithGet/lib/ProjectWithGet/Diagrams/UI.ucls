@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="com.java.pdfmaker.TabUIControlPane.InfoPane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIControlPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="983" y="204"/>    
+    <position height="-1" width="-1" x="648" y="583"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="com.java.pdfmaker.TabUIControlPane.ControlPane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIControlPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="986" y="51"/>    
+    <position height="-1" width="-1" x="649" y="395"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="com.java.pdfmaker.TabUIControlPane.FinalControlPane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIControlPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="998" y="335"/>    
+    <position height="-1" width="-1" x="144" y="654"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="com.java.pdfmaker.TabUIControlPane.ConvertSavePane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIControlPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="984" y="444"/>    
+    <position height="-1" width="-1" x="646" y="745"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="com.java.pdfmaker.TabUIControlPane.OpenPane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIControlPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="970" y="554"/>    
+    <position height="-1" width="-1" x="172" y="780"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="com.java.pdfmaker.TabUIControlPane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIControlPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="694" y="274"/>    
+    <position height="-1" width="-1" x="402" y="598"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="com.java.pdfmaker.TabFileManager" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabFileManager.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="404" y="130"/>    
+    <position height="-1" width="-1" x="111" y="457"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="com.java.pdfmaker.InputParser" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/InputParser.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="125" y="120"/>    
+    <position height="-1" width="-1" x="521" y="169"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="com.java.pdfmaker.TabUIViewPane" project="ProjectWithGet" 
     file="/ProjectWithGet/src/com/java/pdfmaker/TabUIViewPane.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="403" y="410"/>    
+    <position height="-1" width="-1" x="115" y="158"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -84,113 +84,113 @@
   </class>  
   <class id="10" language="java" name="org.icepdf.ri.common.SwingController" project="ProjectWithGet" 
     file="/ProjectWithGet/lib/icepdf-viewer.jar" binary="true" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="188" y="308"/>    
+    <position height="-1" width="-1" x="323" y="38"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <association id="11">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="12" name="controlPane">        
-        <position height="18" width="67" x="839" y="92"/>      
-      </attribute>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="14">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="15" name="in"/>      
-      <multiplicity id="16" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="17">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="18" name="controller"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="20">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="21" name="convertSavePane">        
-        <position height="18" width="96" x="815" y="379"/>      
-      </attribute>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="23">    
+  <nesting id="11">    
     <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="4"/>  
+    <end type="TARGET" refId="3"/>  
   </nesting>  
-  <nesting id="24">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </nesting>  
-  <nesting id="25">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="1"/>  
-  </nesting>  
-  <association id="26">    
+  <association id="12">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="27" name="openPane">        
-        <position height="18" width="58" x="850" y="454"/>      
-      </attribute>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="29">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="30" name="data"/>      
-      <multiplicity id="31" minimum="0" maximum="1"/>    
+      <attribute id="13" name="data"/>      
+      <multiplicity id="14" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="32">    
+  <association id="15">    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="33" name="infoPane"/>      
-      <multiplicity id="34" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="35">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="3"/>  
-  </nesting>  
-  <association id="36">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="37" name="finalControlPane">        
-        <position height="18" width="88" x="822" y="286"/>      
+      <attribute id="16" name="controlPane">        
+        <position height="18" width="67" x="502" y="436"/>      
       </attribute>      
-      <multiplicity id="38" minimum="0" maximum="1"/>    
+      <multiplicity id="17" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="39">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="5"/>  
-  </nesting>  
-  <association id="40">    
+  <association id="18">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="19" name="convertSavePane">        
+        <position height="18" width="96" x="477" y="680"/>      
+      </attribute>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="21">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="22" name="openPane">        
+        <position height="18" width="58" x="52" y="680"/>      
+      </attribute>      
+      <multiplicity id="23" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="24">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="41" name="outputArea"/>      
-      <multiplicity id="42" minimum="0" maximum="1"/>    
+      <attribute id="25" name="outputArea"/>      
+      <multiplicity id="26" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association id="27">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="28" name="infoPane"/>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="30">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
+  <association id="31">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="32" name="finalControlPane">        
+        <position height="18" width="88" x="-32" y="605"/>      
+      </attribute>      
+      <multiplicity id="33" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="34">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </nesting>  
+  <association id="35">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="36" name="controller"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="39" name="in"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="41">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </nesting>  
+  <nesting id="42">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="5"/>  
+  </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true"/>    
