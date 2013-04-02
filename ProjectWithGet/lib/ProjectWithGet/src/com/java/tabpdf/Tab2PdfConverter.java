@@ -6,6 +6,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.java.paramclasses.CharCoordinates;
+import com.java.paramclasses.StarBars;
 import com.java.paramclasses.TextLine;
 import com.java.tabinput.InputParser;
 
@@ -165,8 +166,11 @@ public class Tab2PdfConverter {
 			//(currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq() - 1) * 5 <= document.right()){
 				
 				if(line.charAt(charNum) == '|' || contents.get(blockNum).get(1).charAt(charNum) == '|'){
-					tUB.processCurrentBars(starIndexes, lineNum, charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
-							currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), 
+					tUB.processCurrentBars(new TextLine(lineNum, "", charNum), 
+							new StarBars(starIndexes,
+							currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
+							currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), 
+							currBlockInfo.getUnitStats(curDIndex).getRepValue()), 
 							xPos, yPos);
 					
 					
