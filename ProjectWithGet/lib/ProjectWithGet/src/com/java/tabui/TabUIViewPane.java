@@ -131,7 +131,8 @@ public class TabUIViewPane extends JPanel{
 	public void addImage(){
 		//displays image on the grey screen before the ascii file is opened
 		try {
-			ImageIcon image = new ImageIcon("assets/splash.jpg");
+			
+			ImageIcon image = new ImageIcon(this.getClass().getResource("/resource/splash.jpg"));
 			JLabel label = new JLabel("", image, JLabel.CENTER);
 			centerPane.add( label, BorderLayout.CENTER );
 		} catch (NullPointerException e) {
