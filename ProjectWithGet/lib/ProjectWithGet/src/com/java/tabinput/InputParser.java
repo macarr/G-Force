@@ -14,12 +14,13 @@ public class InputParser {
 	String title = "";
 	String subtitle = "";
 	ArrayList<ArrayList<String>> contents;
-	ArrayList<ArrayList<String>> contentsCopy;
+	ArrayList<ArrayList<String>> validContents;
 	ArrayList<Integer> lineNumBlocks;
 	int lineNum = 0;
 	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";
 	ArrayList<String> block;
 	String errorLog = "";
+	boolean sufficientInput = false;
 	
 	
 	public InputParser(String inputPath)
@@ -200,6 +201,7 @@ public class InputParser {
 		 			
 		 			//If current is of different length from the last line of block.
 					else{
+						sufficientInput = true;
 		 				contents.add(block);
 		 				block = new ArrayList<String>();
 		 				block.add(current);
@@ -211,6 +213,7 @@ public class InputParser {
 				else if(current.equals("")){
 					//If block is not empty.
 					if(block.size() > 0){
+						sufficientInput = true;
 						contents.add(block);
 						block = new ArrayList<String>();
 					}
@@ -237,15 +240,14 @@ public class InputParser {
 			}
 			
 			//contentCopy will hold only the elements from contents whose size is 6.
-			contentsCopy = new ArrayList<ArrayList<String>>();
+			validContents = new ArrayList<ArrayList<String>>();
 			
 			for(int i = 0; i < contents.size(); i++){
 				//If the size of any element of contents is not 6, it is not copied.
 				if(!(contents.get(i).size() < 6) && !(contents.get(i).size() > 6)){
-					contentsCopy.add(contents.get(i));
+					validContents.add(contents.get(i));
 				}
-				else if(contents.get(i).size() > 1){
-					//System.out.println(contents.get(i).size());
+				else if(contents.get(i).size() > 3){
 					out.append("Lines (" + lineNumBlocks.get(i).toString() + "-" + (lineNumBlocks.get(i).intValue() + 
 							contents.get(i).size()-1) + ") starting with \"" + contents.get(i).get(0) + "\" and ending with \"" +
 							contents.get(i).get(contents.get(i).size()-1) + "\" were dropped due to incompatible number of lines." );
@@ -255,8 +257,7 @@ public class InputParser {
 			
 			//Once the needed elements from contents (the ones with size 6) have been copied over to contentsCopy,
 			//contentsCopy is assigned to contents, which now holds only the elements whose size is 6.
-			contents = contentsCopy;
-			contentsCopy = null;
+			
 						
 			//The input and output streams are closed.
 			in.close();
@@ -270,20 +271,41 @@ public class InputParser {
 	}
 	
 	//Returns the title.
-	public String getTitle()
-	{
-		return this.title;
+	public String getTitle(){
+		return title;
 	}
 	
 	//Returns the subtitle.
-	public String getSubtitle()
-	{
-		return this.subtitle;
+	public String getSubtitle(){
+		return subtitle;
 	}
 	
-	//Returns the contents.
-	public ArrayList<ArrayList<String>> getData()
-	{
-		return this.contents;
+	//Returns the valid contents.
+	public ArrayList<ArrayList<String>> getData(){
+		return validContents;
+	}
+	
+	public int getStartLineNum(ArrayList<String> searchFor){
+		int returnVal = 0;
+		boolean found = true;
+		
+		for(int i = 0; i < contents.size(); i++){
+			for(int j = 0; j < contents.get(i).size(); j++){
+				if((searchFor.size() == contents.get(i).size()) && (!searchFor.get(j).equals(contents.get(i).get(j)))){
+					found = false;
+				}
+			}
+			if(found){
+				returnVal = lineNumBlocks.get(i);
+				break;
+			}
+			found = true;
+		}
+		
+		return returnVal;
+	}
+	
+	public boolean inputIsSufficient(){
+		return sufficientInput;
 	}
 }

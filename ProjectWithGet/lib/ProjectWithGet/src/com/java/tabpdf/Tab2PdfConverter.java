@@ -1,6 +1,34 @@
+/** 
+ * Tab2PdfConverter.java
+ * 
+ * This class is responsible for printing the output to the Pdf file by using the aid of the TabUtilitiesBundle class.
+ * From the InputParser parameter, it extracts the ArrarList<ArrayList<String>> that contains the input from the input-file. 
+ * Each ArrayList<String> element is then converted into an object of class TabUnitsBlock and placed into an ArrayList<TabUnitsBlock>.
+ * Afterwards it processes the individual units (measures) within each TabUnitsBlock (in the ArrayList<TabUnitsBlock>) one after the
+ * other. After outputting each unit (measure), it checks whether there is space for the next unit (measure) within the current block 
+ * to be printed adjacent to the unit (measure) that was just printed. If space permits, the next unit is printed adjacent to the last
+ * printed unit. Otherwise a line break occurs and the unit is printed on the next available space. For example, the following is an
+ * ArrayUnitsBlock containing 4 units (measures) of guitar tab.
+ * 	|---------7-------|---------5-------|---------7-------|---------5---------|
+ *	|-----5s7---7-----|-----3s5---5-----|-----5s7---7-----|-----3s5---5-------|
+ *	|---0---------0---|-------------0---|---0---------0---|-------------0---0-|
+ *	|---------------2-|---2-----------2-|---------------2-|---2-----------2---|
+ *	|-----------------|-2---------------|-----------------|-2-----------------|
+ *	|-0---------------|-----------------|-0---------------|-------------------|
+ *	
+ * The class first prints all 6 lines of the first unit (measure) followed by a check to see whether the second unit (measure) can be 
+ * printed adjacent to the first. If so, it is printed on the same sets of lines. Otherwise, it is printed on the next available sets of 
+ * lines. After all the units (measures) within a TabUnitsBlock are printed, a counter is incremented and the next TabUnitsBlock from the
+ * ArrayList<TabUnitsBlock> is fetched and printed in the same way until the ArrayList<TabUnitsBlock> is exhausted.
+ */
+
 package com.java.tabpdf;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Rectangle;
@@ -98,24 +126,46 @@ public class Tab2PdfConverter {
 
 			if(currBlockInfo.getUnitStats(curDIndex).getHorizontalSpaceNeeds() > document.right()-document.left()){
 				fullPdfWritten = false;
+				//System.out.println(in.getStartLineNum(currBlockInfo.getBlock()) + ": " + currBlockInfo.getBlock().get(0));
+				String osVersion = System.getProperty("os.name");
+				String errorLog = "";
+				//String errorLog;
+				if(osVersion.startsWith("Windows"))
+					errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
+				else
+					errorLog = "/tmp/T2PDFErr.txt";
+				
+				try{
+					
+					//The output stream for error-log file
+					BufferedWriter out = new BufferedWriter(new FileWriter(errorLog, true));
+					out.append("Unit number " + (curDIndex + 1) + " in block starting at line " + in.getStartLineNum(currBlockInfo.getBlock()) + 
+							" and ending at line " + (in.getStartLineNum(currBlockInfo.getBlock()) + currBlockInfo.getNumberOfLines() - 1) +
+							" could not be fully printed to the Pdf file due to size.");
+					out.newLine();
+					out.close();
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			//calling this method to draw the beginning 6 horizontal lines
-			tUB.processBeginningHorizontalLines(contents.get(blockNum).getBlockSize(), document.left(), yPos);
+			tUB.processBeginningHorizontalLines(contents.get(blockNum).getNumberOfLines(), document.left(), yPos);
 			yPos = document.top()-yIncrement;
 
 			//skip > 0 means that the block was split and the trailing '|'s were printed before the split,
 			//and suppressed on the current position. Instead, the single '|' would be printed, which is done
 			//through maintaining the skip variable and a call to processSingleBars.
 			if(skip > 0){
-				tUB.processSingleBars(contents.get(blockNum).getBlockSize(), xPos, yPos);
+				tUB.processSingleBars(contents.get(blockNum).getNumberOfLines(), xPos, yPos);
 				margin += spacing;
 				yPos = document.top() - yIncrement;
 			}
 
 			//yPos = document.top() - yIncrement;
 			//at the beginning of each block the xPos needs to be set to the margin.
-			for(lineNum = 0; lineNum < contents.get(blockNum).getBlockSize(); lineNum++){
-				line = contents.get(blockNum).get(lineNum);
+			for(lineNum = 0; lineNum < contents.get(blockNum).getNumberOfLines(); lineNum++){
+				line = contents.get(blockNum).getLine(lineNum);
 
 				xPos = margin;
 
@@ -128,7 +178,7 @@ public class Tab2PdfConverter {
 			skip = 0;
 
 			//if current character index is less than the index of the first of the last set of '|'s
-			if(curDIndex < currBlockInfo.getSize()-1){
+			if(curDIndex < currBlockInfo.getNumberOfUnits()-1){
 				processMidBlockReInit();
 			}
 			//otherwise we need to print the last sets of '|'s for the current block and increase the 
@@ -161,11 +211,11 @@ public class Tab2PdfConverter {
 	private void processUnitLine(){
 		//the idea is to absorb the characters starting with '|' or '||' and ending right before
 		//the next '|' or '||'s
-		for(charNum = currBlockInfo.getUnitStats(curDIndex).getBeginningBarIndex() + skip; curDIndex + 1 < currBlockInfo.getSize() && charNum < (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarIndex());){
+		for(charNum = currBlockInfo.getUnitStats(curDIndex).getBeginningBarIndex() + skip; curDIndex + 1 < currBlockInfo.getNumberOfUnits() && charNum < (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarIndex());){
 			//if(xPos + (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq()*spacing) -
 			//(currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq() - 1) * 5 <= document.right()){
 				
-				if(line.charAt(charNum) == '|' || contents.get(blockNum).get(1).charAt(charNum) == '|'){
+				if(line.charAt(charNum) == '|' || contents.get(blockNum).getLine(1).charAt(charNum) == '|'){
 					tUB.processCurrentBars(new TextLine(lineNum, "", charNum), 
 							new StarBars(starIndexes,
 							currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
@@ -272,7 +322,7 @@ public class Tab2PdfConverter {
 
 			//if a block was split from the middle, the trailing '|'s should be printed before the split.
 			//processTrailingBars does that. Also the ending 6 horizontal lines are printed
-			xPos = tUB.processTrailingBars(starIndexes, contents.get(blockNum).getBlockSize(), charNum, 
+			xPos = tUB.processTrailingBars(starIndexes, contents.get(blockNum).getNumberOfLines(), charNum, 
 					currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
 					currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), 
 					currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
@@ -292,7 +342,7 @@ public class Tab2PdfConverter {
 
 		//If all the units of a block have been printed, it is time to call 'processtrailingBars to print
 		//the last set of '|'s.
-		xPos = tUB.processTrailingBars(starIndexes, contents.get(blockNum).getBlockSize(), charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
+		xPos = tUB.processTrailingBars(starIndexes, contents.get(blockNum).getNumberOfLines(), charNum, currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), currBlockInfo.getUnitStats(curDIndex).getRepValue(), margin, xPos, yPos);
 
 		//margin and yPosition needs to be reset after processTrailingBars returns, so that the next
 		//line that would be output is done at the proper location. 

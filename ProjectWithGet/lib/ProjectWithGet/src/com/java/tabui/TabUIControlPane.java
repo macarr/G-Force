@@ -55,7 +55,7 @@ public class TabUIControlPane extends JPanel{
 					if(status == 0){
 						convertSavePane.disableComponents();
 						enableErrorLog();
-						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display.", "Message", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display. Please check the error log.", "Message", JOptionPane.INFORMATION_MESSAGE);
 					}
 					
 					//Status == 1 means that at least some meaningful data was found in the input file.

@@ -72,11 +72,7 @@ public class TabFileManager{
 	
 			in = new InputParser(inputPath);
 	
-			//If the user chose a file, that file's name is sent to the method 'inputConverter', which sends back an ArrayList filled with
-			//the contents of the file.
-			//contents = in.getData();
-	
-			if(in.getData().size() > 0){
+			if(in.inputIsSufficient() && in.getData().size() > 0){
 				//The Ascii file is displayed on the screen.
 				outputArea.showAsciiFile(in);
 				status = 1;
@@ -140,7 +136,7 @@ public class TabFileManager{
 
 				//If any of the music could not fit on the page, need to notify the user through a dialog-box.
 				if(!fullSuccess){
-					JOptionPane.showMessageDialog(outputArea, "Some Music Could not Fully Fit due to the Large Size.", "Message", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(outputArea, "Some music could not fully fit due to the large size. Please check the error log for more detail.", "Message", JOptionPane.INFORMATION_MESSAGE);
 				}
 				interrupt();
 			}
