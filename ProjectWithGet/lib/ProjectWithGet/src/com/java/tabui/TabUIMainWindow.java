@@ -15,7 +15,9 @@ import java.util.Date;
 
 import java.io.*;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 
 public class TabUIMainWindow extends JFrame{
@@ -34,6 +36,76 @@ public class TabUIMainWindow extends JFrame{
 		
 		Container c = getContentPane();
 		c.setLayout(new BorderLayout());
+		
+		//start Splashscreen
+		try
+		{
+			//loads the image file into an ImageIcon object
+			ImageIcon img = new ImageIcon(this.getClass().getResource("/resource/splash.jpg"));
+	
+			//removes the title bar
+			setUndecorated(true);
+    	
+			//gets dimensions of screen size(continued)
+			double screenWidth = size.getWidth();
+			double screenHeight = size.getHeight();
+	
+			//if image fits onto the screen
+			if ((img.getIconWidth() <= (int)screenWidth) && (img.getIconHeight() <= (int)screenHeight))
+			{
+				//locates the image halfway across the screen and 1/4 - way down the screen,
+				//depending on the resolution of the screen and the resolution of the picture.
+			
+				setLocation(((int)screenWidth - img.getIconWidth()) / 2 , ((int)(screenHeight) - img.getIconHeight()) / 2);
+	
+				//loads the image into a JLabel object
+				JLabel x = new JLabel(img);	
+	
+				//adds the JLabel object into the Container c
+				c.add(x);
+	
+				pack();
+	
+				//sets the picture to be always on top
+				setAlwaysOnTop(true);
+	
+				//displays the actual image
+				setVisible(true);
+	
+				//holds the image for 3 seconds
+				try
+				{
+					Thread.sleep(3000);
+				} catch (InterruptedException e)
+				{
+					Thread.currentThread().interrupt();
+				}
+	
+				//disables always on top for the rest of the program
+				setAlwaysOnTop(false);
+	
+				//optional: set it to be invisible, but won't change anything
+				//setVisible(false);
+	
+				//removes the JLabel from the Container c
+				c.remove(x);
+
+				//clears picture from memory
+				this.dispose();
+	
+				//brings back the title bar for the rest of the program
+				setUndecorated(false);
+			
+				//sets the location back to zero for the rest of the program
+				setLocation(0,0);
+			}
+		}
+		catch (NullPointerException e)
+		{
+			System.out.println("No picture File!");
+			//System.exit(1);
+		}
+		//end Splashscreen
 		
 		c.add(outputArea, BorderLayout.CENTER);
 		c.add(conPan, BorderLayout.EAST);
