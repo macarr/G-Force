@@ -42,11 +42,8 @@ public class TabUIMainWindow extends JFrame{
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
 				outputArea.closePdfFile();
-				String osVersion = System.getProperty("os.name");
-				if(osVersion.startsWith("Windows"))
-					new File(""+System.getenv("TEMP")+"/temp.pdf").delete();
-				else
-					new File("/tmp/temp.pdf").delete();
+				String tempPath = TabFileManager.getTempDir();
+				new File(""+tempPath+"/temp.pdf").delete();
 				System.exit(0);
 			}
 		});

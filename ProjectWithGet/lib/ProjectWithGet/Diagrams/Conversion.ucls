@@ -1,198 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true">  
-  <class id="1" language="java" name="com.java.pdfmaker.Tab2PdfConverter" project="ProjectWithGet" 
-    file="/ProjectWithGet/src/com/java/pdfmaker/Tab2PdfConverter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="790" y="204"/>    
+  <class id="1" language="java" name="com.java.tabpdf.TabUnitStats" project="ProjectWithGet" 
+    file="/ProjectWithGet/src/com/java/tabpdf/TabUnitStats.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="122" y="648"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="com.itextpdf.text.pdf.PdfWriter" project="ProjectWithGet" 
+  <class id="2" language="java" name="com.java.tabpdf.Tab2PdfConverter" project="ProjectWithGet" 
+    file="/ProjectWithGet/src/com/java/tabpdf/Tab2PdfConverter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="205" y="68"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="false" protected="true" private="false"/>      
+      <operations public="true" package="true" protected="true" private="false"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.java.tabpdf.TabUtilitiesBundle" project="ProjectWithGet" 
+    file="/ProjectWithGet/src/com/java/tabpdf/TabUtilitiesBundle.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="609" y="376"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.java.tabinput.InputParser" project="ProjectWithGet" 
+    file="/ProjectWithGet/src/com/java/tabinput/InputParser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="515" y="88"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="com.java.tabpdf.TabUnitsBlock" project="ProjectWithGet" 
+    file="/ProjectWithGet/src/com/java/tabpdf/TabUnitsBlock.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="135" y="329"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="false" protected="false" private="false"/>      
+      <operations public="true" package="false" protected="false" private="false"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.itextpdf.text.pdf.PdfContentByte" project="ProjectWithGet" 
     file="/ProjectWithGet/lib/itextpdf-5.3.5.jar" binary="true" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="520" y="145"/>    
+    <position height="-1" width="-1" x="306" y="502"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="com.java.pdfmaker.InputParser" project="ProjectWithGet" 
-    file="/ProjectWithGet/src/com/java/pdfmaker/InputParser.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="759" y="672"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
-  <class id="4" language="java" name="com.java.pdfmaker.TabUnitsBlock" project="ProjectWithGet" 
-    file="/ProjectWithGet/src/com/java/pdfmaker/TabUnitsBlock.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="492" y="634"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
-  <class id="5" language="java" name="com.java.pdfmaker.TabUnitStats" project="ProjectWithGet" 
-    file="/ProjectWithGet/src/com/java/pdfmaker/TabUnitStats.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="148" y="634"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
-  <class id="6" language="java" name="com.java.pdfmaker.TabUtilitiesBundle" project="ProjectWithGet" 
-    file="/ProjectWithGet/src/com/java/pdfmaker/TabUtilitiesBundle.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="207" y="205"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
-  <class id="7" language="java" name="com.itextpdf.text.Document" project="ProjectWithGet" 
+  <class id="7" language="java" name="com.itextpdf.text.pdf.PdfWriter" project="ProjectWithGet" 
     file="/ProjectWithGet/lib/itextpdf-5.3.5.jar" binary="true" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="516" y="297"/>    
+    <position height="-1" width="-1" x="305" y="246"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="com.itextpdf.text.pdf.PdfContentByte" project="ProjectWithGet" 
-    file="/ProjectWithGet/lib/itextpdf-5.3.5.jar" binary="true" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="515" y="-7"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false"/>      
-      <operations public="false" package="false" protected="false" private="false"/>    
-    </display>  
-  </class>  
-  <association id="9">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="10" name="tUB"/>      
-      <multiplicity id="11" minimum="0" maximum="1"/>    
+  <association id="8">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="9" name="in"/>      
+      <multiplicity id="10" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="11">    
+    <bendpoint x="218" y="181"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="12" name="currBlockInfo"/>      
+      <multiplicity id="13" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="14">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="15" name="cB">        
+        <position height="18" width="23" x="385" y="465"/>      
+      </attribute>      
+      <multiplicity id="16" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="12">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="13" name="cB">        
-        <position height="18" width="23" x="484" y="45"/>      
-      </attribute>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="15">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="16" name="duplicatedFrom"/>      
-      <multiplicity id="17" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="18">    
-    <end type="SOURCE" refId="8" navigable="false">      
-      <attribute id="19" name="writer"/>      
-      <multiplicity id="20" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="21">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="22" name="contents">        
-        <position height="18" width="50" x="329" y="610"/>      
-      </attribute>      
-      <multiplicity id="23" minimum="0" maximum="2147483647">        
-        <position height="16" width="21" x="590" y="494"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="24">    
+  <association id="17">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="25" name="directContent">        
-        <position height="18" width="74" x="520" y="45"/>      
+      <attribute id="18" name="tUB">        
+        <position height="18" width="25" x="381" y="168"/>      
       </attribute>      
-      <multiplicity id="26" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="27">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="28" name="in"/>      
-      <multiplicity id="29" minimum="0" maximum="1"/>    
+      <multiplicity id="19" minimum="0" maximum="1">        
+        <position height="16" width="23" x="374" y="218"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="30">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="31" name="document"/>      
-      <multiplicity id="32" minimum="0" maximum="1"/>    
+  <association id="20">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="21" name="blockOfTabUnits"/>      
+      <multiplicity id="22" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="24" name="directContentUnder">        
+        <position height="18" width="103" x="194" y="458"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="1">        
+        <position height="16" width="23" x="267" y="443"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="27" name="writer">        
+        <position height="18" width="39" x="256" y="273"/>      
+      </attribute>      
+      <multiplicity id="28" minimum="0" maximum="1">        
+        <position height="16" width="23" x="273" y="289"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="33">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="34" name="unit">        
-        <position height="18" width="27" x="259" y="609"/>      
-      </attribute>      
-      <multiplicity id="35" minimum="0" maximum="1">        
-        <position height="16" width="23" x="253" y="658"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="36">    
+  <association id="29">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="37" name="directContentUnder">        
-        <position height="18" width="103" x="391" y="18"/>      
-      </attribute>      
-      <multiplicity id="38" minimum="0" maximum="1"/>    
+      <attribute id="30" name="writer"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="39">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="40" name="currBlockInfo"/>      
-      <multiplicity id="41" minimum="0" maximum="1">        
-        <position height="16" width="23" x="354" y="634"/>      
+  <association id="32">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="33" name="unit"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="36" name="directContent">        
+        <position height="18" width="74" x="320" y="437"/>      
+      </attribute>      
+      <multiplicity id="37" minimum="0" maximum="1">        
+        <position height="16" width="23" x="319" y="454"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="42">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="43" name="blockOfTabUnits">        
-        <position height="18" width="88" x="244" y="597"/>      
-      </attribute>      
-      <multiplicity id="44" minimum="0" maximum="2147483647"/>    
+  <association id="38">    
+    <bendpoint x="67" y="167"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="39" name="contents"/>      
+      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="45">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="46" name="writer"/>      
-      <multiplicity id="47" minimum="0" maximum="1"/>    
+  <association id="41">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="42" name="duplicatedFrom">        
+        <position height="18" width="83" x="322" y="544"/>      
+      </attribute>      
+      <multiplicity id="43" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

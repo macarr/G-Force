@@ -39,11 +39,7 @@ public class TabFileManager{
 	//The 'UIMiddleLayer' constructor, which takes as parameter a reference to the UIView where all screen output is rendered.
 	public TabFileManager(TabUIViewPane outputArea){
 		this.outputArea = outputArea;
-		String osVersion = System.getProperty("os.name");
-		if(osVersion.startsWith("Windows"))
-			outputPath = "" + System.getenv("TEMP");
-		else
-			outputPath = "/tmp/";
+		outputPath = getTempDir();
 	}
 
 	//'loadFile' displays the 'JFileChooser' which allows the user to choose the input file.  
@@ -108,7 +104,15 @@ public class TabFileManager{
 		
 		return destinationPath;
 	}
-
+	public static String getTempDir() {
+		String osVersion = System.getProperty("os.name");
+		String temp;
+		if(osVersion.startsWith("Windows"))
+			temp = ""+System.getenv("TEMP");
+		else
+			temp = "/tmp/";
+		return temp;
+	}
 	//'convertFile' converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
 	public void convertFile(final String fontName, final float fontSize, final float spacing){
 

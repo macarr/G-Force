@@ -327,10 +327,7 @@ public class TabUIControlPane extends JPanel{
 						String errorLog;
 						
 						//Taking care of some platform dependent task in order to access a hidden file.
-						if(osVersion.startsWith("Windows"))
-							errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
-						else
-							errorLog = "/tmp/T2PDFErr.txt";
+						errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
 						
 						//A window where the error-log file shall be displayed.
 						InfoView errLogView = new InfoView("Error Log");

@@ -25,12 +25,7 @@ public class InputParser {
 	
 	public InputParser(String inputPath)
 	{
-		String osVersion = System.getProperty("os.name");
-		//String errorLog;
-		if(osVersion.startsWith("Windows"))
-			errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
-		else
-			errorLog = "/tmp/T2PDFErr.txt";
+		errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
 		
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
