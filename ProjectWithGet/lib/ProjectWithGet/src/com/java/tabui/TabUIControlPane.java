@@ -327,13 +327,13 @@ public class TabUIControlPane extends JPanel{
 						String errorLog;
 						
 						//Taking care of some platform dependent task in order to access a hidden file.
-						errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
+						//errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
 						
 						//A window where the error-log file shall be displayed.
 						InfoView errLogView = new InfoView("Error Log");
 						
 						//InputStream for the error-log file.
-						BufferedReader in = new BufferedReader(new FileReader(errorLog));
+						BufferedReader in = new BufferedReader(new FileReader("log_file"));
 						
 						//Reading the file until null is reached.
 						current = in.readLine();
@@ -347,7 +347,8 @@ public class TabUIControlPane extends JPanel{
 						in.close();
 					}
 					catch(Exception ex){
-						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Unexpected Error Occured", "Error", JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();
+						//JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Unexpected Error Occured", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			});

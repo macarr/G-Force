@@ -16,20 +16,23 @@ public class InputParser {
 	ArrayList<ArrayList<String>> contents;
 	ArrayList<ArrayList<String>> validContents;
 	ArrayList<Integer> lineNumBlocks;
+	ArrayList<Integer> validLineNums;
 	int lineNum = 0;
 	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";
 	ArrayList<String> block;
 	String errorLog = "";
+	String logFile = "";
 	boolean sufficientInput = false;
 	
 	
 	public InputParser(String inputPath)
 	{
-		errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
-		
+		//errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
+		logFile = "log_file";
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
 		lineNumBlocks = new ArrayList<Integer>();
+		validLineNums = new ArrayList<Integer>();
 		readFile(inputPath);
 	}
 	
@@ -42,7 +45,7 @@ public class InputParser {
 			String current = "";
 			
 			//The output stream for error-log file
-			BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
+			BufferedWriter out = new BufferedWriter(new FileWriter(logFile));
 			
 			current = in.readLine();
 			
@@ -241,6 +244,8 @@ public class InputParser {
 				//If the size of any element of contents is not 6, it is not copied.
 				if(!(contents.get(i).size() < 6) && !(contents.get(i).size() > 6)){
 					validContents.add(contents.get(i));
+					validLineNums.add(lineNumBlocks.get(i));
+					
 				}
 				else if(contents.get(i).size() > 3){
 					out.append("Lines (" + lineNumBlocks.get(i).toString() + "-" + (lineNumBlocks.get(i).intValue() + 
@@ -280,24 +285,8 @@ public class InputParser {
 		return validContents;
 	}
 	
-	public int getStartLineNum(ArrayList<String> searchFor){
-		int returnVal = 0;
-		boolean found = true;
-		
-		for(int i = 0; i < contents.size(); i++){
-			for(int j = 0; j < contents.get(i).size(); j++){
-				if((searchFor.size() == contents.get(i).size()) && (!searchFor.get(j).equals(contents.get(i).get(j)))){
-					found = false;
-				}
-			}
-			if(found){
-				returnVal = lineNumBlocks.get(i);
-				break;
-			}
-			found = true;
-		}
-		
-		return returnVal;
+	public int getStartLineNum(int index){
+		return validLineNums.get(index);
 	}
 	
 	public boolean inputIsSufficient(){

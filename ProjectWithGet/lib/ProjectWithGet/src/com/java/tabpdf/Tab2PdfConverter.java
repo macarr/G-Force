@@ -127,21 +127,16 @@ public class Tab2PdfConverter {
 			if(currBlockInfo.getUnitStats(curDIndex).getHorizontalSpaceNeeds() > document.right()-document.left()){
 				fullPdfWritten = false;
 				//System.out.println(in.getStartLineNum(currBlockInfo.getBlock()) + ": " + currBlockInfo.getBlock().get(0));
-				String osVersion = System.getProperty("os.name");
-				String errorLog = "";
-				//String errorLog;
-				if(osVersion.startsWith("Windows"))
-					errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
-				else
-					errorLog = "/tmp/T2PDFErr.txt";
+				//String errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
 				
 				try{
 					
 					//The output stream for error-log file
-					BufferedWriter out = new BufferedWriter(new FileWriter(errorLog, true));
-					out.append("Unit number " + (curDIndex + 1) + " in block starting at line " + in.getStartLineNum(currBlockInfo.getBlock()) + 
-							" and ending at line " + (in.getStartLineNum(currBlockInfo.getBlock()) + currBlockInfo.getNumberOfLines() - 1) +
-							" could not be fully printed to the Pdf file due to size.");
+					BufferedWriter out = new BufferedWriter(new FileWriter("log_file", true));
+					int startLine = in.getStartLineNum(blockNum);
+					
+					out.append("Measure number " + (curDIndex + 1) + " from lines (" + startLine + "-" + (startLine + currBlockInfo.getNumberOfLines()-1) +
+							") of the input file" + " went past the right margin of the PDf document during conversion, and might not have fully fit.");
 					out.newLine();
 					out.close();
 				}

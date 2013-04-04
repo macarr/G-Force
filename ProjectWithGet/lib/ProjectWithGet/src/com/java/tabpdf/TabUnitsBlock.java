@@ -1,3 +1,9 @@
+/**TabUnitsBlock.java
+ * 
+ * This class takes as input an ArrayList<String> (a block of tab units), and maintains an ArrayList<TabUnitStats>. Upon request, it can
+ * return the entire block, a specific line from the block, information about a specific unit (measure), and number of units within this block.
+ */
+
 package com.java.tabpdf;
 
 import java.util.ArrayList;
@@ -37,7 +43,7 @@ public class TabUnitsBlock{
 		}
 	}
 	
-	public void setUnitStats(String source, float spacing) {
+	public void setUnitStats(String source, float spacing){
 		blockOfTabUnits = new ArrayList<TabUnitStats>();
 		int numOfBlanks = 0;
 

@@ -140,7 +140,7 @@ public class TabFileManager{
 
 				//If any of the music could not fit on the page, need to notify the user through a dialog-box.
 				if(!fullSuccess){
-					JOptionPane.showMessageDialog(outputArea, "Some music could not fully fit due to the large size. Please check the error log for more detail.", "Message", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(outputArea, "Some music might not have fully fit on the Pdf document due to size. Please check the error log for more details.", "Message", JOptionPane.INFORMATION_MESSAGE);
 				}
 				interrupt();
 			}
