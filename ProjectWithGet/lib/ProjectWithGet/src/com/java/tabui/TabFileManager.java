@@ -108,7 +108,7 @@ public class TabFileManager{
 		String osVersion = System.getProperty("os.name");
 		String temp;
 		if(osVersion.startsWith("Windows"))
-			temp = ""+System.getenv("TEMP");
+			temp = ""+System.getenv("TEMP")+"/";
 		else
 			temp = "/tmp/";
 		return temp;
@@ -131,10 +131,10 @@ public class TabFileManager{
 				}
 
 				//The 'createPdf' method of 'PdfMaker' returns true if all the music data fit on the screen. Otherwise it returns false.
-				boolean fullSuccess = new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "/temp.pdf", fontName, fontSize, spacing).createPDF();
+				boolean fullSuccess = new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "temp.pdf", fontName, fontSize, spacing).createPDF();
 
 				//The 'showPdf' method of the 'UIView' class takes in the outputPath (The location where the temporary Pdf file is stored).
-				outputArea.showPdfFile(outputPath + "/temp.pdf");
+				outputArea.showPdfFile(outputPath + "temp.pdf");
 
 				//Following the conversion, the 'saveButton' is enabled.
 

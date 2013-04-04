@@ -127,7 +127,17 @@ public class Tab2PdfConverter {
 			if(currBlockInfo.getUnitStats(curDIndex).getHorizontalSpaceNeeds() > document.right()-document.left()){
 				fullPdfWritten = false;
 				//System.out.println(in.getStartLineNum(currBlockInfo.getBlock()) + ": " + currBlockInfo.getBlock().get(0));
-				//String errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
+
+				String errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
+
+				//String osVersion = System.getProperty("os.name");
+				//String errorLog = "";
+				//String errorLog;
+				//if(osVersion.startsWith("Windows"))
+					//errorLog = ""+System.getenv("TEMP")+"T2PDFErr.txt";
+				//else
+				//	errorLog = "/tmp/T2PDFErr.txt";
+
 				
 				try{
 					

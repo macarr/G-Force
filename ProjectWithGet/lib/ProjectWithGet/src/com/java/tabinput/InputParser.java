@@ -25,10 +25,13 @@ public class InputParser {
 	boolean sufficientInput = false;
 	
 	
-	public InputParser(String inputPath)
-	{
+	public InputParser(String inputPath){
+
 		//errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
 		logFile = "log_file";
+
+		//errorLog=com.java.tabui.TabFileManager.getTempDir()+"T2PDFErr.txt";
+		
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
 		lineNumBlocks = new ArrayList<Integer>();
@@ -45,7 +48,10 @@ public class InputParser {
 			String current = "";
 			
 			//The output stream for error-log file
+
+			//BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
 			BufferedWriter out = new BufferedWriter(new FileWriter(logFile));
+
 			
 			current = in.readLine();
 			
@@ -250,10 +256,14 @@ public class InputParser {
 				else if(contents.get(i).size() > 3){
 					out.append("Lines (" + lineNumBlocks.get(i).toString() + "-" + (lineNumBlocks.get(i).intValue() + 
 							contents.get(i).size()-1) + ") starting with \"" + contents.get(i).get(0) + "\" and ending with \"" +
-							contents.get(i).get(contents.get(i).size()-1) + "\" were dropped due to incompatible number of lines." );
+							contents.get(i).get(contents.get(i).size()-1) + "\" were dropped due to incompatible number of lines during input." );
 					out.newLine();
 				}
 			}
+			
+			//Adding two new lines for clarity.
+			out.newLine();
+			out.newLine();
 			
 			//Once the needed elements from contents (the ones with size 6) have been copied over to contentsCopy,
 			//contentsCopy is assigned to contents, which now holds only the elements whose size is 6.
