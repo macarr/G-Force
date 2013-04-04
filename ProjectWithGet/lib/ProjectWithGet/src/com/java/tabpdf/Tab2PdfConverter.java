@@ -131,7 +131,7 @@ public class Tab2PdfConverter {
 				String errorLog = "";
 				//String errorLog;
 				if(osVersion.startsWith("Windows"))
-					errorLog = ""+System.getenv("TEMP")+"/T2PDFErr.txt";
+					errorLog = ""+System.getenv("TEMP")+"T2PDFErr.txt";
 				else
 					errorLog = "/tmp/T2PDFErr.txt";
 				

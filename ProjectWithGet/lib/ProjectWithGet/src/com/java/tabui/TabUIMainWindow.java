@@ -115,7 +115,7 @@ public class TabUIMainWindow extends JFrame{
 			public void windowClosing(WindowEvent e){
 				outputArea.closePdfFile();
 				String tempPath = TabFileManager.getTempDir();
-				new File(""+tempPath+"/temp.pdf").delete();
+				new File(""+tempPath+"temp.pdf").delete();
 				System.exit(0);
 			}
 		});

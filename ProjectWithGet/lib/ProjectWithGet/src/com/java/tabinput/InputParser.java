@@ -25,7 +25,7 @@ public class InputParser {
 	
 	public InputParser(String inputPath)
 	{
-		errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
+		errorLog=com.java.tabui.TabFileManager.getTempDir()+"T2PDFErr.txt";
 		
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
@@ -42,7 +42,7 @@ public class InputParser {
 			String current = "";
 			
 			//The output stream for error-log file
-			BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
+			BufferedWriter out = new BufferedWriter(new FileWriter(errorLog, true));
 			
 			current = in.readLine();
 			
