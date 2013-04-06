@@ -6,8 +6,10 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.java.paramclasses.CharCoordinates;
+import com.java.paramclasses.ReturnValues;
 import com.java.paramclasses.StarBars;
 import com.java.paramclasses.TextLine;
+import com.java.paramclasses.TrailingCoordinates;
 import com.java.tabinput.InputParser;
 
 /**
@@ -32,7 +34,7 @@ public class TabUtilitiesBundle{
 		float tiltY  = (float)(Math.sin(tiltAngle)); 
 	}
 	    
-	PdfTemplate angularRect = null;		//The tilted square would be drawn onto the following PdfTemplate first.
+	PdfTemplate angularRect = null;
 	PdfTemplate slideLine = null;
 	    
 	/**
@@ -44,6 +46,7 @@ public class TabUtilitiesBundle{
 	 * @param pageSize The page-size.
 	 */
 	public TabUtilitiesBundle(PdfContentByte cB, String fontName, float fontSize, float spacing, Rectangle pageSize){
+		//Initializing some of the member objects.
 		this.cB = cB;
 		this.fontName = fontName;
 		this.fontSize = fontSize;
@@ -59,11 +62,12 @@ public class TabUtilitiesBundle{
 			ex.printStackTrace();
 		}
 			
-		//Instantiating the PdfTemplate and drawing the tilted square on it.
+		//Instantiating the PdfTemplate for a tilted square.
 		angularRect = cB.createTemplate(fontSize/2f, fontSize/2f);                
 		angularRect.rectangle(0.5f, 0.5f, fontSize/3f, fontSize/3f);
 		angularRect.stroke();
 		
+		//Instantiating the PdfTemplate for a line representing a slide.
 		slideLine = cB.createTemplate(fontSize/2.0f, fontSize/2.0f);
 		slideLine.moveTo(0f, fontSize/4.0f);
 		slideLine.lineTo(fontSize/2.0f, fontSize/4.0f);
@@ -113,7 +117,7 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Processes input within triangular-brackets and displays it in the proper format on the pdf document.
-	 * @param number The number that appears within triangular brackets.
+	 * @param numericVal The number that appears within triangular brackets.
 	 * @param xPos The horizontal position where the output shall be written.  
 	 * @param yPos The vertical position where the output shall be written.
 	 */
@@ -144,15 +148,19 @@ public class TabUtilitiesBundle{
 	public void processSingleBars(int numLines, float xPos, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 			if(lineNum < 5){
+				//Drawing the vertical bars.
 				cB.moveTo(xPos, yPos-fontSize/1.5f);
 				cB.lineTo(xPos, yPos+fontSize/2.5f);
 				
+				//Drawing the horizontal bars.
 				cB.moveTo(xPos, yPos+fontSize/2.5f);
 				cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 				
 				yPos -= fontSize;
 			}
 		}
+		
+		//Drawing one more horizontal bar for proper alignment.
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
@@ -163,6 +171,7 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the line shall be drawn.
 	 */
 	public void processDashes(float xPos, float yPos){
+		//Drawing a line representing a dash
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 		cB.stroke();
@@ -174,6 +183,7 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the symbol shall be drawn. 
 	 */
 	public void processH(float xPos, float yPos){
+		//Drawing a line. The actual hammer-on is processed within processDigit.
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
@@ -184,99 +194,100 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the pull-off symbol shall be written.
 	 */
 	public void processP(float xPos, float yPos){
+		//Drawing a line. The actual pull-off is processed within processDigit.
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
 	
+	/**
+	 * Writes a straight line in place of a character that is not known.
+	 * @param xPos
+	 * @param yPos
+	 */
 	public void processUnknown(float xPos, float yPos){
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 	}
 
 	/**
-	 * Writes a digit to the pdf file
-	 * @param number The digit to be written to the pdf file.
-	 * @param lineNum The lineNum from the unit that the input-digit came from.
-	 * @param line The actual line from the unit that the input-digit came from. 
-	 * @param charNum The character-number from the line that the input-digit came from.
-	 * @param xPos The horizontal position where the output shall be written.
-	 * @param yPos THe vertical position where the output shall be written.
-	 * @param lastNumPos An ArrayList that stores the horizontal position of the last digit on the same line.
+	 * 
+	 * @param numericVal The value representing the number
+	 * @param textLine The object carrying the information regarding a line
+	 * @param coordinates The object carrying some information regarding locations within the Pdf document
+	 * @return An Object carrying the x and y coordinates of the current number
 	 */
-	public void processDigit(String numericVal, TextLine textLine, CharCoordinates coordinates){
+	public ReturnValues processDigit(String numericVal, TextLine textLine, CharCoordinates coordinates){
 		
 		if(textLine.line.charAt(textLine.charNum-(numericVal.length()+1)) == 'p'){
 			
 			//If the pull-off can be processed on the same line
-			if(coordinates.yPos == coordinates.lastNumYPos[textLine.lineNum]){
-				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.yPos+fontSize/2, coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos+fontSize, 25, 130);
+			if(coordinates.yPos == coordinates.lastNumYPos){
+				cB.arc(coordinates.lastNumXPos, coordinates.yPos+fontSize/2, coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos+fontSize, 25, 130);
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(coordinates.lastNumXPos[textLine.lineNum] + coordinates.xPos + (numericVal.length()*spacing)/2)/2, coordinates.yPos+fontSize+(fontSize/10), 0);	
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p",(coordinates.lastNumXPos + (coordinates.xPos - coordinates.lastNumXPos)/2f), coordinates.yPos+fontSize+(fontSize/10), 0);	
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 			}
 			
-			//Else if the digits associated with the pull-off are on two different lines.
+			//Else if the numbers associated with the pull-off are on two different lines.
 			else{
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", coordinates.lastNumXPos[textLine.lineNum] + 10, coordinates.lastNumYPos[textLine.lineNum]+fontSize+(fontSize/10), 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", coordinates.lastNumXPos + 10, coordinates.lastNumYPos+fontSize+(fontSize/10), 0);
 				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "p", coordinates.xPos - 10, coordinates.yPos + fontSize+(fontSize/10), 0); 
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 				
-				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.lastNumYPos[textLine.lineNum]+fontSize/2, coordinates.lastNumXPos[textLine.lineNum] + 30, coordinates.lastNumYPos[textLine.lineNum]+fontSize, 90, 90);
+				cB.arc(coordinates.lastNumXPos, coordinates.lastNumYPos+fontSize/2, coordinates.lastNumXPos + 30, coordinates.lastNumYPos+fontSize, 90, 90);
 				cB.arc(coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos+fontSize/2, coordinates.xPos - 30, coordinates.yPos+fontSize, 0, 90); 
 				
 			}
 		}
 		
+		
 		else if(textLine.line.charAt(textLine.charNum-(numericVal.length()+1)) == 'h'){
 			
-			//If the pull-off can be processed on the same line
-			if(coordinates.yPos == coordinates.lastNumYPos[textLine.lineNum]){
-				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.yPos+fontSize/2, coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos+fontSize, 25, 130);
+			//If the hammer-on can be processed on the same line
+			if(coordinates.yPos == coordinates.lastNumYPos){
+				cB.arc(coordinates.lastNumXPos, coordinates.yPos+fontSize/2, coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos+fontSize, 25, 130);
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h",(coordinates.lastNumXPos[textLine.lineNum] + coordinates.xPos + (numericVal.length()*spacing)/2)/2, coordinates.yPos+fontSize+(fontSize/10), 0);	
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h",(coordinates.lastNumXPos + (coordinates.xPos - coordinates.lastNumXPos)/2f), coordinates.yPos+fontSize+(fontSize/10), 0);	
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 			}
 			
-			//Else if the digits associated with the pull-off are on two different lines.
+			//Else if the numbers associated with the hammer-on are on two different lines.
 			else{
 				cB.setFontAndSize(bF, fontSize/2);
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", coordinates.lastNumXPos[textLine.lineNum] + 10, coordinates.lastNumYPos[textLine.lineNum]+fontSize+(fontSize/10), 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", coordinates.lastNumXPos + 10, coordinates.lastNumYPos+fontSize+(fontSize/10), 0);
 				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "h", coordinates.xPos - 10, coordinates.yPos + fontSize+(fontSize/10), 0); 
 				cB.endText();
 				cB.setFontAndSize(bF, fontSize);
 				
-				cB.arc(coordinates.lastNumXPos[textLine.lineNum], coordinates.lastNumYPos[textLine.lineNum]+fontSize/2, coordinates.lastNumXPos[textLine.lineNum] + 30, coordinates.lastNumYPos[textLine.lineNum]+fontSize, 90, 90);
+				cB.arc(coordinates.lastNumXPos, coordinates.lastNumYPos+fontSize/2, coordinates.lastNumXPos + 30, coordinates.lastNumYPos+fontSize, 90, 90);
 				cB.arc(coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos+fontSize/2, coordinates.xPos - 30, coordinates.yPos+fontSize, 0, 90); 
 				
 			}
 		}
 
-
-		//Writing the digit.
+		//Writing the number.
 		cB.beginText();
 		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, numericVal, coordinates.xPos, coordinates.yPos, 0);	
 		cB.endText();
 
-		//Saving the horizontal and vertical positions of the current digit for any later pull-offs that may appear.
-		coordinates.lastNumXPos[textLine.lineNum] = coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2;
-		coordinates.lastNumYPos[textLine.lineNum] = coordinates.yPos;
-
+		//Saving the horizontal and vertical positions of the current number for any later pull-offs that may appear.
+		ReturnValues returnValues = new ReturnValues(coordinates.xPos + (bF.getWidthPoint(numericVal, fontSize))/2, coordinates.yPos);
+		
 		//if a very short line is to be inserted between numbers with no gaps in between then 
 		//the if statement needs to be removed
-		//if(line.charAt(charNum) != ' '){
 		cB.moveTo(coordinates.xPos + bF.getWidthPoint(numericVal, fontSize), coordinates.yPos+fontSize/2.5f);
 		cB.lineTo(coordinates.xPos + ((numericVal.length())*spacing), coordinates.yPos+fontSize/2.5f);
 		cB.stroke();
-		//}
-
+		
+		return returnValues;
 	}
 
 	/**
@@ -285,12 +296,12 @@ public class TabUtilitiesBundle{
 	 * @param yPos The vertical position where the slide-up character shall be drawn.
 	 */
 	public void processSlideUp(float xPos, float yPos){
-		//cB.beginText();
-		//cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, "/", xPos+1, yPos+fontSize/6f, 0);	
-		//cB.endText();
 		TiltedShape tS = new TiltedShape();
+		
+		//Drawing the PdfContentByte to the Pdf.
 		cB.addTemplate(slideLine, tS.scaleX, tS.tiltX, tS.scaleY, tS.tiltY, xPos, yPos+fontSize/2.5f);
 		
+		//Drawing a horizontal line.
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 		
@@ -300,15 +311,20 @@ public class TabUtilitiesBundle{
 	 * To process the star character in the ascii file.
 	 * @param xPos The horizontal position where the representation of the star character (a filled circle) shall be drawn.
 	 * @param yPos The vertical position where the representation of the star character (a filled circle) shall be drawn.
+	 * @param nextCharIsBar A boolean value indicating whether the next character in the line is a '|'. 
 	 */
 	public void processStar(float xPos, float yPos, boolean nextCharIsBar){
+		//Horizontal lines
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
 		cB.stroke();
 		
+		//Makes sure that the gap between the filled-circle and the next '|' is constant regardless of the spacing value. 
 		if(nextCharIsBar){
 			cB.circle(xPos + (spacing - 5), yPos + fontSize/2.5f, fontSize/5f);
 		}
+		
+		//Makes sure that the gap between the filled-circle and the previous '|' is constant regardless of the spacing value.
 		else{
 			cB.circle(xPos - (spacing - 5), yPos + fontSize/2.5f, fontSize/5f);
 		}
@@ -349,15 +365,12 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * Processes the bars that appear within a block. The last set of bars within a block are not processed by this method.
-	 * @param curDIndex The index used to mark the current unit within the parent block.
-	 * @param lineNum The current line-number.
-	 * @param charNum The current character-number.
-	 * @param barFreq The number of bars within a set of bars.
-	 * @param repIndex The index of the repeat-information, if available.
-	 * @param repNum The number of repeats, if available.
-	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
-	 * @param yPos The vertical position where the bars would be drawn.
+	 * 
+	 * @param textLine The object carrying certain information about a line
+	 * @param starBars The object carrying certain information about '|' characters and repetitions.
+	 * @param xPos The horizontal position where the '|'s shall be written.
+	 * @param yPos The vertical position where the '|'s shall be written.
+	 * @return The horizontal position after the '|'s have been written.
 	 */
 	public float processCurrentBars(TextLine textLine, StarBars starBars, float xPos, float yPos){
 		int barNum = 0;
@@ -372,21 +385,25 @@ public class TabUtilitiesBundle{
 
 		for(; barNum < starBars.barFreq;){
 			if(textLine.lineNum < 5){
+				//In case of double bars, making the first one a bit thicker if the associated star character is yet to follow.
 				if(barNum == 0 && starBars.barFreq == 2 && starBars.starIndexes.size() > 0 && starBars.starIndexes.get(0) == textLine.charNum + 2){
 					cB.stroke();
-					cB.setLineWidth(2.0f);
+					cB.setLineWidth(3.0f);
 					if(textLine.lineNum >= 4){
 						starBars.starIndexes.remove(0).toString();
 					}
 				}
+				
+				//In case of double bars, making the second one a bit thicker if the associated star character has already been seen.
 				else if(barNum ==1 && starBars.barFreq == 2 && starBars.starIndexes.size() > 0 && starBars.starIndexes.get(0) == textLine.charNum - 2){
 					cB.stroke();
-					cB.setLineWidth(2.0f);
+					cB.setLineWidth(3.0f);
 					if(textLine.lineNum >= 4){
 						starBars.starIndexes.remove(0).toString();
 					}
 				}
 
+				//Vertical lines.
 				cB.moveTo(xPos, yPos-fontSize/1.5f);
 				cB.lineTo(xPos, yPos+fontSize/2.5f);
 				cB.stroke();
@@ -395,12 +412,14 @@ public class TabUtilitiesBundle{
 			cB.setLineWidth(0.5f);
 
 
-			//horizontal lines
+			//Horizontal lines
 			if(barNum < starBars.barFreq){
 				cB.moveTo(xPos, yPos+fontSize/2.5f);
 				cB.lineTo(xPos + 5, yPos+fontSize/2.5f);
 				xPos += 5;
 			}
+			
+			//Horizontal lines
 			else{
 				cB.moveTo(xPos, yPos+fontSize/2.5f);
 				cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
@@ -415,61 +434,41 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * Draws the ending set of bars.
-	 * @param curDIndex curDIndex The index used to mark the current unit within the parent block.
-	 * @param numLines The number of lines in the block.
-	 * @param charNum The current character-number.
-	 * @param barFreq barFreq The number of bars within a set of bars.
-	 * @param repIndex The index of the repeat-information, if available.
-	 * @param repNum The number of repeats, if available.
-	 * @param margin The position at which the first bar from the set would be drawn.
-	 * @param xPos The horizontal position at which the first of the bars would be drawn. 
-	 * @param yPos The vertical position where the bars would be drawn.
-	 * @return
+	 * 
+	 * @param starBars The object carrying certain information about '|' characters and repetitions.
+	 * @param numLines The number of lines in a block
+	 * @param charNum The character position of the '|'s within the line.
+	 * @param trailCdrs The object carrying the horizontal and vertical coordinates where the '|'s shall be printed.
+	 * @return The horizontal coordinate after the last '|' was printed
 	 */
-	public float processTrailingBars(ArrayList<Integer> starIndexes, int numLines, int charNum, int barFreq, int repIndex, String repNum, float margin, float xPos, float yPos){
-		int numOfBars = barFreq;
+	public float processTrailingBars(StarBars starBars, int numLines, int charNum, TrailingCoordinates trailCdrs){
+		int numOfBars = starBars.barFreq;
 		boolean removeElement = false;
 		int chNum = charNum;
-		//System.out.println(starIndexes.get(0) + " " + charNum);
 		
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
 
 			//Writing the repeat message on the Pdf document.
-			if(lineNum == 0 && barFreq == 2 && repIndex > -1){
-				String message = "Repeat " + repNum + " times";
+			if(lineNum == 0 && starBars.barFreq == 2 && starBars.repIndex > -1){
+				String message = "Repeat " + starBars.repNum + " times";
 
 				cB.beginText();
-				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, message, xPos-bF.getWidthPoint(message, fontSize), yPos+fontSize, 0);
+				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, message, trailCdrs.xPos-bF.getWidthPoint(message, fontSize), trailCdrs.yPos+fontSize, 0);
 				cB.endText();
 
 			}
 
 			for(int barNum = 0; barNum < numOfBars;){
 				if(lineNum < 5){
-
-				/*	if(barNum == 0 && barFreq == 2 && starIndexes.get(0) == charNum + 2){
-						System.out.println("bar0");
+					//In case of double bars, making the second one a bit thicker if the associated star character has already been seen.
+					if(barNum ==1 && starBars.barFreq == 2 && starBars.starIndexes.size() > 0 && starBars.starIndexes.get(0) == chNum - 2){
 						cB.stroke();
-						cB.setLineWidth(2.0f);
+						cB.setLineWidth(3.0f);
 						removeElement = true;
-						//if(lineNum >= 6){
-							//starIndexes.remove(0);
-						//}
-						
-					}*/
-					if(barNum ==1 && barFreq == 2 && starIndexes.size() > 0 && starIndexes.get(0) == chNum - 2){
-						//System.out.println(starIndexes.get(0) + " " + chNum);
-						cB.stroke();
-						cB.setLineWidth(2.0f);
-						removeElement = true;
-						//if(lineNum >= 6){
-						//	starIndexes.remove(0);
-						//}
 					}
 
-					cB.moveTo(xPos, yPos-fontSize/1.5f);
-					cB.lineTo(xPos, yPos+fontSize/2.5f);
+					cB.moveTo(trailCdrs.xPos, trailCdrs.yPos-fontSize/1.5f);
+					cB.lineTo(trailCdrs.xPos, trailCdrs.yPos+fontSize/2.5f);
 					cB.stroke();
 				}
 				
@@ -477,49 +476,41 @@ public class TabUtilitiesBundle{
 				chNum++;
 				
 				cB.setLineWidth(0.5f);
-				//horizontal lines;
-				if(barNum < barFreq){
-					cB.moveTo(xPos, yPos+fontSize/2.5f);
-					cB.lineTo(xPos + 5, yPos+fontSize/2.5f);
-					xPos += 5;
+				
+				//Horizontal lines;
+				if(barNum < starBars.barFreq){
+					cB.moveTo(trailCdrs.xPos, trailCdrs.yPos+fontSize/2.5f);
+					cB.lineTo(trailCdrs.xPos + 5, trailCdrs.yPos+fontSize/2.5f);
+					trailCdrs.xPos += 5;
 				}
-				//else{
-				//	cB.moveTo(xPos, yPos+fontSize/2.5f);
-				//	cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
-				//	xPos += spacing;
-				//}
 			}
 
 			cB.stroke();
 			
+			//Reinitialing the horizontal position.
 			if(lineNum < 5){
-				xPos = margin;
-				yPos -= fontSize;
+				trailCdrs.xPos = trailCdrs.margin;
+				trailCdrs.yPos -= fontSize;
 			}
 			
 			chNum = charNum;
 		}
 		
+		//If the assotiated '*' has already been printed, then its index should be removed.
 		if(removeElement){
-			//System.out.println("removed");
-			starIndexes.remove(0);
+			starBars.starIndexes.remove(0);
 		}
 
-		return xPos;
+		return trailCdrs.xPos;
 	}
-
-	/**
-	 * Processes input with chord-id.
-	 * @param line The actual line from the unit that the input-digit came from.
-	 * @param charNum The current character-number.
-	 * @param xPos The horizontal position with respect to which the output shall be written.
-	 * @param yPos The vertical position with respect to which the output shall be written.
-	 */
-	public void processChordID(String line, int charNum, float xPos, float yPos){
-		cB.beginText();
-		cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, Character.toString(line.charAt(charNum)), xPos+1, yPos+fontSize/6f, 0);	
-		cB.endText();
-		cB.moveTo(xPos, yPos+fontSize/2.5f);
-		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
+	
+	public void processChordID(int lineNum, String line, int charNum, float xPos, float yPos){
+		//cB.beginText();
+		//cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, Character.toString(line.charAt(charNum)), xPos, yPos+fontSize/6f, 0);	
+		//cB.endText();
+		if(lineNum < 5){
+			cB.moveTo(xPos, yPos-fontSize/1.5f);
+			cB.lineTo(xPos, yPos+fontSize/2.5f);
+		}
 	}
 }

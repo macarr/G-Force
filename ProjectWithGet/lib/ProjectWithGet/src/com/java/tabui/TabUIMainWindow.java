@@ -37,8 +37,7 @@ public class TabUIMainWindow extends JFrame{
 		c.setLayout(new BorderLayout());
 		
 		//start Splashscreen
-		try
-		{
+	/*	try{
 			//loads the image file into an ImageIcon object
 			ImageIcon img = new ImageIcon(this.getClass().getResource("/resource/splash.jpg"));
 	
@@ -50,8 +49,7 @@ public class TabUIMainWindow extends JFrame{
 			double screenHeight = size.getHeight();
 	
 			//if image fits onto the screen
-			if ((img.getIconWidth() <= (int)screenWidth) && (img.getIconHeight() <= (int)screenHeight))
-			{
+			if ((img.getIconWidth() <= (int)screenWidth) && (img.getIconHeight() <= (int)screenHeight)){
 				//locates the image halfway across the screen and 1/4 - way down the screen,
 				//depending on the resolution of the screen and the resolution of the picture.
 			
@@ -72,11 +70,10 @@ public class TabUIMainWindow extends JFrame{
 				setVisible(true);
 	
 				//holds the image for 1.5 seconds
-				try
-				{
+				try{
 					Thread.sleep(1500);
-				} catch (InterruptedException e)
-				{
+				}
+				catch (InterruptedException e){
 					Thread.currentThread().interrupt();
 				}
 	
@@ -99,11 +96,10 @@ public class TabUIMainWindow extends JFrame{
 				setLocation(0,0);
 			}
 		}
-		catch (NullPointerException e)
-		{
+		catch (NullPointerException e){
 			System.out.println("No picture File!");
 			//System.exit(1);
-		}
+		}*/
 		//end Splashscreen
 		
 		c.add(outputArea, BorderLayout.CENTER);
@@ -130,7 +126,8 @@ public class TabUIMainWindow extends JFrame{
 		});
 		
 		setSize(new Dimension(size.width - 300, size.height - 200));
-		//setMinimumSize(new Dimension(193, size.height - 400));
+		setLocation(((int)size.width - getSize().width) / 2 , ((int)size.height - getSize().height) / 2);
+		setMinimumSize(new Dimension(195, size.height - 300));
 		setVisible(true);
 	}
 }

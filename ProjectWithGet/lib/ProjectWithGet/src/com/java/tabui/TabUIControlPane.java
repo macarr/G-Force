@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -322,29 +323,45 @@ public class TabUIControlPane extends JPanel{
 					try{
 						String current = "";
 						
-						//Taking care of some platform dependent task in order to access a hidden file.
-						String osVersion = System.getProperty("os.name");
-						String errorLog;
+						String summarizedErrorLog = "summarized_log.txt";
+						String extendedErrorLog = "extended_log.txt";
 						
-						//Taking care of some platform dependent task in order to access a hidden file.
-						//errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
+						ArrayList<String> summarized = new ArrayList<String>();
+						ArrayList<String> extended = new ArrayList<String>();
+						
 						
 						//A window where the error-log file shall be displayed.
-						InfoView errLogView = new InfoView("Error Log");
+						ErrorLogView errLogView = new ErrorLogView("Error Log");
 						
-						//InputStream for the error-log file.
-						BufferedReader in = new BufferedReader(new FileReader("log_file"));
+						//InputStream for the summarized error-log file.
+						BufferedReader in = new BufferedReader(new FileReader(summarizedErrorLog));
 						
 						//Reading the file until null is reached.
 						current = in.readLine();
 						
 						while(current != null) {
-							errLogView.append(current);
+							summarized.add(new String(current));
 							current = in.readLine();
 						}
 						
 						//Closing the stream.
 						in.close();
+						
+						//InputStream for the extended error-log file.
+						in = new BufferedReader(new FileReader(extendedErrorLog));
+						
+						//Reading the file until null is reached.
+						current = in.readLine();
+						
+						while(current != null) {
+							extended.add(new String(current));
+							current = in.readLine();
+						}
+						
+						//Closing the stream.
+						in.close();
+						
+						errLogView.append(summarized, extended);
 					}
 					catch(Exception ex){
 						ex.printStackTrace();

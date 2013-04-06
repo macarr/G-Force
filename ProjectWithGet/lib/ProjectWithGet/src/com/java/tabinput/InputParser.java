@@ -20,18 +20,12 @@ public class InputParser {
 	int lineNum = 0;
 	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";
 	ArrayList<String> block;
-	String errorLog = "";
-	String logFile = "";
+	String summarizedErrorLog = "summarized_log.txt";
+	String extendedErrorLog = "extended_log.txt";
 	boolean sufficientInput = false;
 	
 	
 	public InputParser(String inputPath){
-
-		//errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
-		logFile = "log_file";
-
-		//errorLog=com.java.tabui.TabFileManager.getTempDir()+"T2PDFErr.txt";
-		
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
 		lineNumBlocks = new ArrayList<Integer>();
@@ -48,17 +42,17 @@ public class InputParser {
 			String current = "";
 			
 			//The output stream for error-log file
-
-			//BufferedWriter out = new BufferedWriter(new FileWriter(errorLog));
-			BufferedWriter out = new BufferedWriter(new FileWriter(logFile));
-
+			BufferedWriter out = new BufferedWriter(new FileWriter(summarizedErrorLog));
+			BufferedWriter out1 = new BufferedWriter(new FileWriter(extendedErrorLog));
 			
 			current = in.readLine();
 			
 			//If file is empty then return.
 			if(current == null){
 				out.append("File is empty.");
+				out1.append("File is empty.");
 				out.close();
+				out1.close();
 				return;
 			}
 			
@@ -71,7 +65,9 @@ public class InputParser {
 			//If file has ended at this point then we have insufficient data to show.
 			if(current == null){
 				out.append("File is empty.");
+				out1.append("File is empty.");
 				out.close();
+				out1.close();
 				return;
 			}
 			
@@ -80,7 +76,7 @@ public class InputParser {
 				lineNum++;
 				current = current.trim();
 				
-			//	System.out.println(lineNum + ": " + current);
+				//System.out.println(lineNum + ": " + current);
 			}
 			
 			
@@ -107,7 +103,9 @@ public class InputParser {
 			//If file is empty then return.
 			if(current == null){
 				out.append("Only title found.");
+				out1.append("Only title found.");
 				out.close();
+				out1.close();
 				return;
 			}
 			
@@ -120,7 +118,9 @@ public class InputParser {
 			//If file has ended at this point then we have insufficient data to show.
 			if(current == null){
 				out.append("Only title found.");
+				out1.append("Only title found.");
 				out.close();
+				out1.close();
 				return;
 			}
 			
@@ -156,7 +156,24 @@ public class InputParser {
 			//If file has come to an end at this point then return.
 			if(current == null){
 				out.append("Only title and subtitle found.");
+				out1.append("Only title and subtitle found.");
 				out.close();
+				out1.close();
+				return;
+			}
+			
+			//Added now: Pass all empty lines.
+			while(current != null && current.equals("")) {
+				lineNum++;
+				current = in.readLine();
+			}
+			
+			//Added now: If file has come to an end at this point then return.
+			if(current == null){
+				out.append("Only title and subtitle found.");
+				out1.append("Only title and subtitle found.");
+				out.close();
+				out1.close();
 				return;
 			}
 			
@@ -220,14 +237,26 @@ public class InputParser {
 						sufficientInput = true;
 						contents.add(block);
 						block = new ArrayList<String>();
+						//lineNumBlocks.add(new Integer(lineNum));
 					}
 	 			}
 				
 				//Otherwise, error data is written because current did not match any music.
-				//else{
-				//	out.append("Line-number " + lineNum + " \"(" + current + "\") could not be extracted.");
-				//	out.newLine();
-				//}
+				else{
+					//New code starts
+					
+	 				if(block.size() > 0){
+	 					sufficientInput = true;
+	 					contents.add(block);
+	 					block = new ArrayList<String>();
+	 					//block.add(current);
+	 					//lineNumBlocks.add(new Integer(lineNum));
+	 				}
+	 				//New code ends
+	 				
+					out1.append("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input. Please refer to the documentation for valid input format.");
+					out1.newLine();
+				}
 				
 				//Next line from the file is read.
 				current = in.readLine();
@@ -246,6 +275,9 @@ public class InputParser {
 			//contentCopy will hold only the elements from contents whose size is 6.
 			validContents = new ArrayList<ArrayList<String>>();
 			
+			//out.newLine();
+			//out1.newLine();
+			
 			for(int i = 0; i < contents.size(); i++){
 				//If the size of any element of contents is not 6, it is not copied.
 				if(!(contents.get(i).size() < 6) && !(contents.get(i).size() > 6)){
@@ -253,25 +285,55 @@ public class InputParser {
 					validLineNums.add(lineNumBlocks.get(i));
 					
 				}
+				//If the number of lines in a dropped block is only 1, the message goes into the extended log only.
+				else if(contents.get(i).size() == 1){
+					//Extended log stream. 
+					out1.append("The block comprising the single line (\"" + contents.get(i).get(0) + "\") on line " +
+							lineNumBlocks.get(i).toString() + " was dropped due to incompitable number of lines during input.");
+					out1.newLine();
+				}
+				//If the number of lines in a dropped block is between 1 and 3, the message goes into the extended log only.
+				else if(contents.get(i).size() > 1 && contents.get(i).size() <= 3){
+					//Extended log stream.
+					out1.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
+							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
+							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
+							
+					out1.newLine();
+				}
+				//If the number of lines in a dropped block is greater than 3, the message goes into both the summarized and extended logs.
 				else if(contents.get(i).size() > 3){
-					out.append("Lines (" + lineNumBlocks.get(i).toString() + "-" + (lineNumBlocks.get(i).intValue() + 
-							contents.get(i).size()-1) + ") starting with \"" + contents.get(i).get(0) + "\" and ending with \"" +
-							contents.get(i).get(contents.get(i).size()-1) + "\" were dropped due to incompatible number of lines during input." );
+					//Summarized log stream.
+					out.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
+							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
+							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
+							
 					out.newLine();
+					
+					//Extended log stream.
+					out1.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
+							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
+							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
+							
+					out1.newLine();
 				}
 			}
 			
 			//Adding two new lines for clarity.
-			out.newLine();
-			out.newLine();
+			//out.newLine();
+			//out1.newLine();
 			
 			//Once the needed elements from contents (the ones with size 6) have been copied over to contentsCopy,
 			//contentsCopy is assigned to contents, which now holds only the elements whose size is 6.
 			
-						
+			if(validContents.size() == 0){
+				out.write("The contents found in the input file were insufficient to be displayed.");
+			}
+			
 			//The input and output streams are closed.
 			in.close();
 			out.close();
+			out1.close();
 		}
 		
 		catch(Exception e){

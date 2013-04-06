@@ -32,5 +32,4 @@ public class InfoView extends JFrame{
 	public void append(String info){
 		infoArea.append(info + "\n");
 	}
-	
 }

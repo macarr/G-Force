@@ -39,7 +39,7 @@ public class TabUIViewPane extends JPanel{
 	//Class 'SwingController' is from the open-source library 'IcePdf' to enable displaying Pdf documents within java applications. 
 	SwingController controller;
 	
-	//UIView constructor.
+	//TabUIViewPane constructor.
 	public TabUIViewPane(){
 		setLayout(new BorderLayout());
 		statusUpdateLabel = new JLabel(" ");
@@ -47,7 +47,7 @@ public class TabUIViewPane extends JPanel{
 		centerPane = new JPanel(new BorderLayout());
 		centerPane.setBackground(Color.gray);
 		
-		addImage();
+		//addImage();
 		
 		add(statusUpdateLabel, BorderLayout.NORTH);
 		add(centerPane, BorderLayout.CENTER);
@@ -123,7 +123,7 @@ public class TabUIViewPane extends JPanel{
 	
 	public void clearCenterPane(){
 		centerPane.removeAll();
-		addImage();
+		//addImage();
 		centerPane.revalidate();
 		centerPane.repaint();
 	}
