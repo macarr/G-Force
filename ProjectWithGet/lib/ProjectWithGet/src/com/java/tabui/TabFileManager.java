@@ -68,7 +68,7 @@ public class TabFileManager{
 	
 			in = new InputParser(inputPath);
 	
-			if(in.inputIsSufficient() && in.getData().size() > 0){
+			if(in.getData().size() > 0){
 				//The Ascii file is displayed on the screen.
 				outputArea.showAsciiFile(in);
 				status = 1;

@@ -25,7 +25,6 @@ public class InputParser {
 	ArrayList<String> block;	//The block where inputs are stored.
 	String summarizedErrorLog = "summarized_log.txt";	//file name for short error log.
 	String extendedErrorLog = "extended_log.txt";		//file name for full error log.
-	boolean sufficientInput = false;
 	
 	/**
 	 * InputParser constructor.
@@ -33,6 +32,7 @@ public class InputParser {
 	public InputParser(String inputPath){
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
+		validContents = new ArrayList<ArrayList<String>>();
 		lineNumBlocks = new ArrayList<Integer>();
 		validLineNums = new ArrayList<Integer>();
 		readFile(inputPath);
@@ -53,19 +53,11 @@ public class InputParser {
 			BufferedWriter out = new BufferedWriter(new FileWriter(summarizedErrorLog));
 			BufferedWriter out1 = new BufferedWriter(new FileWriter(extendedErrorLog));
 			
+			
 			current = in.readLine();
 			
-			//If file is empty then return.
-			if(current == null){
-				out.append("File is empty.");
-				out1.append("File is empty.");
-				out.close();
-				out1.close();
-				return;
-			}
-			
 			//Pass all empty lines.
-			while(current != null && current.equals("")) {
+			while(current != null && current.trim().equals("")) {
 				lineNum++;
 				current = in.readLine();
 			}
@@ -91,12 +83,12 @@ public class InputParser {
 			}
 			
 			//Otherwise, if line does not start with '|' or '-'.
-			else if(current.charAt(0) != '|' && current.charAt(0) != '-' ){
+			else if(!current.matches(regex)){
 				title = current;
 			}
 			
 			//Otherwise, if line starts with '|' or '-'.
-			else if(current.charAt(0) == '|' || current.charAt(0) == '-'){
+			else if(current.matches(regex)){
 				title = "Not given";
 				block.add(current);
 				lineNumBlocks.add(new Integer(lineNum));
@@ -105,17 +97,8 @@ public class InputParser {
 			//Read the next line.
 			current = in.readLine();
 			
-			//If file is empty then return.
-			if(current == null){
-				out.append("Only title found.");
-				out1.append("Only title found.");
-				out.close();
-				out1.close();
-				return;
-			}
-			
 			//Pass all empty lines.
-			while(current != null && current.equals("")) {
+			while(current != null && current.trim().equals("")) {
 				lineNum++;
 				current = in.readLine();
 			}
@@ -141,12 +124,12 @@ public class InputParser {
 			}
 			
 			//Otherwise, if line does not start with '|' or '-'.
-			else if(current.charAt(0) != '|' && current.charAt(0) != '-' ){
+			else if(!current.matches(regex)){
 				subtitle = current;
 			}
 			
 			//Otherwise, if line starts with '|' or '-'.
-			else if(current.charAt(0) == '|' || current.charAt(0) == '-'){
+			else if(current.matches(regex)){
 				subtitle = "Not given";
 				block.add(current);
 				lineNumBlocks.add(new Integer(lineNum));
@@ -154,15 +137,6 @@ public class InputParser {
 			
 			//Read the next line.
 			current = in.readLine();
-			
-			//If file has come to an end at this point then return.
-			if(current == null){
-				out.append("Only title and subtitle found.");
-				out1.append("Only title and subtitle found.");
-				out.close();
-				out1.close();
-				return;
-			}
 			
 			//Pass all empty lines.
 			while(current != null && current.equals("")) {
@@ -184,6 +158,7 @@ public class InputParser {
 				lineNum++;
 				current = current.trim();
 			}
+			
 			
 			//At this point we skip over all lines that are not music.
 			while(current != null && !current.matches(regex)){
@@ -220,7 +195,6 @@ public class InputParser {
 		 			
 		 			//If current is of different length from the last line of block.
 					else{
-						sufficientInput = true;
 		 				contents.add(block);
 		 				block = new ArrayList<String>();
 		 				block.add(current);
@@ -232,7 +206,6 @@ public class InputParser {
 				else if(current.equals("")){
 					//If block is not empty.
 					if(block.size() > 0){
-						sufficientInput = true;
 						contents.add(block);
 						block = new ArrayList<String>();
 					}
@@ -242,7 +215,6 @@ public class InputParser {
 				else{
 					//First adding the block to contents.
 	 				if(block.size() > 0){
-	 					sufficientInput = true;
 	 					contents.add(block);
 	 					block = new ArrayList<String>();
 	 				}
@@ -264,9 +236,6 @@ public class InputParser {
 			if(!block.isEmpty()){
 				this.contents.add(block);
 			}
-			
-			//validContents will hold only the elements from contents whose size is 6.
-			validContents = new ArrayList<ArrayList<String>>();
 			
 			//Blocks with size less than or greater than 6 are copied to validContents.
 			for(int i = 0; i < contents.size(); i++){
@@ -352,12 +321,5 @@ public class InputParser {
 	 */
 	public int getStartLineNum(int index){
 		return validLineNums.get(index);
-	}
-	
-	/**
-	 * Returns whether sufficient contents were available within the input file.
-	 */
-	public boolean inputIsSufficient(){
-		return sufficientInput;
 	}
 }
