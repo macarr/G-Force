@@ -37,7 +37,7 @@ public class TabUIMainWindow extends JFrame{
 		c.setLayout(new BorderLayout());
 		
 		//start Splashscreen
-	/*	try{
+		try{
 			//loads the image file into an ImageIcon object
 			ImageIcon img = new ImageIcon(this.getClass().getResource("/resource/splash.jpg"));
 	
@@ -99,7 +99,7 @@ public class TabUIMainWindow extends JFrame{
 		catch (NullPointerException e){
 			System.out.println("No picture File!");
 			//System.exit(1);
-		}*/
+		}
 		//end Splashscreen
 		
 		c.add(outputArea, BorderLayout.CENTER);
