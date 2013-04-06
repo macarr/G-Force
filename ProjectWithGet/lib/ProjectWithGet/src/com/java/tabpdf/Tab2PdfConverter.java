@@ -1,25 +1,6 @@
 /** 
- * Tab2PdfConverter.java
- * 
- * This class is responsible for printing the output to the Pdf file by using the aid of the TabUtilitiesBundle class.
- * From the InputParser parameter, it extracts the ArrarList<ArrayList<String>> that contains the input from the input-file. 
- * Each ArrayList<String> element is then converted into an object of class TabUnitsBlock and placed into an ArrayList<TabUnitsBlock>.
- * Afterwards it processes the individual units (measures) within each TabUnitsBlock (in the ArrayList<TabUnitsBlock>) one after the
- * other. After outputting each unit (measure), it checks whether there is space for the next unit (measure) within the current block 
- * to be printed adjacent to the unit (measure) that was just printed. If space permits, the next unit is printed adjacent to the last
- * printed unit. Otherwise a line break occurs and the unit is printed on the next available space. For example, the following is an
- * ArrayUnitsBlock containing 4 units (measures) of guitar tab.
- * 	|---------7-------|---------5-------|---------7-------|---------5---------|
- *	|-----5s7---7-----|-----3s5---5-----|-----5s7---7-----|-----3s5---5-------|
- *	|---0---------0---|-------------0---|---0---------0---|-------------0---0-|
- *	|---------------2-|---2-----------2-|---------------2-|---2-----------2---|
- *	|-----------------|-2---------------|-----------------|-2-----------------|
- *	|-0---------------|-----------------|-0---------------|-------------------|
- *	
- * The class first prints all 6 lines of the first unit (measure) followed by a check to see whether the second unit (measure) can be 
- * printed adjacent to the first. If so, it is printed on the same sets of lines. Otherwise, it is printed on the next available sets of 
- * lines. After all the units (measures) within a TabUnitsBlock are printed, a counter is incremented and the next TabUnitsBlock from the
- * ArrayList<TabUnitsBlock> is fetched and printed in the same way until the ArrayList<TabUnitsBlock> is exhausted.
+ * This class is responsible for calling the appropriate methods of the TabUtilitiesBundle class in order to write the contents of
+ * the Pdf file.
  */
 
 package com.java.tabpdf;
@@ -41,38 +22,40 @@ import com.java.paramclasses.TrailingCoordinates;
 import com.java.tabinput.InputParser;
 
 public class Tab2PdfConverter {
-	private Document document;
-	private PdfWriter writer;
-	private ArrayList<TabUnitsBlock> contents;
-	ArrayList<Integer> starIndexes = null;
+	private Document document;	//The Pdf document.
+	private PdfWriter writer;	//the document writer.
+	private ArrayList<TabUnitsBlock> contents;	//ArrayList containing the TabUnitsBlock objects.
+	ArrayList<Integer> starIndexes = null;	//ArrayList containing the indexes of the '*'s within each block. 
 	private InputParser in;
 	private String fontName;
 	private float fontSize;
 	private float spacing;
 	
-	Rectangle pageSize;
+	Rectangle pageSize;		//The size of the Pdf document.
 
-	private TabUnitsBlock currBlockInfo;
-	private int curDIndex = 0;
+	private TabUnitsBlock currBlock;
+	private int curUnitIndex = 0;	//Index of the current unit (measure) within a block.
 
-	private float yIncrement = 40f;
+	private float yIncrement = 40f;	//Helps maintain the vertical position.
 	private float margin;
 	private float xPos;
 	private float yPos;
 
-	private int blockNum;
+	private int blockNum;	//The index of the current block.
 	private int lineNum;
 	private int charNum = 0;
 	private String line = "";
 
-	private int skip = 0;
+	private int skip = 0;	//Used under some conditions.
 
-	private float []lastNumXPos = new float[6];
-	private float []lastNumYPos = new float[6];
+	private float []lastNumXPos = new float[6];	//Maintains the x position of the last number on each of the six lines. 
+	private float []lastNumYPos = new float[6];	//Maintains the y position of the last number on each of the six lines.
 
 	private TabUtilitiesBundle tUB;
 
-	
+	/**
+	 * Tab2PdfConverter constructor.
+	 */
 	public Tab2PdfConverter(InputParser in, Rectangle pageSize, String filePath, String fontName, float fontSize, float spacing) {
 		this.in = in;
 		this.spacing = spacing;
@@ -80,20 +63,24 @@ public class Tab2PdfConverter {
 		this.fontSize = fontSize;
 		this.pageSize = pageSize;
 		
-		extractTabBlocks(in.getData(), spacing);
+		//Called to instantiate TabUnitBlock objects from the input.
+		extractTabBlocks(in.getData(), spacing);	 
 
 		document = new Document(pageSize);
 
+		//Instantiating the Pdf writer.
 		try{
-			writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
+			writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));	
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-
-		
 	}
 	
+	/**
+	 * This method extracts the elements from the input ArrayList and instantiates TabUnitsBlock objects. The objects are then stored
+	 * in the contents ArrayList.
+	 */
 	private void extractTabBlocks(ArrayList<ArrayList<String>> input, float spacing){
 		contents = new ArrayList<TabUnitsBlock>();
 		
@@ -102,34 +89,44 @@ public class Tab2PdfConverter {
 		}
 	}
 
+	/**
+	 * This is the method that takes all the necessary steps to create the Pdf document.
+	 */
 	public boolean createPDF() {
-		
+		//To check whether there was space for the whole document to be written. 
 		boolean fullPdfWritten = true;
 		
 		margin = document.left();
 		xPos = margin;
+		
+		//Setting the top margin
 		yPos = document.top() - yIncrement;
 
 		document.open();
 
 		tUB = new TabUtilitiesBundle(writer.getDirectContent(), fontName, fontSize, spacing, pageSize);
+		
+		//Setting the line width within the Pdf.
 		tUB.setLineWidth(0.5f);
+		
+		//The header is being written.
 		tUB.processHeader(in, document.getPageSize().getWidth(), document.top());
 
+		currBlock = contents.get(0);
 		
-		currBlockInfo = contents.get(0);
-		starIndexes = currBlockInfo.getStarIndexes();
+		//Getting the indexes of the '*' characters within the block. 
+		starIndexes = currBlock.getStarIndexes();
 		
 		//looping through all the blocks in order to extract their contents and create the pdf 
 		//file using the right format.
 		for(blockNum = 0; blockNum < contents.size();){
-			//at the beginning of each new block the y-position and x-position need to be set
+			//at the beginning of each new block the y-position and x-position need to be set.
 			yPos = document.top() - yIncrement;
 			xPos = margin;
 
-			if(currBlockInfo.getUnitStats(curDIndex).getHorizontalSpaceNeeds() > document.right()-document.left()){
+			//If a unit (measure) does not fit.
+			if(currBlock.getUnitStats(curUnitIndex).getHorizontalSpaceNeeds() > document.right()-document.left()){
 				fullPdfWritten = false;
-				//System.out.println(in.getStartLineNum(currBlockInfo.getBlock()) + ": " + currBlockInfo.getBlock().get(0));
 
 				String errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
 
@@ -148,7 +145,7 @@ public class Tab2PdfConverter {
 					BufferedWriter out = new BufferedWriter(new FileWriter("log_file", true));
 					int startLine = in.getStartLineNum(blockNum);
 					
-					out.append("Measure number " + (curDIndex + 1) + " from lines (" + startLine + "-" + (startLine + currBlockInfo.getNumberOfLines()-1) +
+					out.append("Measure number " + (curUnitIndex + 1) + " from lines (" + startLine + "-" + (startLine + currBlock.getNumberOfLines()-1) +
 							") of the input file" + " went past the right margin of the PDf document during conversion, and might not have fully fit.");
 					out.newLine();
 					out.close();
@@ -170,41 +167,36 @@ public class Tab2PdfConverter {
 				yPos = document.top() - yIncrement;
 			}
 
-			//yPos = document.top() - yIncrement;
-			//at the beginning of each block the xPos needs to be set to the margin.
 			for(lineNum = 0; lineNum < contents.get(blockNum).getNumberOfLines(); lineNum++){
 				line = contents.get(blockNum).getLine(lineNum);
 
+				//At the beginning of each line the xPos needs to be set to the margin.
 				xPos = margin;
-
+				
+				//Called to process a line.
 				processUnitLine();
-				//after printing the parts of each line, we need to move to the next 
+				
+				//After printing the parts of each line, we need to move to the next. 
 				yPos -= fontSize;
 			}
 
-			curDIndex++;
+			//The next unit to be processed from the block.
+			curUnitIndex++;
 			skip = 0;
 
-			//if current character index is less than the index of the first of the last set of '|'s
-			if(curDIndex < currBlockInfo.getNumberOfUnits()-1){
+			//If current character index is less than the index of the first of the last set of '|'s within a block
+			if(curUnitIndex < currBlock.getNumberOfUnits()-1){
 				processMidBlockReInit();
 			}
-			//otherwise we need to print the last sets of '|'s for the current block and increase the 
+			
+			//Otherwise we need to print the last sets of '|'s for the current block and increase the 
 			//blockNum variable.
 			else{
 				processEndBlockReInit();
 			}
 
-			/*if(blockNum < contents.size()){
-				currBlockInfo = new TabUnitsBlock(contents.get(blockNum), spacing);
-				starIndexes = currBlockInfo.getStarIndexes();
-			}*/	
-			//if there is no more space left to join the next block right after the current block, set the margin
-			//to the left end of the document, and yIncrement is increased to set the gap between the current block
-			//and the next.
-			//Please Note: On bigger spacing if the requirement is to keep the double bar part of the current lines,
-			//then we have to change the following code a little bit.
-			if(xPos + currBlockInfo.getUnitStats(curDIndex).getHorizontalSpaceNeeds() > document.right()) {
+			//if there is no more space left to join the next block right after the current block.
+			if(xPos + currBlock.getUnitStats(curUnitIndex).getHorizontalSpaceNeeds() > document.right()) {
 				processInsufficientSpaceReInit();
 			}
 		}
@@ -216,129 +208,125 @@ public class Tab2PdfConverter {
 		return fullPdfWritten;
 	}
 
+	/**
+	 * This method processes individual lines from a unit
+	 */
 	private void processUnitLine(){
+		
 		//the idea is to absorb the characters starting with '|' or '||' and ending right before
-		//the next '|' or '||'s
-		for(charNum = currBlockInfo.getUnitStats(curDIndex).getBeginningBarIndex() + skip; curDIndex + 1 < currBlockInfo.getNumberOfUnits() && charNum < (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarIndex());){
-			//if(xPos + (currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq()*spacing) -
-			//(currBlockInfo.getUnitStats(curDIndex+1).getBeginningBarFreq() - 1) * 5 <= document.right()){
+		//the next '|' or '||'s.
+		for(charNum = currBlock.getUnitStats(curUnitIndex).getBeginningBarIndex() + skip; curUnitIndex + 1 < currBlock.getNumberOfUnits() && charNum < (currBlock.getUnitStats(curUnitIndex+1).getBeginningBarIndex());){
 				
-				if(line.charAt(charNum) == '|' || contents.get(blockNum).getLine(1).charAt(charNum) == '|'){
-					tUB.processCurrentBars(new TextLine(lineNum, "", charNum), 
-							new StarBars(starIndexes,
-							currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(), 
-							currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(), 
-							currBlockInfo.getUnitStats(curDIndex).getRepValue()), 
-							xPos, yPos);
+			//In the following If-else conditions the individual characters are processed.	
+			if(line.charAt(charNum) == '|' || contents.get(blockNum).getLine(1).charAt(charNum) == '|'){
+				tUB.processCurrentBars(new TextLine(lineNum, "", charNum), 
+				new StarBars(starIndexes,
+				currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq(), 
+				currBlock.getUnitStats(curUnitIndex).getRepValueIndex(), 
+				currBlock.getUnitStats(curUnitIndex).getRepValue()), 
+				xPos, yPos);
 					
-					
-					charNum += currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq();
-					xPos += ((currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq()-1) * 5) + spacing;
+				//Character position is incremented.
+				charNum += currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq();
+				xPos += ((currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq()-1) * 5) + spacing;
+			}
+
+			else if(line.charAt(charNum) == '<'){
+				String number = "";
+				charNum++;
+				for(; Character.isDigit(line.charAt(charNum)); charNum++) {
+					number += line.charAt(charNum);
 				}
 
-				else if(line.charAt(charNum) == '<'){
-					String number = "";
-					charNum++;
-					for(; Character.isDigit(line.charAt(charNum)); charNum++) {
-						number += line.charAt(charNum);
-					}
+				//Need to advance charNum one more time to point right after the '>'.
+				charNum++;
+				tUB.processInputWithinTriangle(number, xPos, yPos);
+				xPos += (number.length()+2)*spacing;
+			}	
 
-					//need to advance charNum one more time to point right after the '>'
-					charNum++;
-					tUB.processInputWithinTriangle(number, xPos, yPos);
-					xPos += (number.length()+2)*spacing;
-				}	
+			else if(line.charAt(charNum) == '-'){
+				tUB.processDashes(xPos, yPos);
+				charNum++;
+				xPos += spacing;
+			}
+ 
+			else if(Character.isDigit(line.charAt(charNum))){
+				String number = "";
 
-				//if character is '-', then a line with width the value of 'spacing' would be drawn onto the
-				//pdf file
-				else if(line.charAt(charNum) == '-'){
-					tUB.processDashes(xPos, yPos);
-					charNum++;
-					xPos += spacing;
+				for(; Character.isDigit(line.charAt(charNum)) ; charNum++) {
+					number += line.charAt(charNum);
 				}
-
-				//if the character is letter or digit it would be printed onto the pdf file 
-				else if(Character.isDigit(line.charAt(charNum))){
-					String number = "";
-
-					for(; Character.isDigit(line.charAt(charNum)) ; charNum++) {
-						number += line.charAt(charNum);
-					}
 
 					
-					ReturnValues returnValues = tUB.processDigit(number, new TextLine(lineNum, line, charNum), new CharCoordinates(xPos, yPos, document.right(), lastNumXPos[lineNum], lastNumYPos[lineNum]));
-					lastNumXPos[lineNum] = returnValues.xPos;
-					lastNumYPos[lineNum] = returnValues.yPos;
+				ReturnValues returnValues = tUB.processDigit(number, new TextLine(lineNum, line, charNum), new CharCoordinates(xPos, yPos, document.right(), lastNumXPos[lineNum], lastNumYPos[lineNum]));
+				lastNumXPos[lineNum] = returnValues.xPos;
+				lastNumYPos[lineNum] = returnValues.yPos;
 					
-					xPos += (number.length())*spacing;
-				}
+				xPos += (number.length())*spacing;
+			}
 
-				else if(line.charAt(charNum) == 's') {
-					tUB.processSlideUp(xPos, yPos);
-					charNum++;
-					xPos += spacing;
-				}
+			else if(line.charAt(charNum) == 's') {
+				tUB.processSlideUp(xPos, yPos);
+				charNum++;
+				xPos += spacing;
+			}
 
-				else if(line.charAt(charNum) == '*') {
-					boolean nextCharIsBar = (line.charAt(charNum + 1) == '|');
-					tUB.processStar(xPos, yPos, nextCharIsBar);
-					xPos += spacing;
+			else if(line.charAt(charNum) == '*') {
+				boolean nextCharIsBar = (line.charAt(charNum + 1) == '|');
+				tUB.processStar(xPos, yPos, nextCharIsBar);
+				xPos += spacing;
 					
-					charNum++;
-				}
+				charNum++;
+			}
 
-				else if(line.charAt(charNum) == ' ') {
-					charNum++;
-				}
+			else if(line.charAt(charNum) == ' ') {
+				charNum++;
+			}
 
-				//write code for the cases that have not been handled
-				else if(line.charAt(charNum) == 'h'){
-					tUB.processH(xPos, yPos);
-					charNum++;
-					xPos += spacing;
-				}
+			else if(line.charAt(charNum) == 'h'){
+				tUB.processH(xPos, yPos);
+				charNum++;
+				xPos += spacing;
+			}
 
-				else if(line.charAt(charNum) == 'p'){
-					tUB.processP(xPos, yPos);
-					charNum++;
-					xPos += spacing;
-				}
+			else if(line.charAt(charNum) == 'p'){
+				tUB.processP(xPos, yPos);
+				charNum++;
+				xPos += spacing;
+			}
 
-				else if(line.charAt(charNum) == 'e' || line.charAt(charNum) == 'B' || line.charAt(charNum) == 'G' || line.charAt(charNum) == 'D'
-						|| line.charAt(charNum) == 'A' || line.charAt(charNum) == 'E'){
-							tUB.processChordID(lineNum, line, charNum, xPos, yPos);
-							//xPos += spacing;
-							charNum++;
-				}
+			else if(line.charAt(charNum) == 'e' || line.charAt(charNum) == 'B' || line.charAt(charNum) == 'G' || line.charAt(charNum) == 'D'
+				|| line.charAt(charNum) == 'A' || line.charAt(charNum) == 'E'){
+				tUB.processChordID(lineNum, line, charNum, xPos, yPos);
+				//xPos += spacing;
+				charNum++;
+			}
 				
-				else{
-					tUB.processUnknown(xPos, yPos);
-					charNum++;
-					xPos += spacing;
-				}
-			//}
-
-
-			//else{
-				//charNum++;
-			//}
+			else{
+				tUB.processUnknown(xPos, yPos);
+				charNum++;
+				xPos += spacing;
+			}
 		}
 	}
 
+	/**
+	 * This method is called if a block was split from the middle.
+	 */
 	private void processMidBlockReInit(){
 		margin = xPos;
 		yPos = document.top() - yIncrement;
 
 		//checking if the next block can be fit next to the current. If not, we need to print the
 		//trailing bars for the current block before the actual split that is coming up.
-		if(xPos + currBlockInfo.getUnitStats(curDIndex).getHorizontalSpaceNeeds() > document.right()) {
+		if(xPos + currBlock.getUnitStats(curUnitIndex).getHorizontalSpaceNeeds() > document.right()) {
 
 			//if a block was split from the middle, the trailing '|'s should be printed before the split.
 			//processTrailingBars does that. Also the ending 6 horizontal lines are printed
 			xPos = tUB.processTrailingBars(new StarBars(starIndexes,
-					currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(),
-					currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(),
-					currBlockInfo.getUnitStats(curDIndex).getRepValue()), contents.get(blockNum).getNumberOfLines(), charNum, 
+					currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq(),
+					currBlock.getUnitStats(curUnitIndex).getRepValueIndex(),
+					currBlock.getUnitStats(curUnitIndex).getRepValue()), contents.get(blockNum).getNumberOfLines(), charNum, 
 					new TrailingCoordinates(margin, xPos, yPos));
 
 			yPos = document.top()-yIncrement;
@@ -346,10 +334,13 @@ public class Tab2PdfConverter {
 			//if a block was split from the middle, the trailing '|'s should be printed before the split.
 			//and the same '|'s should be suppressed before the continuation on the next position, which is
 			//achieved through setting the skip variable.
-			skip = currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq();
+			skip = currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq();
 		}
 	}
 
+	/**
+	 * This method is called if a block ends with the unit, and there was no need to split the block up.
+	 */
 	private void processEndBlockReInit(){
 		margin = xPos;
 		yPos = document.top() - yIncrement;
@@ -357,9 +348,9 @@ public class Tab2PdfConverter {
 		//If all the units of a block have been printed, it is time to call 'processtrailingBars to print
 		//the last set of '|'s.
 		xPos = tUB.processTrailingBars(new StarBars(starIndexes,
-				currBlockInfo.getUnitStats(curDIndex).getBeginningBarFreq(),
-				currBlockInfo.getUnitStats(curDIndex).getRepValueIndex(),
-				currBlockInfo.getUnitStats(curDIndex).getRepValue()), contents.get(blockNum).getNumberOfLines(), charNum, 
+				currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq(),
+				currBlock.getUnitStats(curUnitIndex).getRepValueIndex(),
+				currBlock.getUnitStats(curUnitIndex).getRepValue()), contents.get(blockNum).getNumberOfLines(), charNum, 
 				new TrailingCoordinates(margin, xPos, yPos));
 
 		//margin and yPosition needs to be reset after processTrailingBars returns, so that the next
@@ -369,12 +360,15 @@ public class Tab2PdfConverter {
 
 		blockNum++;
 		if(blockNum < contents.size()){
-			currBlockInfo = contents.get(blockNum);
-			starIndexes = currBlockInfo.getStarIndexes();
+			currBlock = contents.get(blockNum);
+			starIndexes = currBlock.getStarIndexes();
 		}	
-		curDIndex = 0;
+		curUnitIndex = 0;
 	}
 
+	/**
+	 * This method checks whether the next unit (measure) can fit next to the current one.
+	 */
 	private void processInsufficientSpaceReInit(){
 		//first draw the 6 horizontal lines at the end of the current block
 		tUB.processEndingHorizontalLines(xPos, yPos);
@@ -384,6 +378,7 @@ public class Tab2PdfConverter {
 		xPos = margin;
 		yIncrement += fontSize * 8;
 
+		//Checks whether there is need to create a new page.
 		if(yPos - fontSize * 8 - fontSize*6  < document.bottom()){
 			document.newPage();
 			yIncrement = 40f;

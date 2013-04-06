@@ -412,7 +412,7 @@ public class TabUIControlPane extends JPanel{
 							 				"the file to be displayed in Pdf format on the left.\n2) Click on the 'Save Current Pdf' button and save the file at the desired location." +
 							 				"\n\nTo view the error-log:\n1) Click on the 'View Error Log' button whenever it is active.";
 					
-					InfoView helpView = new InfoView("Help");	
+					HelpView helpView = new HelpView("Help");	
 					helpView.append(helpMessage);
 				}
 			});

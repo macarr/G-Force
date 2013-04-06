@@ -1,3 +1,6 @@
+/**
+ * This class reads and parses input from an input file containing guitar tabs.
+ */
 package com.java.tabinput;
 
 import java.io.BufferedReader;
@@ -13,18 +16,20 @@ public class InputParser {
 
 	String title = "";
 	String subtitle = "";
-	ArrayList<ArrayList<String>> contents;
-	ArrayList<ArrayList<String>> validContents;
-	ArrayList<Integer> lineNumBlocks;
-	ArrayList<Integer> validLineNums;
-	int lineNum = 0;
-	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";
-	ArrayList<String> block;
-	String summarizedErrorLog = "summarized_log.txt";
-	String extendedErrorLog = "extended_log.txt";
+	ArrayList<ArrayList<String>> contents;	//Holds all the blocks read during input.
+	ArrayList<ArrayList<String>> validContents;	//Holds only the blocks that have 6 lines.
+	ArrayList<Integer> lineNumBlocks;	//holds the starting line of every block within input file.
+	ArrayList<Integer> validLineNums;	//holds the starting line of valid blocks within input file.
+	int lineNum = 0;	
+	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";	//The regular expression.
+	ArrayList<String> block;	//The block where inputs are stored.
+	String summarizedErrorLog = "summarized_log.txt";	//file name for short error log.
+	String extendedErrorLog = "extended_log.txt";		//file name for full error log.
 	boolean sufficientInput = false;
 	
-	
+	/**
+	 * InputParser constructor.
+	 */
 	public InputParser(String inputPath){
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
@@ -33,6 +38,9 @@ public class InputParser {
 		readFile(inputPath);
 	}
 	
+	/**
+	 * This method reads the input file and places the lines in the appropriate block. 
+	 */
 	public void readFile(String inputPath){
 		try{
 		
@@ -41,7 +49,7 @@ public class InputParser {
 			
 			String current = "";
 			
-			//The output stream for error-log file
+			//The output streams for the error-log files.
 			BufferedWriter out = new BufferedWriter(new FileWriter(summarizedErrorLog));
 			BufferedWriter out1 = new BufferedWriter(new FileWriter(extendedErrorLog));
 			
@@ -62,7 +70,7 @@ public class InputParser {
 				current = in.readLine();
 			}
 			
-			//If file has ended at this point then we have insufficient data to show.
+			//If file has ended at this point.
 			if(current == null){
 				out.append("File is empty.");
 				out1.append("File is empty.");
@@ -75,10 +83,7 @@ public class InputParser {
 			else {
 				lineNum++;
 				current = current.trim();
-				
-				//System.out.println(lineNum + ": " + current);
 			}
-			
 			
 			//If the string 'title' is present. 
 			if(current.toLowerCase().startsWith("title")){
@@ -115,7 +120,7 @@ public class InputParser {
 				current = in.readLine();
 			}
 			
-			//If file has ended at this point then we have insufficient data to show.
+			//If file has ended at this point.
 			if(current == null){
 				out.append("Only title found.");
 				out1.append("Only title found.");
@@ -128,8 +133,6 @@ public class InputParser {
 			else {
 				lineNum++;
 				current = current.trim();
-				
-				//System.out.println(lineNum + ": " + current + " hehe");
 			}
 			
 			//If the string 'subtitle' is present.
@@ -149,7 +152,6 @@ public class InputParser {
 				lineNumBlocks.add(new Integer(lineNum));
 			}
 			
-			
 			//Read the next line.
 			current = in.readLine();
 			
@@ -162,13 +164,13 @@ public class InputParser {
 				return;
 			}
 			
-			//Added now: Pass all empty lines.
+			//Pass all empty lines.
 			while(current != null && current.equals("")) {
 				lineNum++;
 				current = in.readLine();
 			}
 			
-			//Added now: If file has come to an end at this point then return.
+			//If file has come to an end at this point then return.
 			if(current == null){
 				out.append("Only title and subtitle found.");
 				out1.append("Only title and subtitle found.");
@@ -177,27 +179,23 @@ public class InputParser {
 				return;
 			}
 			
+			//Else trim() is called.
 			else {
 				lineNum++;
 				current = current.trim();
-				
-				//System.out.println(lineNum + ": " + current);
 			}
 			
-			//At this point we skip over all lines that are not music
+			//At this point we skip over all lines that are not music.
 			while(current != null && !current.matches(regex)){
 				current = in.readLine();
 				
 				if(current != null){
 					lineNum++;
 					current = current.trim();
-				//	System.out.println(lineNum + ": " + current);
 				}
 			}
 			
 			while(current != null) {
-				//lineNum++;
-				//System.out.println(lineNum + ": " + current);
 				//If music is found.
 				if (current.matches(regex) && current.contains("-")){
 		 			//If current block size is 0, simply add the music.
@@ -237,24 +235,20 @@ public class InputParser {
 						sufficientInput = true;
 						contents.add(block);
 						block = new ArrayList<String>();
-						//lineNumBlocks.add(new Integer(lineNum));
 					}
 	 			}
 				
 				//Otherwise, error data is written because current did not match any music.
 				else{
-					//New code starts
-					
+					//First adding the block to contents.
 	 				if(block.size() > 0){
 	 					sufficientInput = true;
 	 					contents.add(block);
 	 					block = new ArrayList<String>();
-	 					//block.add(current);
-	 					//lineNumBlocks.add(new Integer(lineNum));
 	 				}
-	 				//New code ends
 	 				
-					out1.append("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input. Please refer to the documentation for valid input format.");
+					//Error data is written to the extended error-log.
+	 				out1.append("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input. Please refer to the documentation for valid input format.");
 					out1.newLine();
 				}
 				
@@ -263,21 +257,18 @@ public class InputParser {
 				if(current != null){
 					current = current.trim();
 					lineNum++;
-					//System.out.println(lineNum + ": " + current);
 				}
 			}
 			
-			//After exiting the last loop, if the block is found non-empty then it is added to contents.
+			//After exiting the loop, if the block is found non-empty then it is added to contents.
 			if(!block.isEmpty()){
 				this.contents.add(block);
 			}
 			
-			//contentCopy will hold only the elements from contents whose size is 6.
+			//validContents will hold only the elements from contents whose size is 6.
 			validContents = new ArrayList<ArrayList<String>>();
 			
-			//out.newLine();
-			//out1.newLine();
-			
+			//Blocks with size less than or greater than 6 are copied to validContents.
 			for(int i = 0; i < contents.size(); i++){
 				//If the size of any element of contents is not 6, it is not copied.
 				if(!(contents.get(i).size() < 6) && !(contents.get(i).size() > 6)){
@@ -285,32 +276,30 @@ public class InputParser {
 					validLineNums.add(lineNumBlocks.get(i));
 					
 				}
-				//If the number of lines in a dropped block is only 1, the message goes into the extended log only.
-				else if(contents.get(i).size() == 1){
-					//Extended log stream. 
+				//If the number of lines in a dropped block is only 1, the information goes into the extended log only.
+				else if(contents.get(i).size() == 1){ 
 					out1.append("The block comprising the single line (\"" + contents.get(i).get(0) + "\") on line " +
 							lineNumBlocks.get(i).toString() + " was dropped due to incompitable number of lines during input.");
 					out1.newLine();
 				}
-				//If the number of lines in a dropped block is between 1 and 3, the message goes into the extended log only.
+				//If the number of lines in a dropped block is between 1 and 3, the information goes into the extended log only.
 				else if(contents.get(i).size() > 1 && contents.get(i).size() <= 3){
-					//Extended log stream.
 					out1.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
 							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
 							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
 							
 					out1.newLine();
 				}
-				//If the number of lines in a dropped block is greater than 3, the message goes into both the summarized and extended logs.
+				//If the number of lines in a dropped block is greater than 3, the information goes into both the summarized and extended logs.
 				else if(contents.get(i).size() > 3){
-					//Summarized log stream.
+					//Writing to summarized log.
 					out.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
 							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
 							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
 							
 					out.newLine();
 					
-					//Extended log stream.
+					//Writing to extended log.
 					out1.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
 							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
 							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
@@ -319,15 +308,10 @@ public class InputParser {
 				}
 			}
 			
-			//Adding two new lines for clarity.
-			//out.newLine();
-			//out1.newLine();
-			
-			//Once the needed elements from contents (the ones with size 6) have been copied over to contentsCopy,
-			//contentsCopy is assigned to contents, which now holds only the elements whose size is 6.
-			
+			//At the end if validContents has size 0, the appropriate information is displayed.  
 			if(validContents.size() == 0){
 				out.write("The contents found in the input file were insufficient to be displayed.");
+				out1.write("The contents found in the input file were insufficient to be displayed.");
 			}
 			
 			//The input and output streams are closed.
@@ -342,25 +326,37 @@ public class InputParser {
 		
 	}
 	
-	//Returns the title.
+	/**
+	 * Returns the title.
+	 */
 	public String getTitle(){
 		return title;
 	}
 	
-	//Returns the subtitle.
+	/**
+	 * Returns the subtitle.
+	 */
 	public String getSubtitle(){
 		return subtitle;
 	}
 	
-	//Returns the valid contents.
+	/**
+	 * Returns the valid contents.
+	 */
 	public ArrayList<ArrayList<String>> getData(){
 		return validContents;
 	}
 	
+	/**
+	 * Returns the starting line number of a valid block within the input file.
+	 */
 	public int getStartLineNum(int index){
 		return validLineNums.get(index);
 	}
 	
+	/**
+	 * Returns whether sufficient contents were available within the input file.
+	 */
 	public boolean inputIsSufficient(){
 		return sufficientInput;
 	}
