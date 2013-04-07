@@ -16,7 +16,6 @@ public class TabUnitStats{
 	 * TabUnitStats constructor.
 	 */
 	public TabUnitStats(int beginningBarIndex, int beginningBarFreq, int repValueIndex, String repValue){
-		
 		this.beginningBarIndex = beginningBarIndex;
 		this.beginningBarFreq = beginningBarFreq;
 		this.repValueIndex = repValueIndex;

@@ -22,6 +22,7 @@ import java.io.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 
 public class TabUIMainWindow extends JFrame{
@@ -44,7 +45,7 @@ public class TabUIMainWindow extends JFrame{
 		c.setLayout(new BorderLayout());
 		
 		//Displaying the splash screen.
-		//displaySplashScreen(c, size);		
+		displaySplashScreen(c, size);		
 		c.add(outputArea, BorderLayout.CENTER);
 		c.add(conPan, BorderLayout.EAST);
 		
@@ -145,7 +146,7 @@ public class TabUIMainWindow extends JFrame{
 			}
 		}
 		catch (NullPointerException e){
-			System.out.println("No picture File!");
+			JOptionPane.showMessageDialog(this, "No picture File!", "Error", JOptionPane.INFORMATION_MESSAGE);
 			//System.exit(1);
 		}
 		//end Splashscreen

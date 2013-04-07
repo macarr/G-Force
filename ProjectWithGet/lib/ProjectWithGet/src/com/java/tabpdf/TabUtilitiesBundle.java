@@ -274,7 +274,6 @@ public class TabUtilitiesBundle{
 		//Drawing a horizontal line.
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
 		cB.lineTo(xPos + spacing, yPos+fontSize/2.5f);
-		
 	}
 
 	/**
@@ -296,7 +295,6 @@ public class TabUtilitiesBundle{
 			cB.circle(xPos - (spacing - 5), yPos + fontSize/2.5f, fontSize/5f);
 		}
 		cB.fillStroke();
-		
 	}
 
 	/**
@@ -407,7 +405,6 @@ public class TabUtilitiesBundle{
 				cB.beginText();
 				cB.showTextAlignedKerned(PdfContentByte.ALIGN_LEFT, message, trailCdrs.xPos-bF.getWidthPoint(message, fontSize), trailCdrs.yPos+fontSize, 0);
 				cB.endText();
-
 			}
 
 			for(int barNum = 0; barNum < numOfBars;){

@@ -64,7 +64,7 @@ public class Tab2PdfConverter {
 		this.fontSize = fontSize;
 		this.pageSize = pageSize;
 		
-		//Called to instantiate TabUnitBlock objects from the input.
+		//Called to instantiate TabUnitsBlock objects from the input.
 		extractTabBlocks(in.getData(), spacing);	 
 
 		document = new Document(pageSize);
@@ -94,7 +94,7 @@ public class Tab2PdfConverter {
 	 * This is the method that takes all the necessary steps to create the Pdf document.
 	 */
 	public ErrorInformation createPDF() {
-		//To check whether there was space for the whole document to be written. 
+		//To check whether the whole document was written. 
 		boolean fullPdfWritten = true;
 		
 		//ArrayList where any error-info shall be stored.
@@ -167,7 +167,7 @@ public class Tab2PdfConverter {
 				//Called to process a line.
 				processUnitLine();
 				
-				//After printing the parts of each line, we need to move to the next. 
+				//After printing the parts of each line, we need to increment the y position. 
 				yPos -= fontSize;
 			}
 
@@ -196,18 +196,17 @@ public class Tab2PdfConverter {
 		
 		document.close();
 
-		return new ErrorInformation(fullPdfWritten, errorInfo);
+		//Creating object of class ErrorInformation and returning it. 
+		return (new ErrorInformation(fullPdfWritten, errorInfo));
 	}
 
 	/**
 	 * This method processes individual lines from a unit
 	 */
 	private void processUnitLine(){
-		
 		//the idea is to absorb the characters starting with '|' or '||' and ending right before
 		//the next '|' or '||'s.
 		for(charNum = currBlock.getUnitStats(curUnitIndex).getBeginningBarIndex() + skip; curUnitIndex + 1 < currBlock.getNumberOfUnits() && charNum < (currBlock.getUnitStats(curUnitIndex+1).getBeginningBarIndex());){
-				
 			//In the following If-else conditions the individual characters are processed.	
 			if(line.charAt(charNum) == '|' || contents.get(blockNum).getLine(1).charAt(charNum) == '|'){
 				tUB.processCurrentBars(new TextLine(lineNum, "", charNum), 
@@ -248,7 +247,6 @@ public class Tab2PdfConverter {
 					number += line.charAt(charNum);
 				}
 
-					
 				ReturnValues returnValues = tUB.processDigit(number, new TextLine(lineNum, line, charNum), new CharCoordinates(xPos, yPos, document.right(), lastNumXPos[lineNum], lastNumYPos[lineNum]));
 				lastNumXPos[lineNum] = returnValues.xPos;
 				lastNumYPos[lineNum] = returnValues.yPos;
@@ -266,7 +264,6 @@ public class Tab2PdfConverter {
 				boolean nextCharIsBar = (line.charAt(charNum + 1) == '|');
 				tUB.processStar(xPos, yPos, nextCharIsBar);
 				xPos += spacing;
-					
 				charNum++;
 			}
 
@@ -313,7 +310,7 @@ public class Tab2PdfConverter {
 		if(xPos + currBlock.getUnitStats(curUnitIndex).getHorizontalSpaceNeeds() > document.right()) {
 
 			//if a block was split from the middle, the trailing '|'s should be printed before the split.
-			//processTrailingBars does that. Also the ending 6 horizontal lines are printed
+			//processTrailingBars does that.
 			xPos = tUB.processTrailingBars(new StarBars(starIndexes,
 					currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq(),
 					currBlock.getUnitStats(curUnitIndex).getRepValueIndex(),
@@ -336,7 +333,7 @@ public class Tab2PdfConverter {
 		margin = xPos;
 		yPos = document.top() - yIncrement;
 
-		//If all the units of a block have been printed, it is time to call 'processtrailingBars to print
+		//If all the units of a block have been printed, it is time to call processtrailingBars to print
 		//the last set of '|'s.
 		xPos = tUB.processTrailingBars(new StarBars(starIndexes,
 				currBlock.getUnitStats(curUnitIndex).getBeginningBarFreq(),
@@ -361,7 +358,7 @@ public class Tab2PdfConverter {
 	 * This method checks whether the next unit (measure) can fit next to the current one.
 	 */
 	private void processInsufficientSpaceReInit(){
-		//first draw the 6 horizontal lines at the end of the current block
+		//first draw the 6 horizontal lines at the end of the current block.
 		tUB.processEndingHorizontalLines(xPos, yPos);
 		yPos = document.top()-yIncrement;
 

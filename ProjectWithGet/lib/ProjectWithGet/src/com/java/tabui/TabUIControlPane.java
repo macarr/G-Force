@@ -63,7 +63,7 @@ public class TabUIControlPane extends JPanel{
 					if(status == 0){
 						convertSavePane.disableComponents();
 						enableErrorLog();
-						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display. Please check the error log.", "Message", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Nothing to display. Please check the error log.", "Message", JOptionPane.ERROR_MESSAGE);
 					}
 					
 					//Status == 1 means that at least some meaningful data was found in the input file.
@@ -373,13 +373,12 @@ public class TabUIControlPane extends JPanel{
 							}
 						}
 						//A window where the error-log shall be displayed.
-						ErrorLogView errLogView = new ErrorLogView("Error Log");
+						ErrorLogView errLogView = new ErrorLogView("Error Log", summarized, extended);
 						
-						errLogView.append(summarized, extended);
+						//errLogView.append(summarized, extended);
 					}
 					catch(Exception ex){
 						ex.printStackTrace();
-						//JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Unexpected Error Occured", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			});
