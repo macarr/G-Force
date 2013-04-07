@@ -39,11 +39,6 @@ public class TabUtilitiesBundle{
 	    
 	/**
 	 * 	The TabUtilitiesBundle constructor.
-	 * @param cB The PdfContentByte attached to the pdf document that would be written to.
-	 * @param fontName The font-name that would be used.
-	 * @param fontSize The font-size that would be used.
-	 * @param spacing The spacing value.
-	 * @param pageSize The page-size.
 	 */
 	public TabUtilitiesBundle(PdfContentByte cB, String fontName, float fontSize, float spacing, Rectangle pageSize){
 		//Initializing some of the member objects.
@@ -77,7 +72,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Sets the font-size to the value contained in variable fontSize.
-	 * @param fontSize Value that the size of the font would be set to.
 	 */
 	public void setFontSize(float fontSize){
 		
@@ -87,7 +81,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Sets the width of the lines.
-	 * @param lineWidth Value that the width of lines would be set to.
 	 */
 	public void setLineWidth(float lineWidth){
 		cB.setLineWidth(lineWidth);
@@ -95,9 +88,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Writes the header in the pdf document.
-	 * @param in The inputParser object responsible for the input.
-	 * @param docWidth The width of the pdf document.
-	 * @param yPos The vertical position with respect to which the header and sub-header would be written.
 	 */
 	public void processHeader(InputParser in, float docWidth, float yPos){
 		setFontSize(20f);
@@ -117,9 +107,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Processes input within triangular-brackets and displays it in the proper format on the pdf document.
-	 * @param numericVal The number that appears within triangular brackets.
-	 * @param xPos The horizontal position where the output shall be written.  
-	 * @param yPos The vertical position where the output shall be written.
 	 */
 	public void processInputWithinTriangle(String numericVal, float xPos, float yPos){
 		cB.beginText();
@@ -141,9 +128,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Draws single bars at the beginning of a unit if the parent block was split in the middle.
-	 * @param numLines The number of lines.
-	 * @param xPos The horizontal position where the output shall be written.
-	 * @param yPos The vertical position where the output shall be written.
 	 */
 	public void processSingleBars(int numLines, float xPos, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
@@ -167,8 +151,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Draws a line instead of a dash on the pdf document.
-	 * @param xPos The horizontal position where the line shall be drawn.
-	 * @param yPos The vertical position where the line shall be drawn.
 	 */
 	public void processDashes(float xPos, float yPos){
 		//Drawing a line representing a dash
@@ -179,8 +161,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Processes a hammer-on that appears in the ascii file.
-	 * @param xPos The horizontal position where the symbol shall be drawn.
-	 * @param yPos The vertical position where the symbol shall be drawn. 
 	 */
 	public void processH(float xPos, float yPos){
 		//Drawing a line. The actual hammer-on is processed within processDigit.
@@ -190,8 +170,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Processes a pull-off that appears in the ascii file.
-	 * @param xPos The horizontal position where the pull-off symbol shall be written.
-	 * @param yPos The vertical position where the pull-off symbol shall be written.
 	 */
 	public void processP(float xPos, float yPos){
 		//Drawing a line. The actual pull-off is processed within processDigit.
@@ -201,8 +179,6 @@ public class TabUtilitiesBundle{
 	
 	/**
 	 * Writes a straight line in place of a character that is not known.
-	 * @param xPos
-	 * @param yPos
 	 */
 	public void processUnknown(float xPos, float yPos){
 		cB.moveTo(xPos, yPos+fontSize/2.5f);
@@ -210,11 +186,7 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * 
-	 * @param numericVal The value representing the number
-	 * @param textLine The object carrying the information regarding a line
-	 * @param coordinates The object carrying some information regarding locations within the Pdf document
-	 * @return An Object carrying the x and y coordinates of the current number
+	 * Writes a number.
 	 */
 	public ReturnValues processDigit(String numericVal, TextLine textLine, CharCoordinates coordinates){
 		
@@ -292,8 +264,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Processes a slide-up
-	 * @param xPos The horizontal position where the slide-up character shall be drawn.
-	 * @param yPos The vertical position where the slide-up character shall be drawn.
 	 */
 	public void processSlideUp(float xPos, float yPos){
 		TiltedShape tS = new TiltedShape();
@@ -308,10 +278,7 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * To process the star character in the ascii file.
-	 * @param xPos The horizontal position where the representation of the star character (a filled circle) shall be drawn.
-	 * @param yPos The vertical position where the representation of the star character (a filled circle) shall be drawn.
-	 * @param nextCharIsBar A boolean value indicating whether the next character in the line is a '|'. 
+	 * Processes the star character in the ascii file.
 	 */
 	public void processStar(float xPos, float yPos, boolean nextCharIsBar){
 		//Horizontal lines
@@ -334,9 +301,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Draws the horizontal lines before the block.
-	 * @param numLines Number of lines in the block
-	 * @param leftMargin The left margin
-	 * @param yPos The vertical position with respect to which the lines would be drawn.
 	 */
 	public void processBeginningHorizontalLines(int numLines, float leftMargin, float yPos){
 		for(int lineNum = 0; lineNum < numLines; lineNum++){
@@ -350,8 +314,6 @@ public class TabUtilitiesBundle{
 
 	/**
 	 * Draws the horizontal lines after the block
-	 * @param xPos The horizontal position that marks the beginning of the lines
-	 * @param yPos The vertical position with respect to which the lines would be drawn.
 	 */
 	public void processEndingHorizontalLines(float xPos, float yPos){
 		for(int lineNum = 0; lineNum < 6; lineNum++){
@@ -365,12 +327,7 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * 
-	 * @param textLine The object carrying certain information about a line
-	 * @param starBars The object carrying certain information about '|' characters and repetitions.
-	 * @param xPos The horizontal position where the '|'s shall be written.
-	 * @param yPos The vertical position where the '|'s shall be written.
-	 * @return The horizontal position after the '|'s have been written.
+	 * Process the bars within blocks.
 	 */
 	public float processCurrentBars(TextLine textLine, StarBars starBars, float xPos, float yPos){
 		int barNum = 0;
@@ -434,12 +391,7 @@ public class TabUtilitiesBundle{
 	}
 
 	/**
-	 * 
-	 * @param starBars The object carrying certain information about '|' characters and repetitions.
-	 * @param numLines The number of lines in a block
-	 * @param charNum The character position of the '|'s within the line.
-	 * @param trailCdrs The object carrying the horizontal and vertical coordinates where the '|'s shall be printed.
-	 * @return The horizontal coordinate after the last '|' was printed
+	 * Processes the last set of bars in a block.
 	 */
 	public float processTrailingBars(StarBars starBars, int numLines, int charNum, TrailingCoordinates trailCdrs){
 		int numOfBars = starBars.barFreq;

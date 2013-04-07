@@ -1,3 +1,7 @@
+/**
+ *Class 'TabUIController' sets up the components on the right-hand side of the User-Interface. An object of this class can also
+ *be displayed on the left side of the user-interface. 
+ */
 package com.java.tabui;
 
 import java.awt.BorderLayout;
@@ -27,18 +31,21 @@ import javax.swing.border.TitledBorder;
 
 import com.itextpdf.text.pdf.BaseFont;
 
-//Class 'TabUIController' sets up the components on the right-hand side of the User-Interface. An object of this class can also
-//be displayed on the left side of the user-interface.
 public class TabUIControlPane extends JPanel{
   
 	//serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
 	private static final long serialVersionUID = 228385549718664150L;
 	
-	//OpenPane houses the openButton.
+	/**
+	 * Class OpenPane holds the openButton.
+	 */
 	private class OpenPane extends JPanel{
 		//To open an ascii file.
 		private JButton openButton = null;
 			
+		/**
+		 * OpenPane constructor.
+		 */
 		public OpenPane(int buttonHeight){
 			
 			//Instantiating the openButton.  
@@ -70,6 +77,9 @@ public class TabUIControlPane extends JPanel{
 						convertButton.setEnabled(true);
 						convertDisabled = false;
 						enableErrorLog();
+						
+						//saveButton needs to be disabled because the file has not yet been converted to Pdf.
+						convertSavePane.disableSaveButton();
 					}
 				}
 			});
@@ -104,9 +114,14 @@ public class TabUIControlPane extends JPanel{
 		}
 	}
 	
-	//Class ConvertSavePane houses the convertButton, the saveButton, and the components using which the user enters values.
+	/**
+	 * Class ConvertSavePane holds the convertButton, the saveButton, and the components using which the user enters values.
+	 */
 	private class ConvertSavePane extends JPanel{
 		
+		/**
+		 * ConvertSavePane constructor.
+		 */
 		public ConvertSavePane(int buttonHeight){
 			//Using the FontMatrics class, we ensure that the buttons are always wide enough to fully display their labels.
 			FontMetrics metrics = getFontMetrics(getFont()); 
@@ -270,7 +285,17 @@ public class TabUIControlPane extends JPanel{
 			
 		}
 		
-		//Disables certain components.
+		/**
+		 * Disables the saveButton.
+		 */
+		public void disableSaveButton(){
+			saveButton.setEnabled(false);
+			saveDisabled = true;
+		}
+		
+		/**
+		 * Disables certain components.
+		 */
 		public void disableComponents(){
 			convertDisabled = true;
 			saveDisabled = true;
@@ -293,8 +318,14 @@ public class TabUIControlPane extends JPanel{
 		}
 	}
 	
-	//ControlPane holds the openPane and convertSavePane
+	/**
+	 * ControlPane holds the openPane and convertSavePane
+	 */
 	private class ControlPane extends JPanel{
+		
+		/**
+		 *ControlPane constructor.
+		 */
 		public ControlPane(JPanel openPane, JPanel convertSavePane){
 			//Setting the layout of ControlPane to BoxLayout.
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -308,11 +339,16 @@ public class TabUIControlPane extends JPanel{
 		}
 	}
 	
-	//InfoPane holds the errLogButton and helpButton.
+	/**
+	 * InfoPane holds the errLogButton and helpButton.
+	 */
 	private class InfoPane extends JPanel{
 		private JButton errLogButton = null;
 		private JButton helpButton = null;
 		
+		/**
+		 * InfoPane constructor.
+		 */
 		public InfoPane(int buttonHeight){
 			//Instantiating the errLogButton.  
 			errLogButton = new JButton("View Error Log");
@@ -323,43 +359,21 @@ public class TabUIControlPane extends JPanel{
 					try{
 						String current = "";
 						
-						String summarizedErrorLog = "summarized_log.txt";
-						String extendedErrorLog = "extended_log.txt";
+						//Retrieving the error information.
+						ArrayList<String> summarized = data.getIn().getSummarized();
+						ArrayList<String> extended = data.getIn().getExtended();
 						
-						ArrayList<String> summarized = new ArrayList<String>();
-						ArrayList<String> extended = new ArrayList<String>();
+						ArrayList<String> errPdf = data.getErrorInfo();
 						
-						
-						//A window where the error-log file shall be displayed.
+						//System.out.println(summarized.size() + " " + extended.size() + " " + errPdf.size());
+						if(errPdf != null){
+							for(int i = 0; i < errPdf.size(); i++){
+								summarized.add(errPdf.get(i));
+								extended.add(errPdf.get(i));
+							}
+						}
+						//A window where the error-log shall be displayed.
 						ErrorLogView errLogView = new ErrorLogView("Error Log");
-						
-						//InputStream for the summarized error-log file.
-						BufferedReader in = new BufferedReader(new FileReader(summarizedErrorLog));
-						
-						//Reading the file until null is reached.
-						current = in.readLine();
-						
-						while(current != null) {
-							summarized.add(new String(current));
-							current = in.readLine();
-						}
-						
-						//Closing the stream.
-						in.close();
-						
-						//InputStream for the extended error-log file.
-						in = new BufferedReader(new FileReader(extendedErrorLog));
-						
-						//Reading the file until null is reached.
-						current = in.readLine();
-						
-						while(current != null) {
-							extended.add(new String(current));
-							current = in.readLine();
-						}
-						
-						//Closing the stream.
-						in.close();
 						
 						errLogView.append(summarized, extended);
 					}
@@ -436,13 +450,17 @@ public class TabUIControlPane extends JPanel{
 			setBorder(BorderFactory.createMatteBorder(0, 0, 4, 0, new Color(156, 138, 165)));
 		}
 		
-		//Disables the errLogButton whenever necessary.
+		/**
+		 * Disables the errLogButton whenever necessary.
+		 */
 		public void disableComponents(){
 			errLogButton.setEnabled(false);
 		}
 	}
 	
-	//FinalControlPane holds together all the other JPanels above.
+	/**
+	 * FinalControlPane holds together all the other JPanels above.
+	 */
 	private class FinalControlPane extends JPanel{
 		public FinalControlPane(JPanel controlPane, JPanel infoPane){
 			setLayout(new BorderLayout());
@@ -458,60 +476,28 @@ public class TabUIControlPane extends JPanel{
 		}
 	}
 	
-	//To convert to Pdf.
-	private JButton convertButton = null;
 	
-	//To save the Pdf file.
-	private JButton saveButton = null;
-	
-	//JComboBox holding the font-name values.
-	private JComboBox<String> fontNamesCombo = null;
-	
-	//JTextField holding the font-size value.
-	private JTextField fontSizeField = null;
-	
-	//JTextField holding the spacing value.
-	private JTextField spacingField = null;
-	
-	//The path where the file shall be saved.
-	private String destinationPath;
-	
-	//Initially the convertButton should be disabled.
-	private boolean convertDisabled = true;
-	
-	//Initially the saveButton should be disabled.
-	private boolean saveDisabled = true;
-	
-	//Initially the errLogButton should be disabled.
-	private boolean errLogDisabled = true;
-	
-	//JPanel to hold the fontNamesCombo.
-	private JPanel fontNamesComboPane;
-	
-	//JPanel to hold the fontSizeField.
-	private JPanel fontSizeFieldPane;
-	
-	////JPanel to hold the spacingField.
-	private JPanel spacingFieldPane;
-	
-	//Titled border for the fontNamesCombo.
-	private TitledBorder fontNamesComboBorder;
-	
-	//Titled border for the fontSizeField.
-	private TitledBorder fontSizeFieldBorder;
-	
-	//Titled border for the spacingFieldBorder.
-	private TitledBorder spacingFieldBorder;
-	
-	//The references to the JPanels defined above.
+	private JButton convertButton = null;	//To convert to Pdf.
+	private JButton saveButton = null;	//To save the Pdf file.
+	private JComboBox<String> fontNamesCombo = null;	//JComboBox holding the font-name values.
+	private JTextField fontSizeField = null;	//JTextField holding the font-size value.
+	private JTextField spacingField = null;	//JTextField holding the spacing value.
+	private String destinationPath;	//The path where the file shall be saved.
+	private boolean convertDisabled = true;	//Initially the convertButton should be disabled.
+	private boolean saveDisabled = true;	//Initially the saveButton should be disabled.
+	private boolean errLogDisabled = true;	//Initially the errLogButton should be disabled.
+	private JPanel fontNamesComboPane;	//JPanel to hold the fontNamesCombo.
+	private JPanel fontSizeFieldPane;	//JPanel to hold the fontSizeField.
+	private JPanel spacingFieldPane;	//JPanel to hold the spacingField.
+	private TitledBorder fontNamesComboBorder;	//Titled border for the fontNamesCombo.
+	private TitledBorder fontSizeFieldBorder;	//Titled border for the fontSizeField.
+	private TitledBorder spacingFieldBorder;	//Titled border for the spacingFieldBorder.
 	private OpenPane openPane;
 	private ConvertSavePane convertSavePane;
 	private ControlPane controlPane;
 	private InfoPane infoPane;
 	private FinalControlPane finalControlPane;
-
-	//Reference to the TabFileManager.
-	private final TabFileManager data;
+	private final TabFileManager data;	//Reference to the TabFileManager.
 	
 	//chosenFontName is an object that holds the selected value from the fontNamesCombo and makes this value accessible from
 	//multiple methods.  
@@ -533,7 +519,9 @@ public class TabUIControlPane extends JPanel{
 								   BaseFont.TIMES_BOLDITALIC };
 	
 	
-	//The TabUIControlPane constructor.  
+	/**
+	 * The TabUIControlPane constructor.
+	 */
 	public TabUIControlPane(Dimension size, final TabFileManager data){
 		
 		//this.data holds the reference to the TabFileManager object. 
@@ -551,13 +539,17 @@ public class TabUIControlPane extends JPanel{
 		initializeComponents();
 	}
 
-	//Enables the errLogButton.
+	/**
+	 * Enables the errLogButton.
+	 */
 	public void enableErrorLog(){
 		infoPane.errLogButton.setEnabled(true);
 		errLogDisabled = false;
 	}
 	
-	//InitializeComponents() takes the steps to set up the TabUIControlPane.
+	/**
+	 * InitializeComponents() takes the steps to set up the TabUIControlPane.
+	 */
 	public void initializeComponents(){
 		openPane = new OpenPane(getPreferredSize().height/buttonHeightFactor);
 		
@@ -575,7 +567,9 @@ public class TabUIControlPane extends JPanel{
 		}
 	}
 	
-	
+	/**
+	 * Takes the steps necessary to resize itself and the components within.
+	 */
 	public void resizeComponent(Dimension size){
 		FontMetrics metrics = getFontMetrics(getFont()); 
 		int buttonWidth = metrics.stringWidth("Select Font-Name from Below:");

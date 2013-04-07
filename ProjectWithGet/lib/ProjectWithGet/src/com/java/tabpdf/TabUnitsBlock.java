@@ -1,7 +1,7 @@
-/**TabUnitsBlock.java
- * 
+/**
  * This class takes as input an ArrayList<String> (a block of tab units), and maintains an ArrayList<TabUnitStats>. Upon request, it can
- * return the entire block, a specific line from the block, information about a specific unit (measure), and number of units within this block.
+ * return the entire block, a specific line from the block, information about a specific unit (measure), and number of units within this 
+ * block.
  */
 
 package com.java.tabpdf;
@@ -14,23 +14,31 @@ public class TabUnitsBlock{
 	ArrayList<Integer> starIndexes;
 	TabUnitStats unit;
 	
+	/**
+	 * TabUnitsBlock constructor.
+	 */
 	public TabUnitsBlock(ArrayList<String> block, float spacing){
 		this.block = block;
 		setUnitStats(block.get(1), spacing);
 		setStarIndexes();
 	}
 	
+	/**
+	 * Returns an ArrayList containing the indexes of the '*' characters within this block.
+	 */
 	public ArrayList<Integer> getStarIndexes(){
 		ArrayList<Integer> listCopy = new ArrayList<Integer>();
 		
 		for(int i = 0; i < starIndexes.size(); i++){
 			listCopy.add(starIndexes.get(i));
-			//System.out.println(starIndexes.get(i));
 		}
 		
 		return listCopy;
 	}
 	
+	/**
+	 * Stores the indexes of the '*' Characters within this block in an ArrayList.
+	 */
 	private void setStarIndexes(){
 		starIndexes = new ArrayList<Integer>();
 		
@@ -43,6 +51,10 @@ public class TabUnitsBlock{
 		}
 	}
 	
+	/**
+	 *Keeps track of the indexes where the units (measures) start within a block. Other important information about a unit is also
+	 *collected and stored.
+	 */
 	public void setUnitStats(String source, float spacing){
 		blockOfTabUnits = new ArrayList<TabUnitStats>();
 		int numOfBlanks = 0;
@@ -115,6 +127,9 @@ public class TabUnitsBlock{
 		}
 	}
 	
+	/**
+	 * Returns information about a unit (measure).
+	 */
 	public TabUnitStats getUnitStats(int unitIndex){
 		TabUnitStats unitStats = null;
 		
@@ -125,19 +140,37 @@ public class TabUnitsBlock{
 		return unitStats;
 	}
 	
+	/**
+	 * Returns the number of units in this block.
+	 */
 	public int getNumberOfUnits(){
 		return blockOfTabUnits.size();
 	}
 	
+	/**
+	 * Returns number of lines in this block.
+	 */
 	public int getNumberOfLines(){
 		return block.size();
 	}
 	
+	/**
+	 * returns a particular line in this block.
+	 */
 	public String getLine(int lineNum){
 		return block.get(lineNum);
 	}
 	
+	//Returns the block object.
 	public ArrayList<String> getBlock(){
-		return block;
+		ArrayList<String> returnList = new ArrayList<String>();
+		
+		//Creating a copy of the block.
+		for(int i = 0; i < block.size(); i++){
+			returnList.add(block.get(i));
+		}
+		
+		//Returning the copy.
+		return returnList;
 	}
 }

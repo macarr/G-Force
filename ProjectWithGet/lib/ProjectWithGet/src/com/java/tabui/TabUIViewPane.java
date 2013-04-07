@@ -1,3 +1,6 @@
+/**
+ * TabUIViewPane is where the output of this program is displayed.
+ */
 package com.java.tabui;
 
 import java.awt.BorderLayout;
@@ -16,8 +19,7 @@ import org.icepdf.ri.common.ComponentKeyBinding;
 import org.icepdf.ri.common.SwingController;
 
 import com.java.tabinput.InputParser;
-
-//'UIView' is where all the screen output is displayed. 
+ 
 public class TabUIViewPane extends JPanel{
   
 	// serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
@@ -39,7 +41,9 @@ public class TabUIViewPane extends JPanel{
 	//Class 'SwingController' is from the open-source library 'IcePdf' to enable displaying Pdf documents within java applications. 
 	SwingController controller;
 	
-	//TabUIViewPane constructor.
+	/**
+	 * TabUIViewPane constructor.
+	 */
 	public TabUIViewPane(){
 		setLayout(new BorderLayout());
 		statusUpdateLabel = new JLabel(" ");
@@ -53,14 +57,18 @@ public class TabUIViewPane extends JPanel{
 		add(centerPane, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Closes the ice-pdf controller.
+	 */
 	public void closePdfFile(){
 		if(controller != null){
 			controller.closeDocument();
 		}
-		
 	}
 	
-	//Shows the status of a task. When necessary, a progress-bar is also displayed. 
+	/**
+	 * Shows the status of a task. When necessary, a progress-bar is also displayed. 	 
+	 * */
 	public void displayStatusUpdate(String status, boolean showProgressBar){
 		statusUpdateLabel.setText(status);
 		if(showProgressBar){
@@ -74,7 +82,9 @@ public class TabUIViewPane extends JPanel{
 		}
 	}
 	
-	//This method displays the Ascii file when the user opens it.
+	/**
+	 * This method displays the Ascii file when the user opens it.
+	 */
 	public void showAsciiFile(InputParser in){
 		//First making the status-label blank 
 		statusUpdateLabel.setText(" ");
@@ -102,7 +112,9 @@ public class TabUIViewPane extends JPanel{
 		centerPane.repaint();
 	}
 	
-	//This method shows the Pdf file using the open-source library 'JPedal', developed by IDR Solutions.
+	/**
+	 * This method shows the Pdf file using the open-source library 'ice-pdf'.
+	 */
 	public void showPdfFile(String outputPath) {
 		
 		controller = new SwingController();
@@ -121,6 +133,9 @@ public class TabUIViewPane extends JPanel{
 		displayStatusUpdate(" ", false);
 	}
 	
+	/**
+	 * Clears the centerPane.
+	 */
 	public void clearCenterPane(){
 		centerPane.removeAll();
 		//addImage();

@@ -15,6 +15,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import com.java.paramclasses.CharCoordinates;
+import com.java.paramclasses.ErrorInformation;
 import com.java.paramclasses.ReturnValues;
 import com.java.paramclasses.StarBars;
 import com.java.paramclasses.TextLine;
@@ -92,9 +93,12 @@ public class Tab2PdfConverter {
 	/**
 	 * This is the method that takes all the necessary steps to create the Pdf document.
 	 */
-	public boolean createPDF() {
+	public ErrorInformation createPDF() {
 		//To check whether there was space for the whole document to be written. 
 		boolean fullPdfWritten = true;
+		
+		//ArrayList where any error-info shall be stored.
+		ArrayList<String> errorInfo = new ArrayList<String>();
 		
 		margin = document.left();
 		xPos = margin;
@@ -128,32 +132,19 @@ public class Tab2PdfConverter {
 			if(currBlock.getUnitStats(curUnitIndex).getHorizontalSpaceNeeds() > document.right()-document.left()){
 				fullPdfWritten = false;
 
-				String errorLog=com.java.tabui.TabFileManager.getTempDir()+"/T2PDFErr.txt";
-
-				//String osVersion = System.getProperty("os.name");
-				//String errorLog = "";
-				//String errorLog;
-				//if(osVersion.startsWith("Windows"))
-					//errorLog = ""+System.getenv("TEMP")+"T2PDFErr.txt";
-				//else
-				//	errorLog = "/tmp/T2PDFErr.txt";
-
-				
 				try{
-					
-					//The output stream for error-log file
-					BufferedWriter out = new BufferedWriter(new FileWriter("log_file", true));
+					//Getting the start-line number of the current block within the input file. 
 					int startLine = in.getStartLineNum(blockNum);
 					
-					out.append("Measure number " + (curUnitIndex + 1) + " from lines (" + startLine + "-" + (startLine + currBlock.getNumberOfLines()-1) +
+					//Adding error-info to the ArrayList.
+					errorInfo.add("Measure number " + (curUnitIndex + 1) + " from lines (" + startLine + "-" + (startLine + currBlock.getNumberOfLines()-1) +
 							") of the input file" + " went past the right margin of the PDf document during conversion, and might not have fully fit.");
-					out.newLine();
-					out.close();
 				}
 				catch(Exception e){
 					e.printStackTrace();
 				}
 			}
+			
 			//calling this method to draw the beginning 6 horizontal lines
 			tUB.processBeginningHorizontalLines(contents.get(blockNum).getNumberOfLines(), document.left(), yPos);
 			yPos = document.top()-yIncrement;
@@ -205,7 +196,7 @@ public class Tab2PdfConverter {
 		
 		document.close();
 
-		return fullPdfWritten;
+		return new ErrorInformation(fullPdfWritten, errorInfo);
 	}
 
 	/**

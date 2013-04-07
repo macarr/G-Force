@@ -19,7 +19,9 @@ public class InputParser {
 	ArrayList<ArrayList<String>> contents;	//Holds all the blocks read during input.
 	ArrayList<ArrayList<String>> validContents;	//Holds only the blocks that have 6 lines.
 	ArrayList<Integer> lineNumBlocks;	//holds the starting line of every block within input file.
-	ArrayList<Integer> validLineNums;	//holds the starting line of valid blocks within input file.
+	ArrayList<Integer> validLineNums;	//holds the starting line of valid blocks within input file. 
+	ArrayList<String> summarized;
+	ArrayList<String> extended;
 	int lineNum = 0;	
 	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";	//The regular expression.
 	ArrayList<String> block;	//The block where inputs are stored.
@@ -33,6 +35,8 @@ public class InputParser {
 		block = new ArrayList<String>();
 		contents = new ArrayList<ArrayList<String>>();
 		validContents = new ArrayList<ArrayList<String>>();
+		summarized = new ArrayList<String>();
+		extended = new ArrayList<String>();
 		lineNumBlocks = new ArrayList<Integer>();
 		validLineNums = new ArrayList<Integer>();
 		readFile(inputPath);
@@ -49,11 +53,6 @@ public class InputParser {
 			
 			String current = "";
 			
-			//The output streams for the error-log files.
-			BufferedWriter out = new BufferedWriter(new FileWriter(summarizedErrorLog));
-			BufferedWriter out1 = new BufferedWriter(new FileWriter(extendedErrorLog));
-			
-			
 			current = in.readLine();
 			
 			//Pass all empty lines.
@@ -64,10 +63,9 @@ public class InputParser {
 			
 			//If file has ended at this point.
 			if(current == null){
-				out.append("File is empty.");
-				out1.append("File is empty.");
-				out.close();
-				out1.close();
+				summarized.add("File is empty.");
+				extended.add("File is empty.");
+				
 				return;
 			}
 			
@@ -83,12 +81,12 @@ public class InputParser {
 			}
 			
 			//Otherwise, if line does not start with '|' or '-'.
-			else if(!current.matches(regex)){
+			else if(!current.startsWith("|") && !current.startsWith("-")){
 				title = current;
 			}
 			
 			//Otherwise, if line starts with '|' or '-'.
-			else if(current.matches(regex)){
+			else if(current.startsWith("|") || current.startsWith("-")){
 				title = "Not given";
 				block.add(current);
 				lineNumBlocks.add(new Integer(lineNum));
@@ -105,10 +103,9 @@ public class InputParser {
 			
 			//If file has ended at this point.
 			if(current == null){
-				out.append("Only title found.");
-				out1.append("Only title found.");
-				out.close();
-				out1.close();
+				summarized.add("Only title found.");
+				extended.add("Only title found.");
+				
 				return;
 			}
 			
@@ -124,12 +121,12 @@ public class InputParser {
 			}
 			
 			//Otherwise, if line does not start with '|' or '-'.
-			else if(!current.matches(regex)){
+			else if(!current.startsWith("|") && !current.startsWith("-")){
 				subtitle = current;
 			}
 			
 			//Otherwise, if line starts with '|' or '-'.
-			else if(current.matches(regex)){
+			else if(current.startsWith("|") || current.startsWith("-")){
 				subtitle = "Not given";
 				block.add(current);
 				lineNumBlocks.add(new Integer(lineNum));
@@ -146,10 +143,9 @@ public class InputParser {
 			
 			//If file has come to an end at this point then return.
 			if(current == null){
-				out.append("Only title and subtitle found.");
-				out1.append("Only title and subtitle found.");
-				out.close();
-				out1.close();
+				summarized.add("Only title and subtitle found.");
+				extended.add("Only title and subtitle found.");
+				
 				return;
 			}
 			
@@ -220,8 +216,7 @@ public class InputParser {
 	 				}
 	 				
 					//Error data is written to the extended error-log.
-	 				out1.append("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input. Please refer to the documentation for valid input format.");
-					out1.newLine();
+	 				extended.add("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input. Please refer to the documentation for valid input format.");
 				}
 				
 				//Next line from the file is read.
@@ -247,46 +242,40 @@ public class InputParser {
 				}
 				//If the number of lines in a dropped block is only 1, the information goes into the extended log only.
 				else if(contents.get(i).size() == 1){ 
-					out1.append("The block comprising the single line (\"" + contents.get(i).get(0) + "\") on line " +
+					extended.add("The block comprising the single line (\"" + contents.get(i).get(0) + "\") on line " +
 							lineNumBlocks.get(i).toString() + " was dropped due to incompitable number of lines during input.");
-					out1.newLine();
 				}
 				//If the number of lines in a dropped block is between 1 and 3, the information goes into the extended log only.
 				else if(contents.get(i).size() > 1 && contents.get(i).size() <= 3){
-					out1.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
+					extended.add("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
 							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
 							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
 							
-					out1.newLine();
 				}
 				//If the number of lines in a dropped block is greater than 3, the information goes into both the summarized and extended logs.
 				else if(contents.get(i).size() > 3){
 					//Writing to summarized log.
-					out.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
+					summarized.add("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
 							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
 							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
 							
-					out.newLine();
 					
 					//Writing to extended log.
-					out1.append("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
+					extended.add("The block starting with (\"" + contents.get(i).get(0) + "\")" + " and ending with (\"" +
 							contents.get(i).get(contents.get(i).size() - 1) + "\") on lines (" + lineNumBlocks.get(i).toString() +
 							"-" + (lineNumBlocks.get(i).intValue() + contents.get(i).size()-1) + ") were dropped due to incompatible number of lines during input.");
 							
-					out1.newLine();
 				}
 			}
 			
 			//At the end if validContents has size 0, the appropriate information is displayed.  
 			if(validContents.size() == 0){
-				out.write("The contents found in the input file were insufficient to be displayed.");
-				out1.write("The contents found in the input file were insufficient to be displayed.");
+				summarized.add("The contents found in the input file were insufficient to be displayed.");
+				extended.add("The contents found in the input file were insufficient to be displayed.");
 			}
 			
 			//The input and output streams are closed.
 			in.close();
-			out.close();
-			out1.close();
 		}
 		
 		catch(Exception e){
@@ -321,5 +310,29 @@ public class InputParser {
 	 */
 	public int getStartLineNum(int index){
 		return validLineNums.get(index);
+	}
+	
+	public ArrayList<String> getSummarized(){
+		ArrayList<String> summarizedCopy = new ArrayList<String>();
+		
+		//Copying the required information.
+		for(int i = 0; i < summarized.size(); i++){
+			summarizedCopy.add(summarized.get(i));
+		}
+		
+		//Returning the copy.
+		return summarizedCopy;
+	}
+	
+	public ArrayList<String> getExtended(){
+		ArrayList<String> extendedCopy = new ArrayList<String>();
+		
+		//Copying the required information.
+		for(int i = 0; i < extended.size(); i++){
+			extendedCopy.add(extended.get(i));
+		}
+		
+		//Returning the copy.
+		return extendedCopy;
 	}
 }
