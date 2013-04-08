@@ -12,6 +12,8 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -56,6 +58,8 @@ public class TabUIControlPane extends JPanel{
 	private InfoPane infoPane;							//Class defined below.
 	private FinalControlPane finalControlPane;			//Class defined below.
 	private final TabFileManager data;					//Reference to the TabFileManager.
+	private int numOfHelpWindows = 0;					//To manage the number of help windows. 
+	private int numOfErrorLogWindows = 0;				//To manage the number of error-log-windows.
 	
 	//chosenFontName is an object that holds the selected value from the fontNamesCombo and makes this value accessible from
 	//multiple methods.  
@@ -245,8 +249,8 @@ public class TabUIControlPane extends JPanel{
 					//Making sure that value was entered in the two text-fields.
 					if(!fontSizeField.getText().equals("") && !spacingField.getText().equals("")){
 						try{
-							if(Double.parseDouble(fontSizeField.getText()) < 0.0 || Double.parseDouble(spacingField.getText()) < 0.0){
-								JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be positive numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
+							if(Double.parseDouble(fontSizeField.getText()) < 1.0 || Double.parseDouble(spacingField.getText()) < 1.0){
+								JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values cannot be less than 1.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
 							
 								return;
 							}
@@ -401,6 +405,15 @@ public class TabUIControlPane extends JPanel{
 			//Setting the ActionListener for errLogButton. An anonymous inner class is used because this code is used no where else in the program.
 			errLogButton.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
+					
+					//Does not allow more than one error-log window.
+					if(numOfErrorLogWindows > 0){
+						return;
+					}
+					
+					//Increments the number.
+					numOfErrorLogWindows++;
+					
 					try{
 						String current = "";
 						
@@ -419,8 +432,13 @@ public class TabUIControlPane extends JPanel{
 						}
 						//A window where the error-log shall be displayed.
 						ErrorLogView errLogView = new ErrorLogView("Error Log", summarized, extended);
-						
-						//errLogView.append(summarized, extended);
+						errLogView.addWindowListener(new WindowAdapter(){
+							public void windowClosing(WindowEvent e){
+								
+								//Decrements the number.
+								numOfErrorLogWindows--;
+							}
+						});
 					}
 					catch(Exception ex){
 						ex.printStackTrace();
@@ -461,6 +479,14 @@ public class TabUIControlPane extends JPanel{
 			//Setting the ActionListener for helpButton. An anonymous inner class is used because this code is used no where else in the program.
 			helpButton.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e){
+					
+					//Checks to make sure that no more than 1 help window is open.
+					if(numOfHelpWindows > 0){
+						return;
+					}
+					
+					numOfHelpWindows++;
+					
 					String helpMessage = 	"To convert a file to PDF:" +
 							"				\n1) First open a text tablature file by clicking on 'Open Input File'.\n" +
 							 				"2) Select your desired font-name, font-size, and spacing.\n3) Click on 'Convert to PDF'." +
@@ -471,7 +497,12 @@ public class TabUIControlPane extends JPanel{
 							 				"\n\nTo view the error-log:\n1) Click on the 'View Error Log' button whenever it is active.\n2) From the window that opens up, choose summarized " +
 							 				"or extended error log.\n3) To save, click on the appropriate save button.";
 					
-					HelpView helpView = new HelpView("Help");	
+					HelpView helpView = new HelpView("Help");
+					helpView.addWindowListener(new WindowAdapter(){
+						public void windowClosing(WindowEvent e){
+							numOfHelpWindows--;
+						}
+					});
 					helpView.append(helpMessage);
 				}
 			});

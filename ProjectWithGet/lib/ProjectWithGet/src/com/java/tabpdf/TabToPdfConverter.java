@@ -24,31 +24,31 @@ import com.java.paramclasses.TrailingCoordinates;
 import com.java.tabinput.InputParser;
 
 public class TabToPdfConverter {
-	private Document document;	//The Pdf document.
-	private PdfWriter writer;	//the document writer.
+	private Document document;					//The Pdf document.
+	private PdfWriter writer;					//the document writer.
 	private ArrayList<TabUnitsBlock> contents;	//ArrayList containing the TabUnitsBlock objects.
-	ArrayList<Integer> starIndexes = null;	//ArrayList containing the indexes of the '*'s within each block. 
+	ArrayList<Integer> starIndexes = null;		//ArrayList containing the indexes of the '*'s within each block. 
 	private InputParser in;
 	private String fontName;
 	private float fontSize;
 	private float spacing;
 	
-	Rectangle pageSize;		//The size of the Pdf document.
+	Rectangle pageSize;							//The size of the Pdf document.
 
 	private TabUnitsBlock currBlock;
-	private int curUnitIndex = 0;	//Index of the current unit (measure) within a block.
+	private int curUnitIndex = 0;				//Index of the current unit (measure) within a block.
 
-	private float yIncrement = 40f;	//Helps maintain the vertical position.
+	private float yIncrement = 40f;				//Helps maintain the vertical position.
 	private float margin;
 	private float xPos;
 	private float yPos;
 
-	private int blockNum;	//The index of the current block.
+	private int blockNum;						//The index of the current block.
 	private int lineNum;
 	private int charNum = 0;
 	private String line = "";
 
-	private int skip = 0;	//Used under some conditions.
+	private int skip = 0;						//Used under some conditions.
 
 	private float []lastNumXPos = new float[6];	//Maintains the x position of the last number on each of the six lines. 
 	private float []lastNumYPos = new float[6];	//Maintains the y position of the last number on each of the six lines.

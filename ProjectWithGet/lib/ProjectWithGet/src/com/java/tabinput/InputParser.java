@@ -220,7 +220,7 @@ public class InputParser {
 	 				}
 	 				
 					//Error data is written to the extended error-log.
-	 				extended.add("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input. Please refer to the documentation for valid input format.");
+	 				extended.add("Line-number " + lineNum + " (\"" + current + "\") was not recognized as valid input.");
 				}
 				
 				//Next line from the file is read.
