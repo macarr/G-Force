@@ -12,12 +12,12 @@ import com.java.tabui.TabUIMainWindow;
 
 public class Tab2Pdf {
 	public static void main(String args[]){
-		/*String errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
-		File errorFile = new File(errorLog);
+		String icePdfException = ""+TabFileManager.getTempDir()+"ice_pdf_message.txt";
+		File icePdfExceptionFile = new File(icePdfException);
 		try {
-			if(!(errorFile.exists()))
-				errorFile.createNewFile();
-			PrintStream out = new PrintStream(new FileOutputStream(errorLog, true));
+			if(!(icePdfExceptionFile.exists()))
+				icePdfExceptionFile.createNewFile();
+			PrintStream out = new PrintStream(new FileOutputStream(icePdfExceptionFile));
 			Date date = new Date();
 			out.println("["+date+"]");
 			System.setErr(out);
@@ -25,7 +25,7 @@ public class Tab2Pdf {
 			e.printStackTrace();
 		} catch(IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 		new TabUIMainWindow();
 	}
 }
