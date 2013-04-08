@@ -136,9 +136,9 @@ public class TabUIControlPane extends JPanel{
 			
 			//Setting the maximum and minimum size of the 'openButton'. Width of the button is always same. It is only the height
 			//that changes with window resize.
-			openButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			openButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			openButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
+			openButton.setMaximumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			openButton.setMinimumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			openButton.setPreferredSize(new Dimension(buttonWidth + 80, buttonHeight));
 		
 			//The 'BoxLayout' helps us in rendering a properly sized 'openButton' for this particular application.
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -280,9 +280,9 @@ public class TabUIControlPane extends JPanel{
 			convertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			
 			//Setting the maximum and minimum size of the convertButton.
-			convertButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			convertButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			convertButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
+			convertButton.setMaximumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			convertButton.setMinimumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			convertButton.setPreferredSize(new Dimension(buttonWidth + 80, buttonHeight));
 			
 			//saveButton sets in motion the steps needed to save a file.
 			saveButton = new JButton("Save Current Pdf");
@@ -303,9 +303,9 @@ public class TabUIControlPane extends JPanel{
 			saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			
 			//Setting the size of saveButton.
-			saveButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			saveButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			saveButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
+			saveButton.setMaximumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			saveButton.setMinimumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			saveButton.setPreferredSize(new Dimension(buttonWidth + 80, buttonHeight));
 			
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			
@@ -435,9 +435,9 @@ public class TabUIControlPane extends JPanel{
 			int buttonWidth = metrics.stringWidth("Save Current Pdf");
 			
 			//Setting the maximum and minimum size of the errLogButton.
-			errLogButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			errLogButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			errLogButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
+			errLogButton.setMaximumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			errLogButton.setMinimumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			errLogButton.setPreferredSize(new Dimension(buttonWidth + 80, buttonHeight));
 		
 			//if errLogDisabled is true, the button is disabled.
 			if(errLogDisabled){
@@ -480,9 +480,9 @@ public class TabUIControlPane extends JPanel{
 			helpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 				
 			//Setting the maximum and minimum size of the helpButton.
-			helpButton.setMaximumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			helpButton.setMinimumSize(new Dimension(buttonWidth + 40, buttonHeight));
-			helpButton.setPreferredSize(new Dimension(buttonWidth + 40, buttonHeight));
+			helpButton.setMaximumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			helpButton.setMinimumSize(new Dimension(buttonWidth + 80, buttonHeight));
+			helpButton.setPreferredSize(new Dimension(buttonWidth + 80, buttonHeight));
 		
 			//The 'BoxLayout' helps us in rendering a properly sized helpButton for this particular application.
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
