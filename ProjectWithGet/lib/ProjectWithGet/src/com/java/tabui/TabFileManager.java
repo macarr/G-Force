@@ -139,6 +139,8 @@ public class TabFileManager{
 	 * convertFile converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
 	 */
 	public void convertFile(final String fontName, final float fontSize, final float spacing){
+		//Before converting, any previous instance of the Pdf renderer is closed.
+		outputArea.closePdfFile();
 		System.gc();
 		//First making the outputArea's status-label blank
 		outputArea.displayStatusUpdate(" ", false);
