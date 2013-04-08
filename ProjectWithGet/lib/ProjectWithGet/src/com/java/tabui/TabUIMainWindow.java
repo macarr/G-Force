@@ -77,7 +77,7 @@ public class TabUIMainWindow extends JFrame{
 		
 		setSize(new Dimension(size.width - 300, size.height - 200));
 		setLocation(((int)size.width - getSize().width) / 2 , ((int)size.height - getSize().height) / 2);
-		//setMinimumSize(new Dimension(195, size.height - 300));
+		setMinimumSize(new Dimension(195, size.height - 300));
 		setVisible(true);
 	}
 	
