@@ -50,12 +50,7 @@ ArrayList<String> test4ExpectSub = new ArrayList<String>();
 		
 		test4Expect.add(test4ExpectSub);
 	}
-/*
-	@Test
-	public void testReadFile() {
-		fail("Not yet implemented");
-	}
-*/
+
 	@Test
 	public void testGetTitle() {
 		String input4Title = input4.getTitle();
@@ -73,12 +68,6 @@ ArrayList<String> test4ExpectSub = new ArrayList<String>();
 		ArrayList<ArrayList<String>>input4Data = input4.getData();
 		assertEquals(test4Expect, input4Data);
 	}
-/*
-	@Test
-	public void testGetStartLineNum() {
-		fail("Not yet implemented");
-	}
-*/
-	
+
 
 }

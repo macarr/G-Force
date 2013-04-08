@@ -42,12 +42,7 @@ ArrayList<String> test5ExpectSub = new ArrayList<String>();
 		test7Expect.add(test5ExpectSub);
 		test5ExpectSub = new ArrayList<String>();
 	}
-/*
-	@Test
-	public void testReadFile() {
-		fail("Not yet implemented");
-	}
-*/
+
 	@Test
 	public void testGetTitle() {
 		String input7Title = input7.getTitle();

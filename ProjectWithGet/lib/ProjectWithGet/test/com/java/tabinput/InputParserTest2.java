@@ -30,12 +30,7 @@ InputParser input3 = new InputParser("./TestCases/input2test.txt");
 		
 		test3Expect.add(test3ExpectSub);
 	}
-/*
-	@Test
-	public void testReadFile() {
-		fail("Not yet implemented");
-	}
-*/
+
 	@Test
 	public void testGetTitle() {
 		String input3Title = input3.getTitle();

@@ -20,12 +20,6 @@ public class InputParserTest {
 	public void testInputParser() {
 		ArrayList<String> test1ExpectSub = new ArrayList<String>();
 	}
-/*
-	@Test
-	public void testReadFile() {
-		fail("Not yet implemented");
-	}
-*/
 
 	@Test
 	public void testGetTitle() {
@@ -47,12 +41,6 @@ public class InputParserTest {
 
 		assertEquals(test1Expect, input1Data);
 	}
-/*
-	@Test
-	public void testGetStartLineNum() {
-		fail("Not yet implemented");
-	}
-*/
-	
+
 
 }

@@ -31,12 +31,7 @@ InputParser input5 = new InputParser("./TestCases/input9test.txt");
 				
 		test5Expect.add(test5ExpectSub);
 	}
-/*
-	@Test
-	public void testReadFile() {
-		fail("Not yet implemented");
-	}
-*/
+
 	@Test
 	public void testGetTitle() {
 		String input5Title = input5.getTitle();
@@ -54,11 +49,6 @@ InputParser input5 = new InputParser("./TestCases/input9test.txt");
 		ArrayList<ArrayList<String>>input5Data = input5.getData();	
 		assertEquals(test5Expect, input5Data);
 	}
-/*
-	@Test
-	public void testGetStartLineNum() {
-		fail("Not yet implemented");
-	}
-*/
+
 
 }
