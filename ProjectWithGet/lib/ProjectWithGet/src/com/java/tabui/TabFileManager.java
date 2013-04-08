@@ -14,7 +14,7 @@ import com.itextpdf.text.Rectangle;
 import com.java.paramclasses.ErrorInformation;
 import com.java.paramclasses.TextDetails;
 import com.java.tabinput.InputParser;
-import com.java.tabpdf.Tab2PdfConverter;
+import com.java.tabpdf.TabToPdfConverter;
 
 public class TabFileManager{
    
@@ -106,7 +106,7 @@ public class TabFileManager{
 			Thread PdfMakerThread = new Thread(){
 				public void run(){
 					//Creating the Tab2PdfConverter object.
-					new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), destinationPath, new TextDetails(fontName, fontSize, spacing)).createPDF();
+					new TabToPdfConverter(in, new Rectangle(pageWidth, pageHeight), destinationPath, new TextDetails(fontName, fontSize, spacing)).createPDF();
 					outputArea.displayStatusUpdate("File Saved.", false);
 				}
 			};
@@ -156,7 +156,7 @@ public class TabFileManager{
 
 				//The createPdf method of Tab2PdfConverter returns an object that carries information about how successful the Pdf
 				//conversion was.
-				errInfo = new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "temp.pdf", new TextDetails(fontName, fontSize, spacing)).createPDF();
+				errInfo = new TabToPdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "temp.pdf", new TextDetails(fontName, fontSize, spacing)).createPDF();
 
 				//The showPdfFile method of the TabUIViewPane class takes in the outputPath (The location where the temporary Pdf file is stored).
 				outputArea.showPdfFile(outputPath + "temp.pdf");

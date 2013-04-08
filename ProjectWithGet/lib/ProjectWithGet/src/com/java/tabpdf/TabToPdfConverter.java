@@ -23,7 +23,7 @@ import com.java.paramclasses.TextLine;
 import com.java.paramclasses.TrailingCoordinates;
 import com.java.tabinput.InputParser;
 
-public class Tab2PdfConverter {
+public class TabToPdfConverter {
 	private Document document;	//The Pdf document.
 	private PdfWriter writer;	//the document writer.
 	private ArrayList<TabUnitsBlock> contents;	//ArrayList containing the TabUnitsBlock objects.
@@ -58,7 +58,7 @@ public class Tab2PdfConverter {
 	/**
 	 * Tab2PdfConverter constructor.
 	 */
-	public Tab2PdfConverter(InputParser in, Rectangle pageSize, String filePath, TextDetails txDetails) {
+	public TabToPdfConverter(InputParser in, Rectangle pageSize, String filePath, TextDetails txDetails) {
 		this.in = in;
 		this.pageSize = pageSize;
 		this.fontName = txDetails.fontName;
