@@ -51,8 +51,6 @@ public class TabUIViewPane extends JPanel{
 		centerPane = new JPanel(new BorderLayout());
 		centerPane.setBackground(Color.gray);
 		
-		//addImage();
-		
 		add(statusUpdateLabel, BorderLayout.NORTH);
 		add(centerPane, BorderLayout.CENTER);
 	}
@@ -71,6 +69,8 @@ public class TabUIViewPane extends JPanel{
 	 * */
 	public void displayStatusUpdate(String status, boolean showProgressBar){
 		statusUpdateLabel.setText(status);
+		
+		//If showProgressBar is true.
 		if(showProgressBar){
 			progressBar = new JProgressBar();
 			progressBar.setIndeterminate(true);
@@ -116,19 +116,18 @@ public class TabUIViewPane extends JPanel{
 	 * This method shows the Pdf file using the open-source library 'ice-pdf'.
 	 */
 	public void showPdfFile(String outputPath) {
-		
+		//Setting up the components necessary to display the Pdf.
 		controller = new SwingController();
-
 		SwingViewBuilderPane viewPane = new SwingViewBuilderPane(controller);
 		JPanel viewerComponentPanel = viewPane.buildViewerPanel();
 		ComponentKeyBinding.install(controller, viewerComponentPanel);
+		
+		//Opening the Pdf for display.
 		controller.openDocument(outputPath);
 		
 		centerPane.removeAll();
 		centerPane.add(viewerComponentPanel);
 		centerPane.revalidate();
-		
-		
 		
 		displayStatusUpdate(" ", false);
 	}
@@ -138,20 +137,7 @@ public class TabUIViewPane extends JPanel{
 	 */
 	public void clearCenterPane(){
 		centerPane.removeAll();
-		//addImage();
 		centerPane.revalidate();
 		centerPane.repaint();
-	}
-	
-	public void addImage(){
-		//displays image on the grey screen before the ascii file is opened
-		try {
-			
-			ImageIcon image = new ImageIcon(this.getClass().getResource("/resource/splash.jpg"));
-			JLabel label = new JLabel("", image, JLabel.CENTER);
-			centerPane.add( label, BorderLayout.CENTER );
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
 	}
 }

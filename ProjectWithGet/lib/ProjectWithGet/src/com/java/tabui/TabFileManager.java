@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import com.itextpdf.text.Rectangle;
 import com.java.paramclasses.ErrorInformation;
+import com.java.paramclasses.TextDetails;
 import com.java.tabinput.InputParser;
 import com.java.tabpdf.Tab2PdfConverter;
 
@@ -39,6 +40,7 @@ public class TabFileManager{
 	 * loadFile displays the JFileChooser which allows the user to choose the input file.  
 	 */
 	public int loadFile(){
+		System.gc();
 		outputArea.displayStatusUpdate(" ", false);
 		//'status' is a flag which is returned to the caller of the loadFile, based on which the caller method enables/disables 
 		//some buttons.  
@@ -90,7 +92,10 @@ public class TabFileManager{
 		else
 			fc = new JFileChooser(destinationPath);
 
-		fc.setSelectedFile(new File(in.getTitle() + ".pdf"));
+		//Creating a file with the same name as the title.
+		File file = new File(in.getTitle() + ".pdf");
+		
+		fc.setSelectedFile(file);
 		int returnVal = fc.showSaveDialog(outputArea);
 
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -101,12 +106,17 @@ public class TabFileManager{
 			Thread PdfMakerThread = new Thread(){
 				public void run(){
 					//Creating the Tab2PdfConverter object.
-					new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), destinationPath, fontName, fontSize, spacing).createPDF();
+					new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), destinationPath, new TextDetails(fontName, fontSize, spacing)).createPDF();
 					outputArea.displayStatusUpdate("File Saved.", false);
 				}
 			};
 	
 			PdfMakerThread.start();
+		}
+		
+		//Cleaning up any temporary file.
+		if(file.exists()){
+			file.delete();
 		}
 		
 		return destinationPath;
@@ -129,7 +139,7 @@ public class TabFileManager{
 	 * convertFile converts the Ascii file into Pdf Format and displays it in the 'outputArea'.
 	 */
 	public void convertFile(final String fontName, final float fontSize, final float spacing){
-
+		System.gc();
 		//First making the outputArea's status-label blank
 		outputArea.displayStatusUpdate(" ", false);
 
@@ -137,7 +147,7 @@ public class TabFileManager{
 		outputArea.displayStatusUpdate("Converting to Pdf...", true);
 
 		//We use a Thread for the conversion.
-		final Thread pdfMakerThread = new Thread(){
+		Thread pdfMakerThread = new Thread(){
 			public void run(){
 				File tempFolder = new File(outputPath);
 				if(!tempFolder.isDirectory()){
@@ -146,7 +156,7 @@ public class TabFileManager{
 
 				//The createPdf method of Tab2PdfConverter returns an object that carries information about how successful the Pdf
 				//conversion was.
-				errInfo = new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "temp.pdf", fontName, fontSize, spacing).createPDF();
+				errInfo = new Tab2PdfConverter(in, new Rectangle(pageWidth, pageHeight), outputPath + "temp.pdf", new TextDetails(fontName, fontSize, spacing)).createPDF();
 
 				//The showPdfFile method of the TabUIViewPane class takes in the outputPath (The location where the temporary Pdf file is stored).
 				outputArea.showPdfFile(outputPath + "temp.pdf");

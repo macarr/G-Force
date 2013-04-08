@@ -12,7 +12,7 @@ import com.java.tabui.TabUIMainWindow;
 
 public class Tab2Pdf {
 	public static void main(String args[]){
-		/*String errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
+		String errorLog = ""+TabFileManager.getTempDir()+"T2PDFErr.txt";
 		File errorFile = new File(errorLog);
 		try {
 			if(!(errorFile.exists()))
@@ -25,7 +25,7 @@ public class Tab2Pdf {
 			e.printStackTrace();
 		} catch(IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 		new TabUIMainWindow();
 	}
 }

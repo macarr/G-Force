@@ -33,8 +33,48 @@ import com.itextpdf.text.pdf.BaseFont;
 
 public class TabUIControlPane extends JPanel{
   
-	//serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown
+	//serialization variable - used for GUI elements, mostly to get rid of the warning messages that were being shown.
 	private static final long serialVersionUID = 228385549718664150L;
+	private JButton convertButton = null;				//To convert to Pdf.
+	private JButton saveButton = null;					//To save the Pdf file.
+	private JComboBox<String> fontNamesCombo = null;	//JComboBox holding the font-name values.
+	private JTextField fontSizeField = null;			//JTextField holding the font-size value.
+	private JTextField spacingField = null;				//JTextField holding the spacing value.
+	private String destinationPath;						//The path where the file shall be saved.
+	private boolean convertDisabled = true;				//Initially the convertButton should be disabled.
+	private boolean saveDisabled = true;				//Initially the saveButton should be disabled.
+	private boolean errLogDisabled = true;				//Initially the errLogButton should be disabled.
+	private JPanel fontNamesComboPane;					//JPanel to hold the fontNamesCombo.
+	private JPanel fontSizeFieldPane;					//JPanel to hold the fontSizeField.
+	private JPanel spacingFieldPane;					//JPanel to hold the spacingField.
+	private TitledBorder fontNamesComboBorder;			//Titled border for the fontNamesCombo.
+	private TitledBorder fontSizeFieldBorder;			//Titled border for the fontSizeField.
+	private TitledBorder spacingFieldBorder;			//Titled border for the spacingFieldBorder.
+	private OpenPane openPane;							//Class defined below.
+	private ConvertSavePane convertSavePane;			//Class defined below.
+	private ControlPane controlPane;					//Class defined below.
+	private InfoPane infoPane;							//Class defined below.
+	private FinalControlPane finalControlPane;			//Class defined below.
+	private final TabFileManager data;					//Reference to the TabFileManager.
+	
+	//chosenFontName is an object that holds the selected value from the fontNamesCombo and makes this value accessible from
+	//multiple methods.  
+	private String chosenFontName;
+	
+	//chosenFontSize is an object that holds the selected value from the fontSizeField and makes this value accessible from
+	//multiple methods.
+	private float chosenFontSize;
+	
+	//chosenSpacing is an object that holds the selected value from the spacingField and makes this value accessible from
+	//multiple methods.
+	private float chosenSpacing;
+	
+	//A value based on which the height of a button is determined.
+	private int buttonHeightFactor = 8;
+	
+	//The font-names that shall be used.
+	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_BOLD, BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, 
+								   BaseFont.TIMES_BOLDITALIC };
 	
 	/**
 	 * Class OpenPane holds the openButton.
@@ -205,6 +245,12 @@ public class TabUIControlPane extends JPanel{
 					//Making sure that value was entered in the two text-fields.
 					if(!fontSizeField.getText().equals("") && !spacingField.getText().equals("")){
 						try{
+							if(Double.parseDouble(fontSizeField.getText()) < 0.0 || Double.parseDouble(spacingField.getText()) < 0.0){
+								JOptionPane.showMessageDialog(TabUIControlPane.this.getParent(), "Font-Size and spacing values must be positive numbers.", "Wrong Input Type", JOptionPane.ERROR_MESSAGE);
+							
+								return;
+							}
+						
 							//Getting the values in the text-fields and assigning them to the appropriate Strings for later use. 
 							chosenFontSize = Float.parseFloat(fontSizeField.getText());
 							chosenSpacing = Float.parseFloat(spacingField.getText());
@@ -215,7 +261,6 @@ public class TabUIControlPane extends JPanel{
 							//SaveButton should now be enabled.
 							saveButton.setEnabled(true);
 							saveDisabled = false;
-							//enableErrorLog();
 						}
 						
 						//If the user enters non-numbers in the text-fields.
@@ -423,7 +468,8 @@ public class TabUIControlPane extends JPanel{
 							 				"2) Click on 'Convert to PDF'." +
 							 				"\n\nTo save a file as Pdf:\n1) After clicking on the 'Convert to Pdf' button, wait for the convertion to complete and\n" +
 							 				"the file to be displayed in Pdf format on the left.\n2) Click on the 'Save Current Pdf' button and save the file at the desired location." +
-							 				"\n\nTo view the error-log:\n1) Click on the 'View Error Log' button whenever it is active.";
+							 				"\n\nTo view the error-log:\n1) Click on the 'View Error Log' button whenever it is active.\n2) From the window that opens up, choose summarized " +
+							 				"or extended error log.\n3) To save, click on the appropriate save button.";
 					
 					HelpView helpView = new HelpView("Help");	
 					helpView.append(helpMessage);
@@ -474,49 +520,6 @@ public class TabUIControlPane extends JPanel{
 			add(infoPane, BorderLayout.SOUTH);
 		}
 	}
-	
-	
-	private JButton convertButton = null;	//To convert to Pdf.
-	private JButton saveButton = null;	//To save the Pdf file.
-	private JComboBox<String> fontNamesCombo = null;	//JComboBox holding the font-name values.
-	private JTextField fontSizeField = null;	//JTextField holding the font-size value.
-	private JTextField spacingField = null;	//JTextField holding the spacing value.
-	private String destinationPath;	//The path where the file shall be saved.
-	private boolean convertDisabled = true;	//Initially the convertButton should be disabled.
-	private boolean saveDisabled = true;	//Initially the saveButton should be disabled.
-	private boolean errLogDisabled = true;	//Initially the errLogButton should be disabled.
-	private JPanel fontNamesComboPane;	//JPanel to hold the fontNamesCombo.
-	private JPanel fontSizeFieldPane;	//JPanel to hold the fontSizeField.
-	private JPanel spacingFieldPane;	//JPanel to hold the spacingField.
-	private TitledBorder fontNamesComboBorder;	//Titled border for the fontNamesCombo.
-	private TitledBorder fontSizeFieldBorder;	//Titled border for the fontSizeField.
-	private TitledBorder spacingFieldBorder;	//Titled border for the spacingFieldBorder.
-	private OpenPane openPane;
-	private ConvertSavePane convertSavePane;
-	private ControlPane controlPane;
-	private InfoPane infoPane;
-	private FinalControlPane finalControlPane;
-	private final TabFileManager data;	//Reference to the TabFileManager.
-	
-	//chosenFontName is an object that holds the selected value from the fontNamesCombo and makes this value accessible from
-	//multiple methods.  
-	private String chosenFontName;
-	
-	//chosenFontSize is an object that holds the selected value from the fontSizeField and makes this value accessible from
-	//multiple methods.
-	private float chosenFontSize;
-	
-	//chosenSpacing is an object that holds the selected value from the spacingField and makes this value accessible from
-	//multiple methods.
-	private float chosenSpacing;
-	
-	//A value based on which the height of a button is determined.
-	private int buttonHeightFactor = 8;
-	
-	//The font-names that shall be used
-	private String [] fontNames = {BaseFont.HELVETICA, BaseFont.HELVETICA_BOLD, BaseFont.TIMES_ROMAN, BaseFont.TIMES_ITALIC, BaseFont.TIMES_BOLD, 
-								   BaseFont.TIMES_BOLDITALIC };
-	
 	
 	/**
 	 * The TabUIControlPane constructor.

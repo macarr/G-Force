@@ -16,15 +16,15 @@ public class InputParser {
 
 	String title = "";
 	String subtitle = "";
-	ArrayList<ArrayList<String>> contents;	//Holds all the blocks read during input.
+	ArrayList<ArrayList<String>> contents;		//Holds all the blocks read during input.
 	ArrayList<ArrayList<String>> validContents;	//Holds only the blocks that have 6 lines.
-	ArrayList<Integer> lineNumBlocks;	//holds the starting line of every block within input file.
-	ArrayList<Integer> validLineNums;	//holds the starting line of valid blocks within input file. 
+	ArrayList<Integer> lineNumBlocks;			//holds the starting line of every block within input file.
+	ArrayList<Integer> validLineNums;			//holds the starting line of valid blocks within input file. 
 	ArrayList<String> summarized;
 	ArrayList<String> extended;
 	int lineNum = 0;	
 	String regex = "((\\|+|[EBGDA0-9ebgda-]|-).*(\\|*|-*)(.+)(-|\\|+|[A-Z0-9a-z]))";	//The regular expression.
-	ArrayList<String> block;	//The block where inputs are stored.
+	ArrayList<String> block;							//The block where inputs are stored.
 	String summarizedErrorLog = "summarized_log.txt";	//file name for short error log.
 	String extendedErrorLog = "extended_log.txt";		//file name for full error log.
 	
@@ -89,6 +89,8 @@ public class InputParser {
 			else if(current.startsWith("|") || current.startsWith("-")){
 				title = "Not given";
 				block.add(current);
+				
+				//Storing the start line number of block.
 				lineNumBlocks.add(new Integer(lineNum));
 			}
 					
@@ -129,6 +131,8 @@ public class InputParser {
 			else if(current.startsWith("|") || current.startsWith("-")){
 				subtitle = "Not given";
 				block.add(current);
+				
+				//Storing the start line number of block.
 				lineNumBlocks.add(new Integer(lineNum));
 			}
 			

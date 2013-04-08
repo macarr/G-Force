@@ -4,6 +4,7 @@
 package com.java.tabui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -33,8 +34,8 @@ public class ErrorLogView extends JFrame{
 	private JTabbedPane errorLogPane;
 	private JButton saveSummarizedButton;	//To save the summary log
 	private JButton saveExtendedButton;		//To save the extended log.
-	private ArrayList<String> summarized; 
-	private ArrayList<String> extended;
+	private ArrayList<String> summarized; 	//ArrayList holding the summarized log.
+	private ArrayList<String> extended;		//ArrayList holding the extended log.
 	
 	/**
 	 * ErrorLogView constructor.
@@ -50,7 +51,7 @@ public class ErrorLogView extends JFrame{
 		
 		extendedArea = new JTextArea();
 		extendedArea.setEditable(false);
-		
+		 
 		summarizedPane = new JPanel(new BorderLayout());
 		extendedPane = new JPanel(new BorderLayout());
 		
@@ -61,17 +62,21 @@ public class ErrorLogView extends JFrame{
 		saveSummarizedButton = new JButton("Save Summarized Error Log");
 		saveSummarizedButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				JFileChooser fc = new JFileChooser();
-				File file = new File("summarized_log.txt");
+				//Object that will display the save dialog box.
+				JFileChooser saveFile = new JFileChooser();
 				
-				//Setting the default file.
-				fc.setSelectedFile(file);
-				int returnVal = fc.showSaveDialog(ErrorLogView.this);
+				//Instantiating a default temporary file that will be used.
+				File summary = new File("summarized_log.txt");
 				
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					String destinationPath = fc.getSelectedFile().toString();
+				//Setting the default file to the file created.
+				saveFile.setSelectedFile(summary);
+				int option = saveFile.showSaveDialog(ErrorLogView.this);
+				
+				if(option == JFileChooser.APPROVE_OPTION) {
+					//Sets the saving location to the location selected by the user.
+					String savePath = saveFile.getSelectedFile().toString();
 					try{
-						BufferedWriter out = new BufferedWriter(new FileWriter(destinationPath));
+						BufferedWriter out = new BufferedWriter(new FileWriter(savePath));
 						
 						//Looping through the ArrayList and writing the contents to the file.
 						for(int i = 0; i < summarized.size(); i++){
@@ -87,8 +92,8 @@ public class ErrorLogView extends JFrame{
 				
 				//If file exists at this point, simply delete it. Please note that this operation does not affect the file that the
 				//user may have saved.
-				if(file.exists()){
-					file.delete();
+				if(summary.exists()){
+					summary.delete();
 				}
 			}
 		});
@@ -105,17 +110,21 @@ public class ErrorLogView extends JFrame{
 		saveExtendedButton = new JButton("Save Extended Error Log");
 		saveExtendedButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				JFileChooser fc = new JFileChooser();
-				File file = new File("extended_log.txt");
+				//Object that will display the save dialog box.
+				JFileChooser saveFile = new JFileChooser();
 				
-				//Setting the default file.
-				fc.setSelectedFile(file);
-				int returnVal = fc.showSaveDialog(ErrorLogView.this);
+				//Instantiating a default temporary file that will be used.
+				File extendedSummary = new File("extended_log.txt");
 				
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					String destinationPath = fc.getSelectedFile().toString();
+				//Setting the default file to the file created.
+				saveFile.setSelectedFile(extendedSummary);
+				int option = saveFile.showSaveDialog(ErrorLogView.this);
+				
+				if(option == JFileChooser.APPROVE_OPTION) {
+					//Sets the saving location to the location selected by the user.
+					String savePath = saveFile.getSelectedFile().toString();
 					try{
-						BufferedWriter out = new BufferedWriter(new FileWriter(destinationPath));
+						BufferedWriter out = new BufferedWriter(new FileWriter(savePath));
 						
 						//Looping through the ArrayList and writing the contents to the file.
 						for(int i = 0; i < extended.size(); i++){
@@ -131,8 +140,8 @@ public class ErrorLogView extends JFrame{
 				
 				//If file exists at this point, simply delete it. Please note that this operation does not affect the file that the
 				//user may have saved.
-				if(file.exists()){
-					file.delete();
+				if(extendedSummary.exists()){
+					extendedSummary.delete();
 				}
 			}
 		});
@@ -154,11 +163,15 @@ public class ErrorLogView extends JFrame{
 		errorLogPane.addTab("Summarized Error Log", summarizedPane);
 		errorLogPane.addTab("Extended Error Log", extendedPane);
 		
+		//To populate the text area with information.
 		append();
 		
+		//Adding the components to the user interface. 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(errorLogPane);
+		
 		setSize(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
+		setMinimumSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}

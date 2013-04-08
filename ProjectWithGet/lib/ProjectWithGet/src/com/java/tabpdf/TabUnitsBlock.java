@@ -67,10 +67,9 @@ public class TabUnitsBlock{
 			else if(source.charAt(ind) == '|'){
 
 				//'indexRep' represents the index of the repetition-value. An index of -1 is initially being assigned, which would be 
-				//replaced by the actual index value if a repetition-value is found. If no repetition value is found, a -1 would indicate that
-				//when a check would be done.
+				//replaced by the actual index value if a repetition-value is found. If no repetition value is found, a -1 would indicate
+				//that when a check would be done.
 				int indexRep = -1;
-				//char repVal = '0';
 				String repVal = "";
 
 				if(Character.isDigit(block.get(0).charAt(ind))){
@@ -119,6 +118,7 @@ public class TabUnitsBlock{
 			blockOfTabUnits.add(unit);
 		}
 
+		//Calculating the horizontal space needs of each unit (measure) within a block.
 		for(int ind = 0; ind < blockOfTabUnits.size()-1; ind++){
 			blockOfTabUnits.get(ind).setHorizontalSpaceNeeds((((blockOfTabUnits.get(ind + 1).getBeginningBarIndex() + 
 					blockOfTabUnits.get(ind + 1).getBeginningBarFreq())-(blockOfTabUnits.get(ind).getBeginningBarIndex()) - 

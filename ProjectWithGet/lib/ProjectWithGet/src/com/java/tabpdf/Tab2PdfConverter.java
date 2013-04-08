@@ -18,6 +18,7 @@ import com.java.paramclasses.CharCoordinates;
 import com.java.paramclasses.ErrorInformation;
 import com.java.paramclasses.ReturnValues;
 import com.java.paramclasses.StarBars;
+import com.java.paramclasses.TextDetails;
 import com.java.paramclasses.TextLine;
 import com.java.paramclasses.TrailingCoordinates;
 import com.java.tabinput.InputParser;
@@ -57,12 +58,13 @@ public class Tab2PdfConverter {
 	/**
 	 * Tab2PdfConverter constructor.
 	 */
-	public Tab2PdfConverter(InputParser in, Rectangle pageSize, String filePath, String fontName, float fontSize, float spacing) {
+	public Tab2PdfConverter(InputParser in, Rectangle pageSize, String filePath, TextDetails txDetails) {
 		this.in = in;
-		this.spacing = spacing;
-		this.fontName = fontName;
-		this.fontSize = fontSize;
 		this.pageSize = pageSize;
+		this.fontName = txDetails.fontName;
+		this.fontSize = txDetails.fontSize;
+		this.spacing = txDetails.spacing;
+		
 		
 		//Called to instantiate TabUnitsBlock objects from the input.
 		extractTabBlocks(in.getData(), spacing);	 
@@ -138,7 +140,8 @@ public class Tab2PdfConverter {
 					
 					//Adding error-info to the ArrayList.
 					errorInfo.add("Measure number " + (curUnitIndex + 1) + " from lines (" + startLine + "-" + (startLine + currBlock.getNumberOfLines()-1) +
-							") of the input file" + " went past the right margin of the PDf document during conversion, and might not have fully fit.");
+							") starting with (\"" + currBlock.getLine(0) + "\") and ending with (\"" + currBlock.getLine(currBlock.getNumberOfLines() - 1)  + "\") " +
+									"of the input file" + " went past the right margin of the PDf document during conversion, and might not have fully fit.");
 				}
 				catch(Exception e){
 					e.printStackTrace();

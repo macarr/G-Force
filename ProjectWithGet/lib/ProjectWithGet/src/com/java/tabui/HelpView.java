@@ -1,6 +1,7 @@
 package com.java.tabui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 
@@ -21,11 +22,12 @@ public class HelpView extends JFrame{
 		setTitle(title);
 		infoArea = new JTextArea();
 		infoArea.setEditable(false);
-		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(new JScrollPane(infoArea));
-		this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setVisible(true);
+		getContentPane().setLayout(new BorderLayout());
+		getContentPane().add(new JScrollPane(infoArea));
+		setSize(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
+		setMinimumSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setVisible(true);
 		
 	}
 	
