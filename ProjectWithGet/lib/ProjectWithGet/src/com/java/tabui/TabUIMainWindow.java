@@ -118,7 +118,7 @@ public class TabUIMainWindow extends JFrame{
 				//displays the actual image
 				setVisible(true);
 			
-				//holds the image for 1.5 seconds
+				//holds the image for 2 seconds
 				try{
 					Thread.sleep(2000);
 				}
